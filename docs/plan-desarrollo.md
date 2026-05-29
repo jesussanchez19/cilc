@@ -2,7 +2,7 @@
 
 **Inicio:** 1 de junio de 2026  
 **Entrega final:** 11 de septiembre de 2026  
-**Equipo:** Dev A (Frontend/UI) · Dev B (Datos/Integración)  
+**Equipo:** Persona 1 (Frontend/UI) · Persona 2 (Datos/Integración)  
 **Metodología:** Kanban — entrega al final de cada semana (viernes)
 
 ---
@@ -11,7 +11,7 @@
 
 Para evitar conflictos en git, cada developer tiene jurisdicción exclusiva sobre sus módulos.
 
-| Dev A — Frontend/UI | Dev B — Datos/Integración |
+| Persona 1 — Frontend/UI | Persona 2 — Datos/Integración |
 |---|---|
 | `src/components/**` | `src/lib/**` |
 | `app/*/page.tsx` (capa visual) | `app/api/**` (rutas API) |
@@ -23,8 +23,8 @@ Para evitar conflictos en git, cada developer tiene jurisdicción exclusiva sobr
 ```
 main          ← producción (merge viernes de cada semana)
   └─ develop  ← integración (PRs aquí durante la semana)
-       ├─ feature/A/nombre-tarea   ← Dev A
-       └─ feature/B/nombre-tarea   ← Dev B
+       ├─ feature/P1/nombre-tarea   ← Persona 1
+       └─ feature/P2/nombre-tarea   ← Persona 2
 ```
 
 **Regla:** nunca hacer push directo a `main`. Todo pasa por PR a `develop`.
@@ -43,7 +43,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 1 · 1–6 jun · Navegación y contacto funcional
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Menú hamburguesa en móvil | Integrar Resend — formulario envía emails reales |
 | Scroll suave entre secciones | Variables de entorno para Resend API key |
@@ -55,7 +55,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 2 · 8–13 jun · Homepage
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Rediseño Hero: imagen de fondo real, animación de entrada | Google Analytics 4 — evento de clics en CTAs |
 | Sección "¿Por qué CILC?" mejorada con iconos e imágenes | Open Graph / meta tags dinámicos |
@@ -67,7 +67,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 3 · 15–20 jun · Páginas de programas
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Rediseño de ProgramPage: hero con imagen real, galería de fotos | FAQs por programa (datos en `src/lib/data/faqs.ts`) |
 | Sección de testimonios placeholder en cada programa | Precios orientativos y tabla de comparación (datos) |
@@ -79,7 +79,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 4 · 22–27 jun · Sección destinos
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | CountryGrid con filtros visuales (región, idioma) | Datos de países completos: visa, clima, costo estimado |
 | Rediseño página de país: hero, stats, galería | Datos de universidades enriquecidos: requisitos, ranking |
@@ -91,7 +91,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 5 · 29 jun–4 jul · Flujo de leads
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Formulario de cotización rápida (modal, por programa) | API route `POST /api/quote` — guarda lead + envía email |
 | CTA "Obtén tu cotización" en todas las páginas de programa | Rate limiting básico en formularios |
@@ -103,7 +103,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 6 · 6–11 jul · WhatsApp y CTAs
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Widget WhatsApp flotante mejorado (animado, con tooltip) | Mensajes pre-llenados por programa en wa.me links |
 | Sticky CTA bar en páginas de programa en móvil | UTM tracking en links de WhatsApp y formularios |
@@ -115,7 +115,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 7 · 13–18 jul · Blog
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Layout de blog: listado de artículos, página de artículo | MDX setup + primeros 3 artículos de contenido |
 | Card de artículo con imagen, categoría, tiempo de lectura | Categorías: Vida en el extranjero, Tips, Noticias CILC |
@@ -127,7 +127,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 8 · 20–25 jul · Búsqueda y filtros
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | UI de barra de búsqueda global (header) | Lógica de búsqueda: programas, países, artículos del blog |
 | Filtros en `/destinos`: región, idioma, duración | Hook `useSearch` con debounce |
@@ -139,7 +139,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 9 · 27 jul–1 ago · Testimonios y social proof
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Carrusel de testimonios en homepage y páginas de programa | Datos de 10+ testimonios reales (con foto, nombre, programa) |
 | Galería de fotos de estudiantes (grid, lightbox) | Widget de calificación (stars) |
@@ -151,7 +151,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 10 · 3–8 ago · SEO técnico
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Imágenes con `alt` descriptivos en todos los componentes | Metadata dinámica en todas las rutas |
 | Breadcrumbs con JSON-LD | robots.txt, sitemap.xml dinámico |
@@ -163,7 +163,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 11 · 10–15 ago · Performance
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Skeleton screens en contenido dinámico | next/image optimización en todas las imágenes |
 | Lazy loading de secciones below the fold | Bundle analysis — eliminar dependencias innecesarias |
@@ -175,7 +175,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Galería de fotos con lightbox + página `/galeria` | Datos del equipo CILC (`src/lib/data/team.ts`) |
 | Página `/sobre-nosotros` con historia, misión y equipo | Datos de socios y certificaciones (`src/lib/data/partners.ts`) |
@@ -187,7 +187,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 13 · 24–29 ago · Accesibilidad y pulido
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | ARIA labels, focus visible, contraste de color | Revisión de todos los errores de consola/warnings |
 | Animaciones respetuosas de `prefers-reduced-motion` | Error boundaries y página 404 mejorada |
@@ -199,7 +199,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 14 · 31 ago–5 sep · Testing y QA
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Tests E2E con Playwright: flujo homepage → programa → contacto | Tests unitarios de lógica de búsqueda y validación de formularios |
 | Pruebas en dispositivos reales (iOS, Android) | Pruebas de carga del formulario y API routes |
@@ -211,7 +211,7 @@ main          ← producción (merge viernes de cada semana)
 
 ### Semana 15 · 7–11 sep · Deploy y lanzamiento
 
-| Dev A | Dev B |
+| Persona 1 | Persona 2 |
 |---|---|
 | Deploy en Vercel — configuración de dominio personalizado | Variables de entorno en Vercel (Resend API key, etc.) |
 | Favicon, splash screen, PWA básico | Monitoring con Vercel Analytics |

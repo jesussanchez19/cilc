@@ -7,13 +7,13 @@ LISTAS SUGERIDAS EN TRELLO:
   [ Por hacer ] [ En progreso ] [ En revisión ] [ Hecho ]
 
 ETIQUETAS SUGERIDAS:
-  🔵 Dev A  — Frontend / UI / Componentes
-  🟡 Dev B  — Datos / API / Integraciones
+  🔵 Persona 1  — Frontend / UI / Componentes
+  🟡 Persona 2  — Datos / API / Integraciones
   🟢 Entregable — Resultado visible al cliente al final de la semana
 
 REGLA DE RAMAS GIT:
-  Dev A crea: feature/A/nombre-tarea
-  Dev B crea: feature/B/nombre-tarea
+  Persona 1 crea: feature/P1/nombre-tarea
+  Persona 2 crea: feature/P2/nombre-tarea
   Ambos hacen PR a: develop
   develop → main solo los viernes (entrega semanal)
 
@@ -21,27 +21,27 @@ REGLA DE RAMAS GIT:
 SEMANA 1 · 1–6 jun · Navegación y contacto funcional
 ===========================================================
 
-[Dev A] Menú hamburguesa en móvil
+[Persona 1] Menú hamburguesa en móvil
   Archivo: src/components/shared/Navigation.tsx
   Criterio: menú se abre/cierra con animación, se cierra al navegar
 
-[Dev A] Botón WhatsApp flotante global
+[Persona 1] Botón WhatsApp flotante global
   Archivo: src/components/shared/WhatsAppButton.tsx + app/layout.tsx
   Criterio: visible en todas las páginas, abre wa.me en nueva pestaña
 
-[Dev A] Scroll suave al navegar
+[Persona 1] Scroll suave al navegar
   Archivo: app/layout.tsx, tailwind.config
   Criterio: scroll suave al hacer clic en links de ancla
 
-[Dev B] Integrar Resend — formulario envía emails reales
+[Persona 2] Integrar Resend — formulario envía emails reales
   Archivo: app/api/contact/route.ts (nuevo)
   Criterio: email llega al correo de CILC al enviar el formulario
 
-[Dev B] Validación de formulario con Zod
+[Persona 2] Validación de formulario con Zod
   Archivo: src/lib/validations/contact.ts (nuevo)
   Criterio: campos requeridos validados, mensajes de error claros
 
-[Dev B] Configurar .env.example con API key de Resend
+[Persona 2] Configurar .env.example con API key de Resend
   Archivo: .env.example (nuevo), README.md
   Criterio: instrucciones claras para configurar el entorno
 
@@ -51,27 +51,27 @@ SEMANA 1 · 1–6 jun · Navegación y contacto funcional
 SEMANA 2 · 8–13 jun · Homepage
 ===========================================================
 
-[Dev A] Hero banner con imagen de fondo real + animación de entrada
+[Persona 1] Hero banner con imagen de fondo real + animación de entrada
   Archivo: src/components/home/HeroBanner.tsx
   Criterio: imagen real, texto animado al cargar, CTA visible en móvil
 
-[Dev A] Sección "¿Por qué CILC?" con iconos e imágenes reales
+[Persona 1] Sección "¿Por qué CILC?" con iconos e imágenes reales
   Archivo: app/page.tsx, src/components/home/
   Criterio: 6 propuestas de valor con imagen o icono real
 
-[Dev A] Imágenes reales en cards de programas
+[Persona 1] Imágenes reales en cards de programas
   Archivo: src/components/home/FeaturedPrograms.tsx + public/images/
   Criterio: cada programa tiene su propia imagen 4:3
 
-[Dev B] Google Analytics 4 — eventos de clics en CTAs
+[Persona 2] Google Analytics 4 — eventos de clics en CTAs
   Archivo: app/layout.tsx + src/lib/analytics.ts (nuevo)
   Criterio: eventos registrados en GA4 al hacer clic en botones principales
 
-[Dev B] Open Graph meta tags dinámicos
+[Persona 2] Open Graph meta tags dinámicos
   Archivo: app/layout.tsx
   Criterio: vista previa correcta al compartir el link en WhatsApp/redes
 
-[Dev B] Sitemap.xml básico
+[Persona 2] Sitemap.xml básico
   Archivo: app/sitemap.ts (nuevo)
   Criterio: sitemap accesible en /sitemap.xml con todas las rutas
 
@@ -81,27 +81,27 @@ SEMANA 2 · 8–13 jun · Homepage
 SEMANA 3 · 15–20 jun · Páginas de programas
 ===========================================================
 
-[Dev A] Rediseño de ProgramPage: hero con imagen real, galería de fotos
+[Persona 1] Rediseño de ProgramPage: hero con imagen real, galería de fotos
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: cada página tiene imagen hero y al menos 3 fotos de referencia
 
-[Dev A] Sección de testimonios placeholder en páginas de programa
+[Persona 1] Sección de testimonios placeholder en páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: 2-3 testimonios con foto, nombre y país visible
 
-[Dev A] Breadcrumbs en todas las páginas internas
+[Persona 1] Breadcrumbs en todas las páginas internas
   Archivo: src/components/shared/Breadcrumb.tsx (nuevo)
   Criterio: visible en páginas de programa, destinos y contacto
 
-[Dev B] FAQs por programa
+[Persona 2] FAQs por programa
   Archivo: src/lib/data/faqs.ts (nuevo)
   Criterio: mínimo 5 preguntas/respuestas por programa
 
-[Dev B] Precios orientativos por programa
+[Persona 2] Precios orientativos por programa
   Archivo: src/lib/data/programs.ts
   Criterio: rango de precios visible en cada página de programa
 
-[Dev B] Schema.org structured data para programas
+[Persona 2] Schema.org structured data para programas
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: datos estructurados válidos en Google Rich Results Test
 
@@ -111,27 +111,27 @@ SEMANA 3 · 15–20 jun · Páginas de programas
 SEMANA 4 · 22–27 jun · Sección de destinos
 ===========================================================
 
-[Dev A] CountryGrid con filtros visuales (región, idioma)
+[Persona 1] CountryGrid con filtros visuales (región, idioma)
   Archivo: src/components/shared/CountryGrid.tsx, app/destinos/page.tsx
   Criterio: filtros funcionan sin recargar la página
 
-[Dev A] Rediseño página de país: hero, stats, galería
+[Persona 1] Rediseño página de país: hero, stats, galería
   Archivo: src/components/shared/CountryDetail.tsx
   Criterio: imagen hero real, 4 stats destacadas, 3 fotos del país
 
-[Dev A] Página /destinos como entrada principal de la sección
+[Persona 1] Página /destinos como entrada principal de la sección
   Archivo: app/destinos/page.tsx (nuevo, reemplaza /countries)
   Criterio: enlazada desde la navegación principal
 
-[Dev B] Datos de países: visa, clima, costo estimado
+[Persona 2] Datos de países: visa, clima, costo estimado
   Archivo: src/lib/data/countries.ts
   Criterio: todos los campos completados para los 16 países
 
-[Dev B] Datos de universidades enriquecidos
+[Persona 2] Datos de universidades enriquecidos
   Archivo: src/lib/data/universities.ts
   Criterio: requisitos de admisión y ranking actualizado
 
-[Dev B] Redirigir /countries → /destinos
+[Persona 2] Redirigir /countries → /destinos
   Archivo: next.config (redirects)
   Criterio: URL antigua redirige automáticamente a la nueva
 
@@ -141,27 +141,27 @@ SEMANA 4 · 22–27 jun · Sección de destinos
 SEMANA 5 · 29 jun–4 jul · Flujo de leads
 ===========================================================
 
-[Dev A] Modal de cotización rápida por programa
+[Persona 1] Modal de cotización rápida por programa
   Archivo: src/components/shared/QuoteModal.tsx (nuevo)
   Criterio: se abre desde cualquier página de programa, campos mínimos
 
-[Dev A] CTA "Obtén tu cotización" en todas las páginas de programa
+[Persona 1] CTA "Obtén tu cotización" en todas las páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: botón visible en hero y al final de cada página
 
-[Dev A] Estados de carga y confirmación visual en formularios
+[Persona 1] Estados de carga y confirmación visual en formularios
   Archivo: src/components/shared/ContactForm.tsx, QuoteModal.tsx
   Criterio: spinner al enviar, mensaje de éxito o error visible
 
-[Dev B] API route POST /api/quote — guarda lead + envía email
+[Persona 2] API route POST /api/quote — guarda lead + envía email
   Archivo: app/api/quote/route.ts (nuevo)
   Criterio: email con datos del lead llega al correo de CILC
 
-[Dev B] Rate limiting básico en formularios
+[Persona 2] Rate limiting básico en formularios
   Archivo: app/api/contact/route.ts, app/api/quote/route.ts
   Criterio: máximo 5 envíos por IP por hora
 
-[Dev B] Guardar leads en JSON local (sin base de datos)
+[Persona 2] Guardar leads en JSON local (sin base de datos)
   Archivo: src/lib/leads.ts (nuevo), data/leads.json
   Criterio: cada envío agrega una entrada al archivo JSON
 
@@ -171,23 +171,23 @@ SEMANA 5 · 29 jun–4 jul · Flujo de leads
 SEMANA 6 · 6–11 jul · WhatsApp y CTAs
 ===========================================================
 
-[Dev A] Widget WhatsApp flotante mejorado con animación y tooltip
+[Persona 1] Widget WhatsApp flotante mejorado con animación y tooltip
   Archivo: src/components/shared/WhatsAppButton.tsx
   Criterio: pulsación de atención cada 10 seg, tooltip con "¿Tienes dudas?"
 
-[Dev A] Sticky CTA bar en móvil en páginas de programa
+[Persona 1] Sticky CTA bar en móvil en páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: barra fija en fondo en móvil con WhatsApp y Cotizar
 
-[Dev A] Banner "Consulta gratuita" en homepage
+[Persona 1] Banner "Consulta gratuita" en homepage
   Archivo: app/page.tsx
   Criterio: visible arriba del fold en escritorio y móvil
 
-[Dev B] Mensajes pre-llenados por programa en links wa.me
+[Persona 2] Mensajes pre-llenados por programa en links wa.me
   Archivo: src/lib/data/programs.ts (campo whatsappMessage)
   Criterio: cada programa tiene su propio mensaje de bienvenida en WhatsApp
 
-[Dev B] UTM tracking en links de WhatsApp y formularios
+[Persona 2] UTM tracking en links de WhatsApp y formularios
   Archivo: src/lib/analytics.ts
   Criterio: eventos de conversión registrados en GA4
 
@@ -197,27 +197,27 @@ SEMANA 6 · 6–11 jul · WhatsApp y CTAs
 SEMANA 7 · 13–18 jul · Blog
 ===========================================================
 
-[Dev A] Layout del blog: listado y página de artículo
+[Persona 1] Layout del blog: listado y página de artículo
   Archivo: app/blog/page.tsx, app/blog/[slug]/page.tsx (nuevos)
   Criterio: diseño limpio, imagen destacada, tiempo de lectura
 
-[Dev A] Card de artículo con imagen, categoría y tiempo de lectura
+[Persona 1] Card de artículo con imagen, categoría y tiempo de lectura
   Archivo: src/components/blog/ArticleCard.tsx (nuevo)
   Criterio: reutilizable en blog y en sección de homepage
 
-[Dev A] Sección "Últimas noticias" en homepage (3 artículos recientes)
+[Persona 1] Sección "Últimas noticias" en homepage (3 artículos recientes)
   Archivo: app/page.tsx
   Criterio: actualiza automáticamente con el blog
 
-[Dev B] MDX setup + primeros 3 artículos
+[Persona 2] MDX setup + primeros 3 artículos
   Archivo: content/blog/*.mdx (nuevos), next.config
   Criterio: MDX funcional, artículos con frontmatter completo
 
-[Dev B] Categorías del blog
+[Persona 2] Categorías del blog
   Archivo: src/lib/data/categories.ts (nuevo)
   Criterio: Vida en el extranjero · Tips de viaje · Noticias CILC
 
-[Dev B] RSS feed básico
+[Persona 2] RSS feed básico
   Archivo: app/blog/feed.xml/route.ts (nuevo)
   Criterio: feed válido en /blog/feed.xml
 
@@ -227,23 +227,23 @@ SEMANA 7 · 13–18 jul · Blog
 SEMANA 8 · 20–25 jul · Búsqueda y filtros
 ===========================================================
 
-[Dev A] Barra de búsqueda global en header
+[Persona 1] Barra de búsqueda global en header
   Archivo: src/components/shared/Header.tsx, SearchBar.tsx (nuevo)
   Criterio: visible en todas las páginas, abre resultados al escribir
 
-[Dev A] Filtros en /destinos: región, idioma, duración
+[Persona 1] Filtros en /destinos: región, idioma, duración
   Archivo: app/destinos/page.tsx
   Criterio: filtros en panel lateral o chips, sin recargar página
 
-[Dev A] Página de resultados /buscar
+[Persona 1] Página de resultados /buscar
   Archivo: app/buscar/page.tsx (nuevo)
   Criterio: muestra programas, países y artículos que coincidan
 
-[Dev B] Lógica de búsqueda: programas, países, artículos
+[Persona 2] Lógica de búsqueda: programas, países, artículos
   Archivo: src/lib/search.ts (nuevo)
   Criterio: busca en todos los datos disponibles, devuelve resultados agrupados
 
-[Dev B] Hook useSearch con debounce
+[Persona 2] Hook useSearch con debounce
   Archivo: src/hooks/useSearch.ts (nuevo)
   Criterio: búsqueda se activa 300ms después del último teclazo
 
@@ -253,23 +253,23 @@ SEMANA 8 · 20–25 jul · Búsqueda y filtros
 SEMANA 9 · 27 jul–1 ago · Testimonios y social proof
 ===========================================================
 
-[Dev A] Carrusel de testimonios en homepage y páginas de programa
+[Persona 1] Carrusel de testimonios en homepage y páginas de programa
   Archivo: src/components/shared/TestimonialsCarousel.tsx (nuevo)
   Criterio: auto-play, navegación manual, responsive
 
-[Dev A] Galería de fotos de estudiantes con lightbox
+[Persona 1] Galería de fotos de estudiantes con lightbox
   Archivo: src/components/shared/PhotoGallery.tsx (nuevo)
   Criterio: grid de fotos, clic abre en pantalla completa
 
-[Dev A] Sección "Medios y certificaciones" con logos
+[Persona 1] Sección "Medios y certificaciones" con logos
   Archivo: app/page.tsx
   Criterio: logos de medios, asociaciones o certificaciones de CILC
 
-[Dev B] Datos de 10+ testimonios reales
+[Persona 2] Datos de 10+ testimonios reales
   Archivo: src/lib/data/testimonials.ts (nuevo)
   Criterio: nombre, foto, programa, país, texto del testimonio
 
-[Dev B] Widget de calificación (estrellas)
+[Persona 2] Widget de calificación (estrellas)
   Archivo: src/components/shared/Rating.tsx (nuevo)
   Criterio: promedio de calificaciones visible en homepage
 
@@ -279,27 +279,27 @@ SEMANA 9 · 27 jul–1 ago · Testimonios y social proof
 SEMANA 10 · 3–8 ago · SEO técnico
 ===========================================================
 
-[Dev A] Alt descriptivos en todas las imágenes
+[Persona 1] Alt descriptivos en todas las imágenes
   Archivo: todos los componentes con next/image
   Criterio: ninguna imagen tiene alt vacío o genérico
 
-[Dev A] Breadcrumbs con JSON-LD
+[Persona 1] Breadcrumbs con JSON-LD
   Archivo: src/components/shared/Breadcrumb.tsx
   Criterio: estructura BreadcrumbList válida en Google Rich Results
 
-[Dev A] Open Graph images personalizadas por página
+[Persona 1] Open Graph images personalizadas por página
   Archivo: app/opengraph-image.tsx (nuevo)
   Criterio: imagen de 1200x630 generada automáticamente por ruta
 
-[Dev B] Metadata dinámica en todas las rutas
+[Persona 2] Metadata dinámica en todas las rutas
   Archivo: app/**/page.tsx (generateMetadata)
   Criterio: title y description únicos por página
 
-[Dev B] robots.txt y sitemap.xml dinámico
+[Persona 2] robots.txt y sitemap.xml dinámico
   Archivo: app/robots.ts, app/sitemap.ts
   Criterio: sitemap incluye todas las rutas, robots permite indexación
 
-[Dev B] Verificar en Google Search Console
+[Persona 2] Verificar en Google Search Console
   Criterio: sitio verificado, sin errores de cobertura
 
 🟢 ENTREGABLE S10: SEO técnico completo — sitio indexable por Google
@@ -308,26 +308,26 @@ SEMANA 10 · 3–8 ago · SEO técnico
 SEMANA 11 · 10–15 ago · Performance
 ===========================================================
 
-[Dev A] Skeleton screens en contenido dinámico
+[Persona 1] Skeleton screens en contenido dinámico
   Archivo: src/components/shared/Skeleton.tsx (nuevo)
   Criterio: loading states visibles antes de cargar datos
 
-[Dev A] Lazy loading en secciones below the fold
+[Persona 1] Lazy loading en secciones below the fold
   Archivo: app/page.tsx y páginas de programa
   Criterio: secciones inferiores cargan con IntersectionObserver
 
-[Dev A] Fuentes optimizadas con next/font
+[Persona 1] Fuentes optimizadas con next/font
   Archivo: app/layout.tsx
   Criterio: sin parpadeo de fuentes (CLS = 0), carga desde Google Fonts
 
-[Dev B] Optimización de next/image en todas las imágenes
+[Persona 2] Optimización de next/image en todas las imágenes
   Archivo: todos los archivos con img o next/image
   Criterio: todas las imágenes usan next/image con sizes correcto
 
-[Dev B] Bundle analysis — eliminar dependencias innecesarias
+[Persona 2] Bundle analysis — eliminar dependencias innecesarias
   Criterio: bundle < 200KB gzipped para la ruta principal
 
-[Dev B] Core Web Vitals objetivo
+[Persona 2] Core Web Vitals objetivo
   Criterio: LCP < 2.5s, FID < 100ms, CLS < 0.1 en móvil
 
 🟢 ENTREGABLE S11: Lighthouse score 90+ en móvil
@@ -336,23 +336,23 @@ SEMANA 11 · 10–15 ago · Performance
 SEMANA 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 ===========================================================
 
-[Dev A] Galería de fotos de estudiantes con lightbox
+[Persona 1] Galería de fotos de estudiantes con lightbox
   Archivo: src/components/shared/PhotoGallery.tsx, app/galeria/page.tsx (nuevos)
   Criterio: grid de fotos, clic abre en pantalla completa, categorías por destino
 
-[Dev A] Página /sobre-nosotros con historia y equipo de CILC
+[Persona 1] Página /sobre-nosotros con historia y equipo de CILC
   Archivo: app/sobre-nosotros/page.tsx (nuevo)
   Criterio: historia desde 2001, misión, visión, equipo, socios y certificaciones
 
-[Dev A] Sección de socios y certificaciones en homepage
+[Persona 1] Sección de socios y certificaciones en homepage
   Archivo: app/page.tsx
   Criterio: logos de organizaciones con las que trabaja CILC
 
-[Dev B] Datos del equipo y historia de CILC
+[Persona 2] Datos del equipo y historia de CILC
   Archivo: src/lib/data/team.ts (nuevo)
   Criterio: nombre, cargo, foto y descripción de cada integrante del equipo
 
-[Dev B] Datos de socios, certificaciones y premios
+[Persona 2] Datos de socios, certificaciones y premios
   Archivo: src/lib/data/partners.ts (nuevo)
   Criterio: nombre, logo y descripción de cada socio o certificación
 
@@ -362,25 +362,25 @@ SEMANA 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 SEMANA 13 · 24–29 ago · Accesibilidad y pulido
 ===========================================================
 
-[Dev A] ARIA labels, focus visible, contraste de color
+[Persona 1] ARIA labels, focus visible, contraste de color
   Archivo: todos los componentes interactivos
   Criterio: sin errores en axe DevTools, contraste WCAG AA
 
-[Dev A] Animaciones con prefers-reduced-motion
+[Persona 1] Animaciones con prefers-reduced-motion
   Archivo: tailwind.config, componentes con animaciones
   Criterio: animaciones se deshabilitan si el usuario lo prefiere
 
-[Dev A] Revisión de tipografía y espaciado en todos los breakpoints
+[Persona 1] Revisión de tipografía y espaciado en todos los breakpoints
   Criterio: sin texto cortado o sobrelapado en móvil, tablet y escritorio
 
-[Dev B] Limpiar errores de consola y warnings de build
+[Persona 2] Limpiar errores de consola y warnings de build
   Criterio: 0 errores en consola en producción, build limpio
 
-[Dev B] Página 404 mejorada con links de navegación
+[Persona 2] Página 404 mejorada con links de navegación
   Archivo: app/not-found.tsx
   Criterio: diseño coherente con el sitio, sugiere páginas relevantes
 
-[Dev B] Error boundaries en secciones críticas
+[Persona 2] Error boundaries en secciones críticas
   Archivo: src/components/shared/ErrorBoundary.tsx (nuevo)
   Criterio: error en una sección no rompe toda la página
 
@@ -390,21 +390,21 @@ SEMANA 13 · 24–29 ago · Accesibilidad y pulido
 SEMANA 14 · 31 ago–5 sep · Testing y QA
 ===========================================================
 
-[Dev A] Tests E2E con Playwright: flujo homepage → programa → contacto
+[Persona 1] Tests E2E con Playwright: flujo homepage → programa → contacto
   Archivo: tests/e2e/*.spec.ts (nuevos)
   Criterio: flujo completo de usuario sin errores
 
-[Dev A] Pruebas en dispositivos reales (iOS Safari, Android Chrome)
+[Persona 1] Pruebas en dispositivos reales (iOS Safari, Android Chrome)
   Criterio: sin bugs visuales en los 5 dispositivos más comunes
 
-[Dev A] Checklist visual de QA por página (16 páginas)
+[Persona 1] Checklist visual de QA por página (16 páginas)
   Criterio: todas las páginas revisadas en móvil y escritorio
 
-[Dev B] Tests unitarios de búsqueda y validación de formularios
+[Persona 2] Tests unitarios de búsqueda y validación de formularios
   Archivo: src/lib/__tests__/*.test.ts (nuevos)
   Criterio: cobertura > 80% en funciones críticas
 
-[Dev B] Pruebas de carga en formularios y API routes
+[Persona 2] Pruebas de carga en formularios y API routes
   Criterio: formulario soporta 100 envíos simultáneos sin error
 
 🟢 ENTREGABLE S14: Suite de tests pasando, sitio probado en móvil y escritorio
@@ -413,23 +413,23 @@ SEMANA 14 · 31 ago–5 sep · Testing y QA
 SEMANA 15 · 7–11 sep · Deploy y lanzamiento
 ===========================================================
 
-[Dev A] Deploy en Vercel — configuración de dominio personalizado
+[Persona 1] Deploy en Vercel — configuración de dominio personalizado
   Criterio: sitio accesible en dominio de CILC con HTTPS
 
-[Dev A] Favicon, splash screen, meta theme-color
+[Persona 1] Favicon, splash screen, meta theme-color
   Archivo: app/icon.png, app/apple-icon.png, app/manifest.ts
   Criterio: ícono correcto en móvil, color de barra del navegador
 
-[Dev A] Revisión final visual en producción
+[Persona 1] Revisión final visual en producción
   Criterio: checklist de 20 puntos completado en el sitio en vivo
 
-[Dev B] Variables de entorno configuradas en Vercel
+[Persona 2] Variables de entorno configuradas en Vercel
   Criterio: RESEND_API_KEY y demás variables funcionando en producción
 
-[Dev B] Vercel Analytics y Speed Insights activados
+[Persona 2] Vercel Analytics y Speed Insights activados
   Criterio: datos de tráfico visibles desde el día 1
 
-[Dev B] DNS + SSL verificado
+[Persona 2] DNS + SSL verificado
   Criterio: sin advertencias de seguridad en ningún browser
 
 🟢 ENTREGABLE FINAL S15: Sitio CILC en producción bajo dominio propio
