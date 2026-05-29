@@ -49,9 +49,6 @@ El desarrollo está dividido en **15 semanas** con tareas diarias:
 # Instalar dependencias
 npm install
 
-# Configurar variables de entorno
-cp .env.example .env.local
-
 # Ejecutar en desarrollo
 npm run dev
 ```
