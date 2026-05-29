@@ -32,9 +32,12 @@ REGLA CLAVE — SECCIONES INDIVIDUALES OBLIGATORIAS:
   El resto de secciones puede investigarse/construirse juntos y luego
   cada quien lo integra y adapta a su propio documento.
 
-DIVISIÓN DE CAPÍTULOS:
-  Sánchez lidera → Capítulo 2 (Diseño/UI — su área de trabajo)
-  Flores lidera  → Capítulo 3 (Desarrollo/API — su área de trabajo)
+DIVISIÓN DE ROLES Y CAPÍTULOS:
+  Sánchez → Backend / Datos / API / Integraciones
+  Flores  → Frontend / UI / Diseño / Componentes visuales
+
+  Sánchez lidera → Capítulo 3 (Desarrollo/API — su área de trabajo)
+  Flores lidera  → Capítulo 2 (Diseño/UI — su área de trabajo)
   Ambos colaboran → Capítulo 1 (Análisis) y Capítulo 4 (Pruebas)
 
 FORMATO OBLIGATORIO (Arial):
@@ -48,19 +51,19 @@ SEMANA 1 · 4–8 may · Análisis — Revisión de estructura actual
 ===========================================================
 Actividad del programa: 1.1 Revisión de estructura y funcionamiento del sistema
 
-[🔵 Sánchez — TÉCNICO] Analizar estructura visual y de navegación del sitio actual
+[🔵 Sánchez — TÉCNICO] Analizar funcionalidad y tecnología del sitio actual
+  Criterio: documentar la tecnología usada, formularios y funcionalidades del sitio
+  Pruebas:
+    1. Identificar el CMS o tecnología (Place) con la que está hecho el sitio
+    2. Probar todos los formularios y links del sitio original
+    3. Documentar errores funcionales encontrados con capturas
+
+[🟡 Flores — TÉCNICO] Analizar estructura visual y de navegación del sitio actual
   Criterio: documentar componentes visuales, layout y navegación del sitio original
   Pruebas:
     1. Mapear todas las páginas del sitio actual con capturas
     2. Identificar problemas visuales y de navegación
     3. Registrar resultado de Lighthouse en el sitio original (línea base)
-
-[🟡 Flores — TÉCNICO] Analizar funcionalidad y tecnología del sitio actual
-  Criterio: documentar la tecnología usada, formularios y funcionalidades del sitio
-  Pruebas:
-    1. Identificar el CMS o tecnología (Place) con la que está hecho
-    2. Probar todos los formularios y links del sitio original
-    3. Documentar errores funcionales encontrados
 
 [🔴 Ambos — INDIVIDUAL] Portadilla
   Criterio: cada quien redacta la suya en su propio documento
@@ -83,7 +86,7 @@ Actividad del programa: 1.1 Revisión de estructura y funcionamiento del sistema
     1. Título: "CAPÍTULO 1 ANÁLISIS DE LA PÁGINA WEB ACTUAL" (14pt, negritas, mayúsculas)
     2. Incluir: descripción de CILC, área de Marketing, contexto del proyecto
     3. Incluir capturas del sitio original como figuras (Figura 1.1, 1.2...)
-    4. Describir la estructura de navegación del sitio actual
+    4. Describir la estructura de navegación y funcionalidad del sitio actual
 
 🟢 ENTREGA S1: Portadilla + Agradecimientos + Capítulo 1 iniciado (ambos)
 
@@ -92,17 +95,17 @@ SEMANA 2 · 11–15 may · Análisis — Identificación de problemas
 ===========================================================
 Actividad del programa: 1.2 Identificación de errores y áreas de mejora
 
-[🔵 Sánchez — TÉCNICO] Documentar problemas visuales y de UX detectados
+[🔵 Sánchez — TÉCNICO] Documentar problemas funcionales detectados
+  Criterio: lista de errores en formularios, links y funcionalidades con capturas
+  Pruebas:
+    1. Mínimo 3 problemas funcionales con captura como evidencia (Figura 1.X)
+    2. Clasificar: formularios, links rotos, rendimiento, SEO
+
+[🟡 Flores — TÉCNICO] Documentar problemas visuales y de UX detectados
   Criterio: lista de errores visuales, de layout y responsive con capturas
   Pruebas:
     1. Mínimo 3 problemas visuales con captura como evidencia (Figura 1.X)
     2. Clasificar: visual, navegación, responsive, accesibilidad
-
-[🟡 Flores — TÉCNICO] Documentar problemas funcionales detectados
-  Criterio: lista de errores en formularios, links y funcionalidades con capturas
-  Pruebas:
-    1. Mínimo 3 problemas funcionales con captura como evidencia
-    2. Clasificar: formularios, links rotos, rendimiento, SEO
 
 [🔴 Ambos — INDIVIDUAL] Introducción (borrador)
   Criterio: tiempo futuro · mínimo 2, máximo 5 cuartillas · redacción propia
@@ -129,8 +132,8 @@ Actividad del programa: 1.2 Identificación de errores y áreas de mejora
 [🟣 Ambos] Avanzar Capítulo 1 — documentar problemas detectados
   Criterio: cada quien integra los problemas de su área en su documento
   Pruebas:
-    1. Sánchez: integra problemas visuales/UX en su Cap. 1
-    2. Flores: integra problemas funcionales en su Cap. 1
+    1. Sánchez: integra problemas funcionales en su Cap. 1
+    2. Flores: integra problemas visuales/UX en su Cap. 1
     3. Cada problema tiene captura (Figura 1.X) y clasificación
     4. Tabla resumen: Problema | Tipo | Impacto
 
@@ -141,21 +144,21 @@ SEMANA 3 · 18–22 may · Diseño — Nuevas vistas y mejoras visuales
 ===========================================================
 Actividad del programa: 2.1 Diseño de nuevas vistas y mejoras visuales (inicio)
 
-[🔵 Sánchez — TÉCNICO] Diseñar wireframes y propuesta visual completa
-  Criterio: wireframes de las páginas principales en desktop y móvil
-  Pruebas:
-    1. Wireframes de mínimo 6 pantallas (home, programas, contacto, destinos, etc.)
-    2. Paleta de colores definida y justificada
-    3. Tipografía seleccionada
-
-[🟡 Flores — TÉCNICO] Definir arquitectura de datos y estructura de componentes
+[🔵 Sánchez — TÉCNICO] Definir arquitectura de datos y estructura del proyecto
   Criterio: estructura de datos del proyecto definida y documentada
   Pruebas:
     1. Estructura de archivos del proyecto documentada
     2. Tipos de datos definidos (interfaces TypeScript)
     3. Flujo de datos entre componentes mapeado
 
-[🔵 Sánchez — LIDERA] Iniciar Capítulo 2 — Diseño
+[🟡 Flores — TÉCNICO] Diseñar wireframes y propuesta visual completa
+  Criterio: wireframes de las páginas principales en desktop y móvil
+  Pruebas:
+    1. Wireframes de mínimo 6 pantallas (home, programas, contacto, destinos, etc.)
+    2. Paleta de colores definida y justificada
+    3. Tipografía seleccionada
+
+[🟡 Flores — LIDERA] Iniciar Capítulo 2 — Diseño
   Sección: 12. Desarrollo (Capítulo 2)
   Criterio: tiempo presente · mínimo 10 cuartillas al cerrar
   Pruebas:
@@ -163,8 +166,8 @@ Actividad del programa: 2.1 Diseño de nuevas vistas y mejoras visuales (inicio)
     2. Incluir wireframes como figuras (Figura 2.1, 2.2...)
     3. Justificar decisiones de diseño: paleta, tipografía, layout
 
-[🟡 Flores — COLABORA] Integrar arquitectura en su Capítulo 2
-  Criterio: Flores documenta la parte de estructura/datos en su versión del Cap. 2
+[🔵 Sánchez — COLABORA] Integrar arquitectura en su Capítulo 2
+  Criterio: Sánchez documenta la parte de estructura/datos en su versión del Cap. 2
   Pruebas:
     1. Incluir diagrama de arquitectura como figura
     2. Describir la estructura de componentes y datos
@@ -173,68 +176,74 @@ Actividad del programa: 2.1 Diseño de nuevas vistas y mejoras visuales (inicio)
 [🟣 Ambos] Iniciar Marco Teórico — parte 1
   Sección: 10. Marco Teórico · mín 5, máx 10 cuartillas
   División del contenido a investigar:
-    Sánchez investiga → HTML, CSS, Tailwind CSS, diseño responsive, UX/UI
-    Flores investiga  → JavaScript, TypeScript, Next.js, React, APIs
+    Sánchez investiga → JavaScript, TypeScript, Next.js, React, APIs, bases de datos
+    Flores investiga  → HTML, CSS, Tailwind CSS, diseño responsive, UX/UI, accesibilidad
   Pruebas:
     1. Cada definición con referencia bibliográfica en formato APA
     2. Términos en otro idioma en cursiva (*framework*, *layout*, etc.)
     3. Cada quien integra TODO el Marco Teórico en su documento
 
-🟢 ENTREGA S3: Capítulo 2 iniciado (Sánchez) + Marco Teórico iniciado (ambos)
+🟢 ENTREGA S3: Capítulo 2 iniciado (Flores) + Marco Teórico iniciado (ambos)
 
 ===========================================================
 SEMANA 4 · 25–29 may · Diseño — Continuar mejoras visuales
 ===========================================================
 Actividad del programa: 2.1 Diseño de nuevas vistas y mejoras visuales (término)
 
-[🔵 Sánchez — TÉCNICO] Implementar diseño base en código
+[🔵 Sánchez — TÉCNICO] Implementar estructura de datos y componentes base
+  Criterio: datos y tipos TypeScript funcionando sin errores
+  Pruebas:
+    1. Archivos de datos creados (programs.ts, countries.ts, etc.)
+    2. Tipos TypeScript sin errores (npx tsc --noEmit)
+    3. Datos renderizando correctamente en los componentes
+
+[🟡 Flores — TÉCNICO] Implementar diseño base en código
   Criterio: estructura visual del sitio funcionando localmente
   Pruebas:
     1. npm run dev sin errores
     2. Header, navegación y footer visibles en móvil y desktop
     3. Paleta de colores y tipografía aplicadas consistentemente
 
-[🟡 Flores — TÉCNICO] Implementar estructura de datos y componentes base
-  Criterio: datos y componentes base funcionando
-  Pruebas:
-    1. Archivos de datos creados (programs.ts, countries.ts, etc.)
-    2. Tipos TypeScript definidos sin errores (npx tsc --noEmit)
-    3. Componentes base renderizando datos correctamente
-
-[🔵 Sánchez] Avanzar Capítulo 2 — documentar implementación visual
+[🟡 Flores] Avanzar Capítulo 2 — documentar implementación visual
   Pruebas:
     1. Capturas antes/después del rediseño como figuras (Figura 2.X)
     2. Describir cada componente visual creado
     3. Justificar decisiones tomadas durante la implementación
+
+[🔵 Sánchez] Avanzar Capítulo 2 — documentar arquitectura implementada
+  Pruebas:
+    1. Documentar estructura de datos con fragmentos de código
+    2. Incluir diagrama de tipos/interfaces como figura
+    3. Describir decisiones técnicas de arquitectura
 
 [🟣 Ambos] Completar Marco Teórico
   Criterio: mínimo 5, máximo 10 cuartillas en total
   Pruebas:
     1. Sánchez comparte su investigación con Flores y viceversa
     2. Cada quien integra el contenido completo en su documento
-    3. Verificar que no excede 10 cuartillas
-    4. Todas las fuentes tienen referencia APA
+    3. No excede 10 cuartillas
+    4. Todas las fuentes con referencia APA
 
-🟢 ENTREGA S4: Marco Teórico completo (ambos) + Capítulo 2 avanzado (Sánchez)
+🟢 ENTREGA S4: Marco Teórico completo (ambos) + Capítulo 2 avanzado (Flores)
 
 ===========================================================
 SEMANA 5 · 1–5 jun · Diseño — Optimización de UX
 ===========================================================
 Actividad del programa: 2.2 Optimización de experiencia de usuario
 
-[🔵 Sánchez — TÉCNICO] Implementar mejoras de UX: navegación, accesibilidad, responsive
-  Pruebas:
-    1. Menú hamburguesa funcional en móvil
-    2. Axe DevTools: 0 errores críticos
-    3. Lighthouse mobile: mínimo 70
-
-[🟡 Flores — TÉCNICO] Implementar formulario de contacto funcional con validaciones
+[🔵 Sánchez — TÉCNICO] Implementar formulario de contacto funcional con validaciones
   Pruebas:
     1. Formulario envía datos al API route correctamente
     2. Validación con Zod funciona (errores visibles al usuario)
     3. Rate limiting básico implementado
 
-[🔵 Sánchez] Cerrar Capítulo 2 — Diseño
+[🟡 Flores — TÉCNICO] Implementar mejoras de UX: navegación, accesibilidad, responsive
+  Pruebas:
+    1. Menú hamburguesa funcional en móvil
+    2. Axe DevTools: 0 errores críticos
+    3. Lighthouse mobile: mínimo 70
+
+[🟡 Flores] Cerrar Capítulo 2 — Diseño
   Criterio: mínimo 10 cuartillas
   Pruebas:
     1. Contar cuartillas: mínimo 10
@@ -242,38 +251,40 @@ Actividad del programa: 2.2 Optimización de experiencia de usuario
     3. Todas las figuras referenciadas en el texto
     4. Capítulo tiene introducción, desarrollo y cierre
 
-[🟡 Flores] Iniciar Capítulo 2 en su versión — enfoque en arquitectura y datos
-  Criterio: Flores documenta el Cap. 2 desde su perspectiva técnica
+[🔵 Sánchez] Cerrar Capítulo 2 en su versión — enfoque en arquitectura y datos
+  Criterio: Sánchez documenta el Cap. 2 desde su perspectiva técnica
   Pruebas:
     1. Describir la arquitectura del proyecto (App Router, estructura de carpetas)
     2. Documentar decisiones técnicas: TypeScript, Tailwind, Next.js
     3. Incluir diagrama de estructura como figura
+    4. Mínimo 10 cuartillas
 
 [🔴 Ambos — INDIVIDUAL] Metodología (borrador)
-  Criterio: máximo 3 cuartillas · redacción propia · puede compartirse la investigación
+  Criterio: máximo 3 cuartillas · redacción propia
   Pruebas:
     1. Describir la metodología usada (Kanban, iterativa)
     2. Mencionar herramientas: GitHub, Trello, VS Code
     3. No exceder 3 cuartillas
 
-🟢 ENTREGA S5: Capítulo 2 cerrado (Sánchez, mín 10 cuartillas) + Metodología (ambos)
+🟢 ENTREGA S5: Capítulo 2 cerrado (Flores y Sánchez, mín 10 cuartillas) + Metodología
 
 ===========================================================
 SEMANA 6 · 8–12 jun · Desarrollo — Corrección de errores funcionales
 ===========================================================
 Actividad del programa: 3.1 Corrección de errores funcionales (inicio)
 
-[🔵 Sánchez — TÉCNICO] Corregir errores visuales y de UX identificados
-  Pruebas:
-    1. Cada error visual de semana 2 marcado como corregido
-    2. Capturas antes/después de cada corrección
-
-[🟡 Flores — TÉCNICO] Corregir errores funcionales identificados
+[🔵 Sánchez — TÉCNICO] Corregir errores funcionales identificados en semana 2
   Pruebas:
     1. Cada error funcional de semana 2 marcado como corregido
     2. Formularios y links funcionando correctamente
+    3. Capturas antes/después de cada corrección
 
-[🟡 Flores — LIDERA] Iniciar Capítulo 3 — Desarrollo e Implementación
+[🟡 Flores — TÉCNICO] Corregir errores visuales y de UX identificados en semana 2
+  Pruebas:
+    1. Cada error visual de semana 2 marcado como corregido
+    2. Capturas antes/después de cada corrección visual
+
+[🔵 Sánchez — LIDERA] Iniciar Capítulo 3 — Desarrollo e Implementación
   Sección: 12. Desarrollo (Capítulo 3)
   Criterio: tiempo presente · mínimo 10 cuartillas al cerrar
   Pruebas:
@@ -281,12 +292,12 @@ Actividad del programa: 3.1 Corrección de errores funcionales (inicio)
     2. Para cada corrección: descripción del problema, solución aplicada, resultado
     3. Capturas antes/después como figuras (Figura 3.1, 3.2...)
 
-[🔵 Sánchez — COLABORA] Integrar correcciones visuales en su Capítulo 3
-  Criterio: Sánchez documenta las correcciones de su área en su versión del Cap. 3
+[🟡 Flores — COLABORA] Integrar correcciones visuales en su Capítulo 3
+  Criterio: Flores documenta las correcciones de su área en su versión del Cap. 3
   Pruebas:
-    1. Documentar correcciones de componentes visuales
-    2. Incluir capturas antes/después como figuras
-    3. Describir el impacto de cada corrección
+    1. Documentar correcciones de componentes visuales con capturas
+    2. Describir el impacto de cada corrección
+    3. Figuras numeradas correctamente (3.X)
 
 [🟣 Ambos] Cerrar Capítulo 1 — Análisis
   Criterio: mínimo 10 cuartillas · cada quien en su propio documento
@@ -302,25 +313,25 @@ SEMANA 7 · 15–19 jun · Desarrollo — Continuar corrección de errores
 ===========================================================
 Actividad del programa: 3.1 Corrección de errores funcionales (continuación)
 
-[🔵 Sánchez — TÉCNICO] Implementar mejoras visuales: páginas de programas
+[🔵 Sánchez — TÉCNICO] Implementar integración de Resend y validaciones Zod
+  Pruebas:
+    1. Email llega al correo de CILC al enviar el formulario
+    2. Validaciones Zod con mensajes de error claros
+    3. API route respondiendo con status 200 en envío exitoso
+
+[🟡 Flores — TÉCNICO] Implementar mejoras visuales en páginas de programas
   Pruebas:
     1. Páginas de los 6 programas con diseño mejorado
     2. Imágenes con proporción 4:3 correcta
     3. Responsive en móvil sin textos cortados
 
-[🟡 Flores — TÉCNICO] Implementar integración de Resend y validaciones
+[🔵 Sánchez] Avanzar Capítulo 3 — documentar implementaciones técnicas
   Pruebas:
-    1. Email llega al correo de CILC al enviar el formulario
-    2. Validaciones Zod funcionando con mensajes de error claros
-    3. API route respondiendo correctamente
-
-[🟡 Flores] Avanzar Capítulo 3 — documentar implementaciones técnicas
-  Pruebas:
-    1. Documentar integración de Resend con fragmentos de código
+    1. Documentar integración de Resend con fragmentos de código clave
     2. Documentar validaciones con Zod
     3. Figuras numeradas correctamente (3.X)
 
-[🔵 Sánchez] Avanzar Capítulo 3 — documentar mejoras visuales
+[🟡 Flores] Avanzar Capítulo 3 — documentar mejoras visuales
   Pruebas:
     1. Documentar mejoras en páginas de programas con capturas
     2. Describir decisiones de diseño tomadas
@@ -333,29 +344,29 @@ SEMANA 8 · 22–26 jun · Desarrollo — Nuevas funcionalidades (inicio)
 ===========================================================
 Actividad del programa: 3.2 Implementación de nuevas funcionalidades (inicio)
 
-[🔵 Sánchez — TÉCNICO] Implementar botón WhatsApp y CTAs globales
+[🔵 Sánchez — TÉCNICO] Implementar lógica de búsqueda, datos enriquecidos y SEO técnico
+  Pruebas:
+    1. Búsqueda funcional con debounce (hook useSearch)
+    2. Datos de países completos (16 países con todos los campos)
+    3. Sitemap.xml y robots.txt configurados
+
+[🟡 Flores — TÉCNICO] Implementar botón WhatsApp, CTAs globales y sticky bar móvil
   Pruebas:
     1. Botón WhatsApp visible en todas las páginas
     2. Mensajes pre-llenados por programa funcionando
-    3. Sticky CTA bar en móvil en páginas de programa
+    3. Sticky CTA bar visible en móvil en páginas de programa
 
-[🟡 Flores — TÉCNICO] Implementar lógica de búsqueda y datos enriquecidos
-  Pruebas:
-    1. Búsqueda funcional de programas y destinos
-    2. Datos de países completos (16 países con todos los campos)
-    3. Hook useSearch con debounce funcionando
-
-[🟡 Flores] Avanzar Capítulo 3 — nuevas funcionalidades técnicas
+[🔵 Sánchez] Avanzar Capítulo 3 — nuevas funcionalidades técnicas
   Pruebas:
     1. Documentar lógica de búsqueda con fragmentos de código
     2. Documentar estructura de datos enriquecidos
-    3. Incluir diagrama de flujo de la búsqueda como figura
+    3. Incluir diagrama de flujo de la búsqueda como figura (Figura 3.X)
 
-[🔵 Sánchez] Avanzar Capítulo 3 — nuevas funcionalidades visuales
+[🟡 Flores] Avanzar Capítulo 3 — nuevas funcionalidades visuales
   Pruebas:
-    1. Documentar botón WhatsApp y mensajes por programa
-    2. Documentar sticky CTA bar con capturas en móvil
-    3. Figuras en móvil y desktop para comparar
+    1. Documentar botón WhatsApp y mensajes por programa con capturas
+    2. Documentar sticky CTA bar en móvil
+    3. Figuras en móvil y desktop para comparar (Figura 3.X)
 
 [🟣 Ambos] Iniciar Listado de Siglas y Glosario
   Pruebas:
@@ -370,28 +381,28 @@ SEMANA 9 · 29 jun–3 jul · Desarrollo — Nuevas funcionalidades (continuaci�
 ===========================================================
 Actividad del programa: 3.2 Implementación de nuevas funcionalidades (continuación)
 
-[🔵 Sánchez — TÉCNICO] Implementar blog: layout, cards y sección en homepage
+[🔵 Sánchez — TÉCNICO] Implementar MDX, categorías de blog y RSS feed
   Pruebas:
-    1. /blog muestra lista de artículos con imagen, título y fecha
-    2. Página de artículo renderiza MDX correctamente
-    3. Sección "Últimas noticias" visible en homepage
-
-[🟡 Flores — TÉCNICO] Implementar MDX, categorías y RSS
-  Pruebas:
-    1. 3 artículos en MDX publicados y accesibles
+    1. 3 artículos en MDX publicados y accesibles en /blog/[slug]
     2. Categorías del blog funcionando como filtros
     3. /blog/feed.xml válido en formato RSS
 
-[🔵 Sánchez] Avanzar Capítulo 3 — documentar blog
+[🟡 Flores — TÉCNICO] Implementar layout del blog y sección en homepage
   Pruebas:
-    1. Documentar layout del blog con capturas (Figura 3.X)
-    2. Describir decisiones de diseño del blog
+    1. /blog muestra lista de artículos con imagen, título y fecha
+    2. Página de artículo renderiza correctamente
+    3. Sección "Últimas noticias" visible en homepage
 
-[🟡 Flores] Avanzar Capítulo 3 — documentar MDX y datos del blog
+[🔵 Sánchez] Avanzar Capítulo 3 — documentar MDX y datos del blog
   Pruebas:
     1. Documentar configuración de MDX con fragmentos de código
     2. Documentar estructura de frontmatter de artículos
-    3. Mostrar captura del RSS feed válido como figura
+    3. Mostrar captura del RSS feed válido como figura (Figura 3.X)
+
+[🟡 Flores] Avanzar Capítulo 3 — documentar layout del blog
+  Pruebas:
+    1. Documentar layout del blog con capturas (Figura 3.X)
+    2. Describir decisiones de diseño del blog y homepage
 
 [🟣 Ambos] Completar Siglas y Glosario
   Pruebas:
@@ -406,36 +417,36 @@ SEMANA 10 · 6–10 jul · Desarrollo — Cierre de implementación
 ===========================================================
 Actividad del programa: 3.2 Implementación de nuevas funcionalidades (término)
 
-[🔵 Sánchez — TÉCNICO] Implementar SEO visual: alt en imágenes, breadcrumbs, OG images
+[🔵 Sánchez — TÉCNICO] Implementar metadata dinámica, sitemap dinámico y Google Search Console
+  Pruebas:
+    1. Metadata única en cada página (title + description)
+    2. /sitemap.xml válido con todas las rutas
+    3. Sitio verificado en Google Search Console
+
+[🟡 Flores — TÉCNICO] Implementar SEO visual: alt en imágenes, breadcrumbs, OG images
   Pruebas:
     1. Axe DevTools: 0 imágenes sin alt
     2. Breadcrumbs visibles en páginas internas
     3. Vista previa correcta al compartir en WhatsApp (OG image)
 
-[🟡 Flores — TÉCNICO] Implementar SEO técnico: sitemap, robots, metadata dinámica
-  Pruebas:
-    1. /sitemap.xml válido con todas las rutas
-    2. /robots.txt configurado correctamente
-    3. Metadata única en cada página (title + description)
-
-[🟡 Flores] Cerrar Capítulo 3 — Desarrollo
+[🔵 Sánchez] Cerrar Capítulo 3 — Desarrollo técnico/backend
   Criterio: mínimo 10 cuartillas
   Pruebas:
     1. Contar cuartillas: mínimo 10
-    2. Cubre corrección de errores + nuevas funcionalidades + SEO técnico
+    2. Cubre: corrección funcional + nuevas funcionalidades + SEO técnico + datos
     3. Todas las figuras referenciadas
 
-[🔵 Sánchez] Cerrar Capítulo 3 — Diseño/Visual
+[🟡 Flores] Cerrar Capítulo 3 — Desarrollo visual/frontend
   Criterio: mínimo 10 cuartillas
   Pruebas:
     1. Contar cuartillas: mínimo 10
-    2. Cubre correcciones visuales + nuevas funcionalidades + SEO visual
+    2. Cubre: correcciones visuales + nuevas funcionalidades + SEO visual
     3. Todas las figuras referenciadas
 
 [🟣 Ambos] Iniciar Referencias bibliográficas
   Criterio: formato APA, orden alfabético
   Pruebas:
-    1. Listar todas las fuentes usadas en Marco Teórico
+    1. Listar todas las fuentes del Marco Teórico
     2. Formato APA: Autor (año). Título. Editorial/URL
     3. Orden alfabético por apellido del autor
 
@@ -446,33 +457,32 @@ SEMANA 11 · 13–17 jul · Pruebas — Funcionales y corrección final
 ===========================================================
 Actividad del programa: 4.1 Pruebas funcionales y corrección final (inicio)
 
-[🔵 Sánchez — TÉCNICO] Ejecutar pruebas visuales y de UX
-  Pruebas:
-    1. Checklist visual en móvil (375px), tablet (768px) y desktop (1440px)
-    2. Sin textos cortados ni imágenes rotas en ninguna página
-    3. Navegación completa sin links rotos
-
-[🟡 Flores — TÉCNICO] Ejecutar pruebas funcionales y de rendimiento
+[🔵 Sánchez — TÉCNICO] Ejecutar pruebas funcionales y de rendimiento
   Pruebas:
     1. Formulario envía email correctamente desde producción
     2. Lighthouse mobile: mínimo 80 en las 4 categorías
     3. npm run build sin errores
 
-[🔵 Sánchez] Iniciar Capítulo 4 — Pruebas visuales y de UX
+[🟡 Flores — TÉCNICO] Ejecutar pruebas visuales y de UX
+  Pruebas:
+    1. Checklist visual en móvil (375px), tablet (768px) y desktop (1440px)
+    2. Sin textos cortados ni imágenes rotas en ninguna página
+    3. Navegación completa sin links rotos
+
+[🔵 Sánchez] Iniciar Capítulo 4 — Pruebas funcionales y de rendimiento
   Sección: 12. Desarrollo (Capítulo 4)
   Criterio: tiempo presente · mínimo 10 cuartillas al cerrar
   Pruebas:
     1. Título: "CAPÍTULO 4 PRUEBAS Y VALIDACIÓN DEL SISTEMA" (14pt, negritas, mayúsculas)
-    2. Documentar metodología de pruebas usada
-    3. Tabla de pruebas visuales: Prueba | Esperado | Obtenido | Estado
-    4. Capturas de resultados como figuras (Figura 4.X)
+    2. Tabla de pruebas funcionales: Prueba | Esperado | Obtenido | Estado
+    3. Captura de Lighthouse con score visible como figura (Figura 4.X)
 
-[🟡 Flores] Iniciar Capítulo 4 — Pruebas funcionales y de rendimiento
+[🟡 Flores] Iniciar Capítulo 4 — Pruebas visuales y de UX
   Criterio: tiempo presente · mínimo 10 cuartillas al cerrar
   Pruebas:
     1. Título del capítulo igual al de Sánchez
-    2. Tabla de pruebas funcionales: Prueba | Esperado | Obtenido | Estado
-    3. Captura de Lighthouse con score visible como figura (Figura 4.X)
+    2. Tabla de pruebas visuales: Prueba | Esperado | Obtenido | Estado
+    3. Capturas del sitio en móvil y desktop como figuras (Figura 4.X)
 
 🟢 ENTREGA S11: Capítulo 4 iniciado (ambos) + primeras pruebas documentadas
 
@@ -481,25 +491,25 @@ SEMANA 12 · 20–24 jul · Pruebas — Corrección final
 ===========================================================
 Actividad del programa: 4.1 Pruebas funcionales y corrección final (término)
 
-[🔵 Sánchez — TÉCNICO] Corregir bugs visuales encontrados en semana 11
-  Pruebas:
-    1. Repetir pruebas fallidas — deben pasar ahora
-    2. Capturas del resultado corregido como figuras
-
-[🟡 Flores — TÉCNICO] Corregir bugs funcionales encontrados en semana 11
+[🔵 Sánchez — TÉCNICO] Corregir bugs funcionales encontrados en semana 11
   Pruebas:
     1. Repetir pruebas funcionales fallidas — deben pasar ahora
-    2. Sin nuevos bugs introducidos al corregir los anteriores
+    2. Sin nuevos bugs introducidos al corregir
 
-[🔵 Sánchez] Avanzar Capítulo 4 — documentar correcciones visuales
+[🟡 Flores — TÉCNICO] Corregir bugs visuales encontrados en semana 11
   Pruebas:
-    1. Para cada bug visual: descripción, captura del error, corrección, captura del resultado
-    2. Actualizar tabla de pruebas con estado final
+    1. Repetir pruebas visuales fallidas — deben pasar ahora
+    2. Capturas del resultado corregido como figuras
 
-[🟡 Flores] Avanzar Capítulo 4 — documentar correcciones funcionales
+[🔵 Sánchez] Avanzar Capítulo 4 — documentar correcciones funcionales
   Pruebas:
-    1. Para cada bug funcional: descripción, corrección aplicada, resultado
+    1. Para cada bug: descripción, corrección aplicada, resultado con captura
     2. Actualizar tabla de pruebas funcionales con estado final
+
+[🟡 Flores] Avanzar Capítulo 4 — documentar correcciones visuales
+  Pruebas:
+    1. Para cada bug visual: captura del error, corrección, captura del resultado
+    2. Actualizar tabla de pruebas visuales con estado final
 
 🟢 ENTREGA S12: Correcciones aplicadas + Capítulo 4 avanzado (ambos)
 
@@ -508,31 +518,31 @@ SEMANA 13 · 27–31 jul · Pruebas — Optimización y validación final
 ===========================================================
 Actividad del programa: 4.2 Optimización y validación del sistema
 
-[🔵 Sánchez — TÉCNICO] Optimización final visual: accesibilidad y performance visual
-  Pruebas:
-    1. Axe DevTools: 0 errores críticos en todas las páginas
-    2. Lighthouse Accessibility: mínimo 90
-    3. Sin parpadeo de fuentes (CLS = 0)
-
-[🟡 Flores — TÉCNICO] Optimización final técnica: performance y SEO
+[🔵 Sánchez — TÉCNICO] Optimización técnica final: performance y SEO
   Pruebas:
     1. Lighthouse Performance: mínimo 85 en móvil
     2. Sitemap verificado en Google Search Console
     3. npm run build: 0 errores y 0 warnings críticos
 
-[🔵 Sánchez] Cerrar Capítulo 4 — validación visual y accesibilidad
+[🟡 Flores — TÉCNICO] Optimización visual final: accesibilidad y CLS
+  Pruebas:
+    1. Lighthouse Accessibility: mínimo 90
+    2. Axe DevTools: 0 errores críticos en todas las páginas
+    3. Sin parpadeo de fuentes (CLS = 0)
+
+[🔵 Sánchez] Cerrar Capítulo 4 — validación funcional y performance
+  Criterio: mínimo 10 cuartillas en total
+  Pruebas:
+    1. Contar cuartillas: mínimo 10
+    2. Incluir resultado final de PageSpeed Insights como figura
+    3. Comparativa de métricas antes vs. después del proyecto
+
+[🟡 Flores] Cerrar Capítulo 4 — validación visual y accesibilidad
   Criterio: mínimo 10 cuartillas en total
   Pruebas:
     1. Contar cuartillas: mínimo 10
     2. Incluir resultado final de Lighthouse Accessibility como figura
     3. Comparativa: métricas antes del proyecto vs. después
-
-[🟡 Flores] Cerrar Capítulo 4 — validación funcional y performance
-  Criterio: mínimo 10 cuartillas en total
-  Pruebas:
-    1. Contar cuartillas: mínimo 10
-    2. Incluir resultado final de PageSpeed Insights como figura
-    3. Comparativa de métricas antes vs. después
 
 [🔴 Ambos — INDIVIDUAL] Conclusiones
   Criterio: mínimo 1, máximo 2 cuartillas · redacción completamente propia
@@ -589,7 +599,7 @@ Actividad del programa: 5.1 Elaboración del reporte técnico
     3. Números alineados a la derecha
     4. Jerarquía visual correcta
 
-🟢 ENTREGA S14: Documento completo en borrador — enviar a asesores para revisión (ambos)
+🟢 ENTREGA S14: Documento completo en borrador — enviar a asesores (ambos)
 
 ===========================================================
 SEMANA 15 · 10–14 ago · Documentación — Revisión y entrega final
@@ -597,15 +607,14 @@ SEMANA 15 · 10–14 ago · Documentación — Revisión y entrega final
 Actividad del programa: 5.2 Revisión y entrega final del proyecto
 
 [🔴 Ambos — INDIVIDUAL] Aplicar correcciones del asesor académico
-  Criterio: cada quien atiende los comentarios recibidos en su propio documento
   Pruebas:
-    1. Revisar y aplicar cada corrección recibida
+    1. Revisar y aplicar cada corrección recibida en su propio documento
     2. Re-enviar al asesor académico para confirmación
 
 [🔴 Ambos — INDIVIDUAL] Aplicar correcciones de la asesora de la organización
   Pruebas:
     1. Información de CILC validada por Lic. Patricia Hernández Núñez
-    2. Información confidencial retirada si así lo indica la asesora
+    2. Información confidencial retirada si así lo indica
     3. Firma de la asesora en el Programa y Cronograma de cada quien
 
 [🔴 Ambos — INDIVIDUAL] Obtener autorización de docentes de inglés para el Abstract
@@ -629,7 +638,6 @@ Actividad del programa: 5.2 Revisión y entrega final del proyecto
 
 [🔴 Ambos — INDIVIDUAL] Tramitar Carta de Autorización de Digitalización
   Sección: 2. Carta de Autorización
-  Criterio: proceso en orden según la guía UTT
   Pruebas:
     1. Firma 1: asesora de la organización (Lic. Patricia Hernández Núñez)
     2. Firma 2: asesor académico (Mtro. Alfonso René Bendaña Castillo)
