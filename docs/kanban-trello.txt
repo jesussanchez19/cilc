@@ -1,0 +1,454 @@
+===========================================================
+CILC — TABLERO KANBAN TRELLO
+15 Semanas · 2 Developers · Inicio: 1 junio 2026
+===========================================================
+
+LISTAS SUGERIDAS EN TRELLO:
+  [ Por hacer ] [ En progreso ] [ En revisión ] [ Hecho ]
+
+ETIQUETAS SUGERIDAS:
+  🔵 Dev A  — Frontend / UI / Componentes
+  🟡 Dev B  — Datos / API / Integraciones
+  🟢 Entregable — Resultado visible al cliente al final de la semana
+
+REGLA DE RAMAS GIT:
+  Dev A crea: feature/A/nombre-tarea
+  Dev B crea: feature/B/nombre-tarea
+  Ambos hacen PR a: develop
+  develop → main solo los viernes (entrega semanal)
+
+===========================================================
+SEMANA 1 · 1–6 jun · Navegación y contacto funcional
+===========================================================
+
+[Dev A] Menú hamburguesa en móvil
+  Archivo: src/components/shared/Navigation.tsx
+  Criterio: menú se abre/cierra con animación, se cierra al navegar
+
+[Dev A] Botón WhatsApp flotante global
+  Archivo: src/components/shared/WhatsAppButton.tsx + app/layout.tsx
+  Criterio: visible en todas las páginas, abre wa.me en nueva pestaña
+
+[Dev A] Scroll suave al navegar
+  Archivo: app/layout.tsx, tailwind.config
+  Criterio: scroll suave al hacer clic en links de ancla
+
+[Dev B] Integrar Resend — formulario envía emails reales
+  Archivo: app/api/contact/route.ts (nuevo)
+  Criterio: email llega al correo de CILC al enviar el formulario
+
+[Dev B] Validación de formulario con Zod
+  Archivo: src/lib/validations/contact.ts (nuevo)
+  Criterio: campos requeridos validados, mensajes de error claros
+
+[Dev B] Configurar .env.example con API key de Resend
+  Archivo: .env.example (nuevo), README.md
+  Criterio: instrucciones claras para configurar el entorno
+
+🟢 ENTREGABLE S1: Navegación móvil funcional + formulario envía correo a CILC
+
+===========================================================
+SEMANA 2 · 8–13 jun · Homepage
+===========================================================
+
+[Dev A] Hero banner con imagen de fondo real + animación de entrada
+  Archivo: src/components/home/HeroBanner.tsx
+  Criterio: imagen real, texto animado al cargar, CTA visible en móvil
+
+[Dev A] Sección "¿Por qué CILC?" con iconos e imágenes reales
+  Archivo: app/page.tsx, src/components/home/
+  Criterio: 6 propuestas de valor con imagen o icono real
+
+[Dev A] Imágenes reales en cards de programas
+  Archivo: src/components/home/FeaturedPrograms.tsx + public/images/
+  Criterio: cada programa tiene su propia imagen 4:3
+
+[Dev B] Google Analytics 4 — eventos de clics en CTAs
+  Archivo: app/layout.tsx + src/lib/analytics.ts (nuevo)
+  Criterio: eventos registrados en GA4 al hacer clic en botones principales
+
+[Dev B] Open Graph meta tags dinámicos
+  Archivo: app/layout.tsx
+  Criterio: vista previa correcta al compartir el link en WhatsApp/redes
+
+[Dev B] Sitemap.xml básico
+  Archivo: app/sitemap.ts (nuevo)
+  Criterio: sitemap accesible en /sitemap.xml con todas las rutas
+
+🟢 ENTREGABLE S2: Homepage con imágenes reales + GA4 activo
+
+===========================================================
+SEMANA 3 · 15–20 jun · Páginas de programas
+===========================================================
+
+[Dev A] Rediseño de ProgramPage: hero con imagen real, galería de fotos
+  Archivo: src/components/shared/ProgramPage.tsx
+  Criterio: cada página tiene imagen hero y al menos 3 fotos de referencia
+
+[Dev A] Sección de testimonios placeholder en páginas de programa
+  Archivo: src/components/shared/ProgramPage.tsx
+  Criterio: 2-3 testimonios con foto, nombre y país visible
+
+[Dev A] Breadcrumbs en todas las páginas internas
+  Archivo: src/components/shared/Breadcrumb.tsx (nuevo)
+  Criterio: visible en páginas de programa, destinos y contacto
+
+[Dev B] FAQs por programa
+  Archivo: src/lib/data/faqs.ts (nuevo)
+  Criterio: mínimo 5 preguntas/respuestas por programa
+
+[Dev B] Precios orientativos por programa
+  Archivo: src/lib/data/programs.ts
+  Criterio: rango de precios visible en cada página de programa
+
+[Dev B] Schema.org structured data para programas
+  Archivo: src/components/shared/ProgramPage.tsx
+  Criterio: datos estructurados válidos en Google Rich Results Test
+
+🟢 ENTREGABLE S3: 6 páginas de programas completas con contenido e imágenes reales
+
+===========================================================
+SEMANA 4 · 22–27 jun · Sección de destinos
+===========================================================
+
+[Dev A] CountryGrid con filtros visuales (región, idioma)
+  Archivo: src/components/shared/CountryGrid.tsx, app/destinos/page.tsx
+  Criterio: filtros funcionan sin recargar la página
+
+[Dev A] Rediseño página de país: hero, stats, galería
+  Archivo: src/components/shared/CountryDetail.tsx
+  Criterio: imagen hero real, 4 stats destacadas, 3 fotos del país
+
+[Dev A] Página /destinos como entrada principal de la sección
+  Archivo: app/destinos/page.tsx (nuevo, reemplaza /countries)
+  Criterio: enlazada desde la navegación principal
+
+[Dev B] Datos de países: visa, clima, costo estimado
+  Archivo: src/lib/data/countries.ts
+  Criterio: todos los campos completados para los 16 países
+
+[Dev B] Datos de universidades enriquecidos
+  Archivo: src/lib/data/universities.ts
+  Criterio: requisitos de admisión y ranking actualizado
+
+[Dev B] Redirigir /countries → /destinos
+  Archivo: next.config (redirects)
+  Criterio: URL antigua redirige automáticamente a la nueva
+
+🟢 ENTREGABLE S4: Sección destinos navegable con datos y fotos reales
+
+===========================================================
+SEMANA 5 · 29 jun–4 jul · Flujo de leads
+===========================================================
+
+[Dev A] Modal de cotización rápida por programa
+  Archivo: src/components/shared/QuoteModal.tsx (nuevo)
+  Criterio: se abre desde cualquier página de programa, campos mínimos
+
+[Dev A] CTA "Obtén tu cotización" en todas las páginas de programa
+  Archivo: src/components/shared/ProgramPage.tsx
+  Criterio: botón visible en hero y al final de cada página
+
+[Dev A] Estados de carga y confirmación visual en formularios
+  Archivo: src/components/shared/ContactForm.tsx, QuoteModal.tsx
+  Criterio: spinner al enviar, mensaje de éxito o error visible
+
+[Dev B] API route POST /api/quote — guarda lead + envía email
+  Archivo: app/api/quote/route.ts (nuevo)
+  Criterio: email con datos del lead llega al correo de CILC
+
+[Dev B] Rate limiting básico en formularios
+  Archivo: app/api/contact/route.ts, app/api/quote/route.ts
+  Criterio: máximo 5 envíos por IP por hora
+
+[Dev B] Guardar leads en JSON local (sin base de datos)
+  Archivo: src/lib/leads.ts (nuevo), data/leads.json
+  Criterio: cada envío agrega una entrada al archivo JSON
+
+🟢 ENTREGABLE S5: Usuario solicita info → email llega a CILC en segundos
+
+===========================================================
+SEMANA 6 · 6–11 jul · WhatsApp y CTAs
+===========================================================
+
+[Dev A] Widget WhatsApp flotante mejorado con animación y tooltip
+  Archivo: src/components/shared/WhatsAppButton.tsx
+  Criterio: pulsación de atención cada 10 seg, tooltip con "¿Tienes dudas?"
+
+[Dev A] Sticky CTA bar en móvil en páginas de programa
+  Archivo: src/components/shared/ProgramPage.tsx
+  Criterio: barra fija en fondo en móvil con WhatsApp y Cotizar
+
+[Dev A] Banner "Consulta gratuita" en homepage
+  Archivo: app/page.tsx
+  Criterio: visible arriba del fold en escritorio y móvil
+
+[Dev B] Mensajes pre-llenados por programa en links wa.me
+  Archivo: src/lib/data/programs.ts (campo whatsappMessage)
+  Criterio: cada programa tiene su propio mensaje de bienvenida en WhatsApp
+
+[Dev B] UTM tracking en links de WhatsApp y formularios
+  Archivo: src/lib/analytics.ts
+  Criterio: eventos de conversión registrados en GA4
+
+🟢 ENTREGABLE S6: WhatsApp con mensajes específicos por programa + tracking activo
+
+===========================================================
+SEMANA 7 · 13–18 jul · Blog
+===========================================================
+
+[Dev A] Layout del blog: listado y página de artículo
+  Archivo: app/blog/page.tsx, app/blog/[slug]/page.tsx (nuevos)
+  Criterio: diseño limpio, imagen destacada, tiempo de lectura
+
+[Dev A] Card de artículo con imagen, categoría y tiempo de lectura
+  Archivo: src/components/blog/ArticleCard.tsx (nuevo)
+  Criterio: reutilizable en blog y en sección de homepage
+
+[Dev A] Sección "Últimas noticias" en homepage (3 artículos recientes)
+  Archivo: app/page.tsx
+  Criterio: actualiza automáticamente con el blog
+
+[Dev B] MDX setup + primeros 3 artículos
+  Archivo: content/blog/*.mdx (nuevos), next.config
+  Criterio: MDX funcional, artículos con frontmatter completo
+
+[Dev B] Categorías del blog
+  Archivo: src/lib/data/categories.ts (nuevo)
+  Criterio: Vida en el extranjero · Tips de viaje · Noticias CILC
+
+[Dev B] RSS feed básico
+  Archivo: app/blog/feed.xml/route.ts (nuevo)
+  Criterio: feed válido en /blog/feed.xml
+
+🟢 ENTREGABLE S7: Blog con 3 artículos publicados
+
+===========================================================
+SEMANA 8 · 20–25 jul · Búsqueda y filtros
+===========================================================
+
+[Dev A] Barra de búsqueda global en header
+  Archivo: src/components/shared/Header.tsx, SearchBar.tsx (nuevo)
+  Criterio: visible en todas las páginas, abre resultados al escribir
+
+[Dev A] Filtros en /destinos: región, idioma, duración
+  Archivo: app/destinos/page.tsx
+  Criterio: filtros en panel lateral o chips, sin recargar página
+
+[Dev A] Página de resultados /buscar
+  Archivo: app/buscar/page.tsx (nuevo)
+  Criterio: muestra programas, países y artículos que coincidan
+
+[Dev B] Lógica de búsqueda: programas, países, artículos
+  Archivo: src/lib/search.ts (nuevo)
+  Criterio: busca en todos los datos disponibles, devuelve resultados agrupados
+
+[Dev B] Hook useSearch con debounce
+  Archivo: src/hooks/useSearch.ts (nuevo)
+  Criterio: búsqueda se activa 300ms después del último teclazo
+
+🟢 ENTREGABLE S8: Búsqueda funcional de programas y destinos
+
+===========================================================
+SEMANA 9 · 27 jul–1 ago · Testimonios y social proof
+===========================================================
+
+[Dev A] Carrusel de testimonios en homepage y páginas de programa
+  Archivo: src/components/shared/TestimonialsCarousel.tsx (nuevo)
+  Criterio: auto-play, navegación manual, responsive
+
+[Dev A] Galería de fotos de estudiantes con lightbox
+  Archivo: src/components/shared/PhotoGallery.tsx (nuevo)
+  Criterio: grid de fotos, clic abre en pantalla completa
+
+[Dev A] Sección "Medios y certificaciones" con logos
+  Archivo: app/page.tsx
+  Criterio: logos de medios, asociaciones o certificaciones de CILC
+
+[Dev B] Datos de 10+ testimonios reales
+  Archivo: src/lib/data/testimonials.ts (nuevo)
+  Criterio: nombre, foto, programa, país, texto del testimonio
+
+[Dev B] Widget de calificación (estrellas)
+  Archivo: src/components/shared/Rating.tsx (nuevo)
+  Criterio: promedio de calificaciones visible en homepage
+
+🟢 ENTREGABLE S9: Sección de confianza completa con testimonios reales
+
+===========================================================
+SEMANA 10 · 3–8 ago · SEO técnico
+===========================================================
+
+[Dev A] Alt descriptivos en todas las imágenes
+  Archivo: todos los componentes con next/image
+  Criterio: ninguna imagen tiene alt vacío o genérico
+
+[Dev A] Breadcrumbs con JSON-LD
+  Archivo: src/components/shared/Breadcrumb.tsx
+  Criterio: estructura BreadcrumbList válida en Google Rich Results
+
+[Dev A] Open Graph images personalizadas por página
+  Archivo: app/opengraph-image.tsx (nuevo)
+  Criterio: imagen de 1200x630 generada automáticamente por ruta
+
+[Dev B] Metadata dinámica en todas las rutas
+  Archivo: app/**/page.tsx (generateMetadata)
+  Criterio: title y description únicos por página
+
+[Dev B] robots.txt y sitemap.xml dinámico
+  Archivo: app/robots.ts, app/sitemap.ts
+  Criterio: sitemap incluye todas las rutas, robots permite indexación
+
+[Dev B] Verificar en Google Search Console
+  Criterio: sitio verificado, sin errores de cobertura
+
+🟢 ENTREGABLE S10: SEO técnico completo — sitio indexable por Google
+
+===========================================================
+SEMANA 11 · 10–15 ago · Performance
+===========================================================
+
+[Dev A] Skeleton screens en contenido dinámico
+  Archivo: src/components/shared/Skeleton.tsx (nuevo)
+  Criterio: loading states visibles antes de cargar datos
+
+[Dev A] Lazy loading en secciones below the fold
+  Archivo: app/page.tsx y páginas de programa
+  Criterio: secciones inferiores cargan con IntersectionObserver
+
+[Dev A] Fuentes optimizadas con next/font
+  Archivo: app/layout.tsx
+  Criterio: sin parpadeo de fuentes (CLS = 0), carga desde Google Fonts
+
+[Dev B] Optimización de next/image en todas las imágenes
+  Archivo: todos los archivos con img o next/image
+  Criterio: todas las imágenes usan next/image con sizes correcto
+
+[Dev B] Bundle analysis — eliminar dependencias innecesarias
+  Criterio: bundle < 200KB gzipped para la ruta principal
+
+[Dev B] Core Web Vitals objetivo
+  Criterio: LCP < 2.5s, FID < 100ms, CLS < 0.1 en móvil
+
+🟢 ENTREGABLE S11: Lighthouse score 90+ en móvil
+
+===========================================================
+SEMANA 12 · 17–22 ago · Panel de leads
+===========================================================
+
+[Dev A] UI del panel /admin con lista de leads
+  Archivo: app/admin/page.tsx (nuevo)
+  Criterio: tabla con nombre, programa, fecha, teléfono, email
+
+[Dev A] Exportar leads a CSV desde el panel
+  Archivo: src/components/admin/ExportButton.tsx (nuevo)
+  Criterio: descarga archivo CSV con todos los leads
+
+[Dev B] API route GET /api/leads — lista de solicitudes
+  Archivo: app/api/leads/route.ts (nuevo)
+  Criterio: devuelve leads del JSON local, protegida con password
+
+[Dev B] Middleware de autenticación básica para /admin
+  Archivo: middleware.ts
+  Criterio: sin password correcto, redirige a login
+
+🟢 ENTREGABLE S12: CILC puede ver todos los leads capturados en el panel
+
+===========================================================
+SEMANA 13 · 24–29 ago · Accesibilidad y pulido
+===========================================================
+
+[Dev A] ARIA labels, focus visible, contraste de color
+  Archivo: todos los componentes interactivos
+  Criterio: sin errores en axe DevTools, contraste WCAG AA
+
+[Dev A] Animaciones con prefers-reduced-motion
+  Archivo: tailwind.config, componentes con animaciones
+  Criterio: animaciones se deshabilitan si el usuario lo prefiere
+
+[Dev A] Revisión de tipografía y espaciado en todos los breakpoints
+  Criterio: sin texto cortado o sobrelapado en móvil, tablet y escritorio
+
+[Dev B] Limpiar errores de consola y warnings de build
+  Criterio: 0 errores en consola en producción, build limpio
+
+[Dev B] Página 404 mejorada con links de navegación
+  Archivo: app/not-found.tsx
+  Criterio: diseño coherente con el sitio, sugiere páginas relevantes
+
+[Dev B] Error boundaries en secciones críticas
+  Archivo: src/components/shared/ErrorBoundary.tsx (nuevo)
+  Criterio: error en una sección no rompe toda la página
+
+🟢 ENTREGABLE S13: Sitio accesible y sin errores de consola
+
+===========================================================
+SEMANA 14 · 31 ago–5 sep · Testing y QA
+===========================================================
+
+[Dev A] Tests E2E con Playwright: flujo homepage → programa → contacto
+  Archivo: tests/e2e/*.spec.ts (nuevos)
+  Criterio: flujo completo de usuario sin errores
+
+[Dev A] Pruebas en dispositivos reales (iOS Safari, Android Chrome)
+  Criterio: sin bugs visuales en los 5 dispositivos más comunes
+
+[Dev A] Checklist visual de QA por página (16 páginas)
+  Criterio: todas las páginas revisadas en móvil y escritorio
+
+[Dev B] Tests unitarios de búsqueda y validación de formularios
+  Archivo: src/lib/__tests__/*.test.ts (nuevos)
+  Criterio: cobertura > 80% en funciones críticas
+
+[Dev B] Pruebas de carga en formularios y API routes
+  Criterio: formulario soporta 100 envíos simultáneos sin error
+
+🟢 ENTREGABLE S14: Suite de tests pasando, sitio probado en móvil y escritorio
+
+===========================================================
+SEMANA 15 · 7–11 sep · Deploy y lanzamiento
+===========================================================
+
+[Dev A] Deploy en Vercel — configuración de dominio personalizado
+  Criterio: sitio accesible en dominio de CILC con HTTPS
+
+[Dev A] Favicon, splash screen, meta theme-color
+  Archivo: app/icon.png, app/apple-icon.png, app/manifest.ts
+  Criterio: ícono correcto en móvil, color de barra del navegador
+
+[Dev A] Revisión final visual en producción
+  Criterio: checklist de 20 puntos completado en el sitio en vivo
+
+[Dev B] Variables de entorno configuradas en Vercel
+  Criterio: RESEND_API_KEY y demás variables funcionando en producción
+
+[Dev B] Vercel Analytics y Speed Insights activados
+  Criterio: datos de tráfico visibles desde el día 1
+
+[Dev B] DNS + SSL verificado
+  Criterio: sin advertencias de seguridad en ningún browser
+
+🟢 ENTREGABLE FINAL S15: Sitio CILC en producción bajo dominio propio
+
+===========================================================
+RESUMEN DE MÓDULOS (sin empalme de archivos entre devs)
+===========================================================
+
+DEV A — NUNCA toca:
+  src/lib/**, app/api/**, next.config.*, middleware.ts
+
+DEV B — NUNCA toca:
+  src/components/**, public/**, app/*/page.tsx (solo la UI)
+
+ARCHIVOS COMPARTIDOS (coordinar antes de editar):
+  app/layout.tsx
+  app/page.tsx
+  tailwind.config.*
+  package.json
+
+Regla de archivos compartidos: avisar en el canal del equipo antes de editarlos,
+nunca dos personas al mismo tiempo.
+
+===========================================================
+FIN DEL DOCUMENTO
+===========================================================
