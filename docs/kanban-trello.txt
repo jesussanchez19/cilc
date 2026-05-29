@@ -333,26 +333,30 @@ SEMANA 11 · 10–15 ago · Performance
 🟢 ENTREGABLE S11: Lighthouse score 90+ en móvil
 
 ===========================================================
-SEMANA 12 · 17–22 ago · Panel de leads
+SEMANA 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 ===========================================================
 
-[Dev A] UI del panel /admin con lista de leads
-  Archivo: app/admin/page.tsx (nuevo)
-  Criterio: tabla con nombre, programa, fecha, teléfono, email
+[Dev A] Galería de fotos de estudiantes con lightbox
+  Archivo: src/components/shared/PhotoGallery.tsx, app/galeria/page.tsx (nuevos)
+  Criterio: grid de fotos, clic abre en pantalla completa, categorías por destino
 
-[Dev A] Exportar leads a CSV desde el panel
-  Archivo: src/components/admin/ExportButton.tsx (nuevo)
-  Criterio: descarga archivo CSV con todos los leads
+[Dev A] Página /sobre-nosotros con historia y equipo de CILC
+  Archivo: app/sobre-nosotros/page.tsx (nuevo)
+  Criterio: historia desde 2001, misión, visión, equipo, socios y certificaciones
 
-[Dev B] API route GET /api/leads — lista de solicitudes
-  Archivo: app/api/leads/route.ts (nuevo)
-  Criterio: devuelve leads del JSON local, protegida con password
+[Dev A] Sección de socios y certificaciones en homepage
+  Archivo: app/page.tsx
+  Criterio: logos de organizaciones con las que trabaja CILC
 
-[Dev B] Middleware de autenticación básica para /admin
-  Archivo: middleware.ts
-  Criterio: sin password correcto, redirige a login
+[Dev B] Datos del equipo y historia de CILC
+  Archivo: src/lib/data/team.ts (nuevo)
+  Criterio: nombre, cargo, foto y descripción de cada integrante del equipo
 
-🟢 ENTREGABLE S12: CILC puede ver todos los leads capturados en el panel
+[Dev B] Datos de socios, certificaciones y premios
+  Archivo: src/lib/data/partners.ts (nuevo)
+  Criterio: nombre, logo y descripción de cada socio o certificación
+
+🟢 ENTREGABLE S12: Página "Sobre nosotros" completa + galería de estudiantes
 
 ===========================================================
 SEMANA 13 · 24–29 ago · Accesibilidad y pulido

@@ -173,15 +173,15 @@ main          ← producción (merge viernes de cada semana)
 
 ---
 
-### Semana 12 · 17–22 ago · Panel de leads
+### Semana 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 
 | Dev A | Dev B |
 |---|---|
-| UI de panel en `/admin` (protegido con password básico) | API route `GET /api/leads` — lista de solicitudes recibidas |
-| Vista de leads: nombre, programa, fecha, contacto | Autenticación básica con middleware de Next.js |
-| Export a CSV desde el panel | — |
+| Galería de fotos con lightbox + página `/galeria` | Datos del equipo CILC (`src/lib/data/team.ts`) |
+| Página `/sobre-nosotros` con historia, misión y equipo | Datos de socios y certificaciones (`src/lib/data/partners.ts`) |
+| Sección de socios y logos en homepage | — |
 
-**Entregable:** Panel donde CILC ve los leads capturados
+**Entregable:** Página "Sobre nosotros" completa + galería de estudiantes
 
 ---
 
