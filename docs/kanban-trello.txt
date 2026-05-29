@@ -12,8 +12,8 @@ ETIQUETAS SUGERIDAS:
   🟢 Entregable — Resultado visible al cliente al final de la semana
 
 REGLA DE RAMAS GIT:
-  Persona 1 crea: feature/P1/nombre-tarea
-  Persona 2 crea: feature/P2/nombre-tarea
+  Persona 1 crea: feature/Sanchez/nombre-tarea
+  Persona 2 crea: feature/Flores/nombre-tarea
   Ambos hacen PR a: develop
   develop → main solo los viernes (entrega semanal)
 
