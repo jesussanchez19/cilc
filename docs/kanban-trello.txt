@@ -17,6 +17,11 @@ REGLA DE RAMAS GIT:
   Ambos hacen PR a: develop
   develop → main solo los viernes (entrega semanal)
 
+MÓDULOS SIN EMPALME:
+  Persona 1 — NUNCA toca: src/lib/**, app/api/**, next.config.*, middleware.ts
+  Persona 2 — NUNCA toca: src/components/**, public/**, app/*/page.tsx
+  Archivos compartidos (avisar antes de editar): app/layout.tsx · app/page.tsx · tailwind.config.* · package.json
+
 ===========================================================
 SEMANA 1 · 1–6 jun · Navegación y contacto funcional
 ===========================================================
@@ -24,26 +29,57 @@ SEMANA 1 · 1–6 jun · Navegación y contacto funcional
 [Persona 1] Menú hamburguesa en móvil
   Archivo: src/components/shared/Navigation.tsx
   Criterio: menú se abre/cierra con animación, se cierra al navegar
+  Pruebas:
+    1. Reducir la ventana a menos de 768px — debe aparecer el ícono ☰ y desaparecer los links
+    2. Hacer clic en ☰ — el menú debe desplegarse con animación visible
+    3. Hacer clic en cualquier link del menú — el menú debe cerrarse y navegar a la página correcta
+    4. Hacer clic fuera del menú (overlay) — debe cerrarse sin navegar
+    5. En escritorio (+768px) — el ícono ☰ no debe ser visible
+    6. Con teclado: Tab hasta el botón y Enter — debe abrir/cerrar igual que con clic
 
 [Persona 1] Botón WhatsApp flotante global
   Archivo: src/components/shared/WhatsAppButton.tsx + app/layout.tsx
   Criterio: visible en todas las páginas, abre wa.me en nueva pestaña
+  Pruebas:
+    1. Navegar por todas las páginas — el botón debe estar visible en todas
+    2. Hacer clic — debe abrir https://wa.me/525518944494 en una pestaña nueva
+    3. En móvil — verificar que no tapa botones ni texto importante al hacer scroll
+    4. Verificar que el número de teléfono en el link es el correcto de CILC
 
 [Persona 1] Scroll suave al navegar
   Archivo: app/layout.tsx, tailwind.config
   Criterio: scroll suave al hacer clic en links de ancla
+  Pruebas:
+    1. Hacer clic en un link de ancla (ej. "Contáctanos") — el desplazamiento debe ser animado, no instantáneo
+    2. Verificar en Chrome, Firefox y Safari/Edge
+    3. Con prefers-reduced-motion activado en el sistema — el scroll debe ser instantáneo (sin animación)
 
 [Persona 2] Integrar Resend — formulario envía emails reales
   Archivo: app/api/contact/route.ts (nuevo)
   Criterio: email llega al correo de CILC al enviar el formulario
+  Pruebas:
+    1. Llenar todos los campos del formulario y enviar — el email debe llegar en menos de 60 segundos
+    2. Verificar que el email recibido contiene: nombre, email, teléfono y mensaje del usuario
+    3. Revisar que el remitente del email se identifica como el sitio CILC (no como correo personal)
+    4. Enviar formulario con datos reales desde un celular — debe funcionar igual
 
 [Persona 2] Validación de formulario con Zod
   Archivo: src/lib/validations/contact.ts (nuevo)
   Criterio: campos requeridos validados, mensajes de error claros
+  Pruebas:
+    1. Enviar formulario completamente vacío — todos los campos deben mostrar mensaje de error rojo
+    2. Escribir un email con formato incorrecto (ej. "juan@") — debe mostrar "Email inválido"
+    3. Dejar solo el nombre y enviar — los demás campos deben mostrar error individualmente
+    4. Llenar todos los campos correctamente — el formulario debe enviarse sin errores
+    5. Intentar inyección en el campo de mensaje (ej. <script>alert(1)</script>) — debe enviarse como texto plano, sin ejecutarse
 
 [Persona 2] Configurar .env.example con API key de Resend
   Archivo: .env.example (nuevo), README.md
   Criterio: instrucciones claras para configurar el entorno
+  Pruebas:
+    1. Borrar .env.local y seguir solo las instrucciones del README — debe funcionar sin pasos extras
+    2. Verificar que .env.local NO aparece en git status (debe estar en .gitignore)
+    3. Verificar que .env.example SÍ aparece en el repositorio de GitHub
 
 🟢 ENTREGABLE S1: Navegación móvil funcional + formulario envía correo a CILC
 
@@ -54,26 +90,55 @@ SEMANA 2 · 8–13 jun · Homepage
 [Persona 1] Hero banner con imagen de fondo real + animación de entrada
   Archivo: src/components/home/HeroBanner.tsx
   Criterio: imagen real, texto animado al cargar, CTA visible en móvil
+  Pruebas:
+    1. Cargar la homepage — la imagen de fondo debe aparecer sin parpadeo
+    2. El texto debe animarse en la primera carga (fade-in o slide)
+    3. En móvil — los botones CTA deben ser accesibles sin hacer scroll
+    4. Recargar la página — la animación debe repetirse
+    5. Con conexión lenta (DevTools → Network → Slow 3G) — la imagen debe mostrar un color de fondo mientras carga
 
 [Persona 1] Sección "¿Por qué CILC?" con iconos e imágenes reales
   Archivo: app/page.tsx, src/components/home/
   Criterio: 6 propuestas de valor con imagen o icono real
+  Pruebas:
+    1. Verificar que aparecen exactamente 6 tarjetas con icono, título y descripción
+    2. En móvil — las tarjetas deben verse en 1 columna sin texto cortado
+    3. En tablet — deben verse en 2 columnas
+    4. En escritorio — deben verse en 3 columnas
 
 [Persona 1] Imágenes reales en cards de programas
   Archivo: src/components/home/FeaturedPrograms.tsx + public/images/
   Criterio: cada programa tiene su propia imagen 4:3
+  Pruebas:
+    1. Verificar que cada una de las 6 cards tiene imagen diferente (no placeholder)
+    2. Las imágenes deben mantener proporción 4:3 sin deformarse
+    3. En DevTools → Network verificar que las imágenes pesan menos de 200KB cada una
+    4. Hacer clic en cada card — debe navegar a la página correcta del programa
 
 [Persona 2] Google Analytics 4 — eventos de clics en CTAs
   Archivo: app/layout.tsx + src/lib/analytics.ts (nuevo)
   Criterio: eventos registrados en GA4 al hacer clic en botones principales
+  Pruebas:
+    1. Abrir GA4 → DebugView — debe aparecer el sitio conectado en tiempo real
+    2. Hacer clic en "Contáctanos" — debe aparecer un evento en DebugView en menos de 10 segundos
+    3. Hacer clic en el botón de WhatsApp — debe registrarse un evento separado
+    4. Navegar entre páginas — cada cambio de página debe registrarse como pageview
 
 [Persona 2] Open Graph meta tags dinámicos
   Archivo: app/layout.tsx
   Criterio: vista previa correcta al compartir el link en WhatsApp/redes
+  Pruebas:
+    1. Pegar el link del sitio en WhatsApp — debe mostrar imagen, título y descripción correctos
+    2. Usar https://www.opengraph.xyz para verificar la vista previa
+    3. Compartir el link de una página de programa — la imagen y título deben ser específicos de ese programa
 
 [Persona 2] Sitemap.xml básico
   Archivo: app/sitemap.ts (nuevo)
   Criterio: sitemap accesible en /sitemap.xml con todas las rutas
+  Pruebas:
+    1. Abrir /sitemap.xml en el navegador — debe mostrarse un XML válido
+    2. Verificar que incluye las rutas: /, /idiomas, /au-pair, /anos-academicos, /estudia-trabaja, /formacion-corporativa, /idiomas-en-linea, /contacto
+    3. Pegar el sitemap en https://www.xml-sitemaps.com/validate-xml-sitemap.html — debe ser válido sin errores
 
 🟢 ENTREGABLE S2: Homepage con imágenes reales + GA4 activo
 
@@ -84,26 +149,54 @@ SEMANA 3 · 15–20 jun · Páginas de programas
 [Persona 1] Rediseño de ProgramPage: hero con imagen real, galería de fotos
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: cada página tiene imagen hero y al menos 3 fotos de referencia
+  Pruebas:
+    1. Visitar cada una de las 6 páginas de programa — cada una debe tener su propia imagen hero
+    2. La galería debe mostrar mínimo 3 fotos relacionadas con el programa
+    3. Las fotos deben poder verse en pantalla completa al hacer clic
+    4. En móvil — el hero debe verse completo sin texto cortado
 
-[Persona 1] Sección de testimonios placeholder en páginas de programa
+[Persona 1] Sección de testimonios en páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: 2-3 testimonios con foto, nombre y país visible
+  Pruebas:
+    1. Cada página de programa debe mostrar entre 2 y 3 testimonios
+    2. Cada testimonio debe tener: foto de persona, nombre, país/programa y texto
+    3. En móvil — los testimonios deben verse en 1 columna sin desbordamiento
+    4. Las fotos deben ser reales (no siluetas genéricas)
 
 [Persona 1] Breadcrumbs en todas las páginas internas
   Archivo: src/components/shared/Breadcrumb.tsx (nuevo)
   Criterio: visible en páginas de programa, destinos y contacto
+  Pruebas:
+    1. Visitar /idiomas — debe mostrar: Inicio > Idiomas
+    2. Visitar /destinos/canada — debe mostrar: Inicio > Destinos > Canadá
+    3. Hacer clic en "Inicio" del breadcrumb — debe navegar al home
+    4. En móvil — el breadcrumb debe verse completo sin cortarse
 
 [Persona 2] FAQs por programa
   Archivo: src/lib/data/faqs.ts (nuevo)
   Criterio: mínimo 5 preguntas/respuestas por programa
+  Pruebas:
+    1. Cada página de programa debe mostrar su sección de FAQs con mínimo 5 preguntas
+    2. Hacer clic en una pregunta — debe expandirse la respuesta (acordeón)
+    3. Hacer clic en una pregunta abierta — debe cerrarse
+    4. Abrir dos preguntas — verificar si el diseño permite varias abiertas o solo una
 
 [Persona 2] Precios orientativos por programa
   Archivo: src/lib/data/programs.ts
   Criterio: rango de precios visible en cada página de programa
+  Pruebas:
+    1. Cada página de programa debe mostrar un rango de precios (ej. "Desde $X,XXX USD")
+    2. Los precios deben tener una nota aclaratoria ("precios orientativos, sujetos a cambio")
+    3. Verificar que ningún precio está en blanco o en cero
 
 [Persona 2] Schema.org structured data para programas
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: datos estructurados válidos en Google Rich Results Test
+  Pruebas:
+    1. Copiar la URL de /idiomas en https://search.google.com/test/rich-results — debe ser válido sin errores
+    2. Verificar que el JSON-LD aparece en el HTML fuente de la página (Ctrl+U)
+    3. Hacer lo mismo con al menos 2 páginas de programa más
 
 🟢 ENTREGABLE S3: 6 páginas de programas completas con contenido e imágenes reales
 
@@ -114,26 +207,53 @@ SEMANA 4 · 22–27 jun · Sección de destinos
 [Persona 1] CountryGrid con filtros visuales (región, idioma)
   Archivo: src/components/shared/CountryGrid.tsx, app/destinos/page.tsx
   Criterio: filtros funcionan sin recargar la página
+  Pruebas:
+    1. Seleccionar filtro "Europa" — solo deben aparecer destinos europeos sin recargar
+    2. Seleccionar filtro "Inglés" — solo deben aparecer destinos donde se habla inglés
+    3. Combinar dos filtros — deben aplicarse ambos simultáneamente
+    4. Limpiar filtros — deben volver a aparecer todos los destinos
+    5. En móvil — los filtros deben ser accesibles (chips o dropdown)
 
 [Persona 1] Rediseño página de país: hero, stats, galería
   Archivo: src/components/shared/CountryDetail.tsx
   Criterio: imagen hero real, 4 stats destacadas, 3 fotos del país
+  Pruebas:
+    1. Visitar /destinos/canada — debe mostrar imagen hero de Canadá, no imagen genérica
+    2. Deben verse 4 estadísticas destacadas (ej. idioma, costo, clima, visas)
+    3. La galería debe mostrar 3 fotos distintas del país
+    4. Visitar cada uno de los 16 países — ninguno debe mostrar datos vacíos
 
-[Persona 1] Página /destinos como entrada principal de la sección
-  Archivo: app/destinos/page.tsx (nuevo, reemplaza /countries)
+[Persona 1] Página /destinos como entrada principal
+  Archivo: app/destinos/page.tsx (nuevo)
   Criterio: enlazada desde la navegación principal
+  Pruebas:
+    1. La navegación principal debe tener un link a /destinos
+    2. Abrir /countries — debe redirigir automáticamente a /destinos (301)
+    3. La URL /destinos debe funcionar directamente sin error 404
 
 [Persona 2] Datos de países: visa, clima, costo estimado
   Archivo: src/lib/data/countries.ts
   Criterio: todos los campos completados para los 16 países
+  Pruebas:
+    1. Revisar en el código que ningún país tiene campos vacíos o con "TODO"
+    2. Los costos deben estar en USD o MXN con la moneda especificada
+    3. La información de visa debe indicar si los mexicanos necesitan visa o no
 
 [Persona 2] Datos de universidades enriquecidos
   Archivo: src/lib/data/universities.ts
   Criterio: requisitos de admisión y ranking actualizado
+  Pruebas:
+    1. Cada universidad debe tener: nombre, país, requisitos básicos y especialidades
+    2. Verificar que no hay universidades duplicadas
+    3. Las universidades deben aparecer correctamente en la página del país correspondiente
 
 [Persona 2] Redirigir /countries → /destinos
   Archivo: next.config (redirects)
   Criterio: URL antigua redirige automáticamente a la nueva
+  Pruebas:
+    1. Escribir /countries en la barra de direcciones — debe redirigir a /destinos automáticamente
+    2. Escribir /countries/canada — debe redirigir a /destinos/canada
+    3. Verificar en DevTools → Network que la redirección es 301 (permanente)
 
 🟢 ENTREGABLE S4: Sección destinos navegable con datos y fotos reales
 
@@ -144,26 +264,54 @@ SEMANA 5 · 29 jun–4 jul · Flujo de leads
 [Persona 1] Modal de cotización rápida por programa
   Archivo: src/components/shared/QuoteModal.tsx (nuevo)
   Criterio: se abre desde cualquier página de programa, campos mínimos
+  Pruebas:
+    1. Hacer clic en "Obtén tu cotización" en /idiomas — debe abrirse el modal con el programa preseleccionado
+    2. El modal debe cerrarse con la X, con Escape y con clic fuera
+    3. En móvil — el modal debe verse completo sin necesidad de scroll horizontal
+    4. El programa debe aparecer preseleccionado según la página donde se abrió
 
 [Persona 1] CTA "Obtén tu cotización" en todas las páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: botón visible en hero y al final de cada página
+  Pruebas:
+    1. En /idiomas — debe haber un botón CTA en el hero (arriba) y otro al final de la página
+    2. Hacer scroll hasta el final — el botón inferior debe ser visible sin hacer scroll adicional
+    3. Verificar las 6 páginas de programa — todas deben tener los 2 botones
 
-[Persona 1] Estados de carga y confirmación visual en formularios
+[Persona 1] Estados de carga y confirmación visual
   Archivo: src/components/shared/ContactForm.tsx, QuoteModal.tsx
   Criterio: spinner al enviar, mensaje de éxito o error visible
+  Pruebas:
+    1. Enviar formulario — debe aparecer un spinner o indicador de carga inmediatamente
+    2. Envío exitoso — debe aparecer mensaje verde de confirmación ("¡Mensaje enviado!")
+    3. Simular error (desconectar internet) — debe aparecer mensaje rojo de error
+    4. Después del éxito — el formulario debe limpiarse o deshabilitarse para evitar doble envío
 
-[Persona 2] API route POST /api/quote — guarda lead + envía email
+[Persona 2] API route POST /api/quote
   Archivo: app/api/quote/route.ts (nuevo)
   Criterio: email con datos del lead llega al correo de CILC
+  Pruebas:
+    1. Llenar el modal y enviar — verificar que el email llega con: nombre, programa, email, teléfono
+    2. El asunto del email debe identificar claramente que es una solicitud de cotización
+    3. Enviar sin datos — la API debe responder con error 400, no con error 500
+    4. Abrir DevTools → Network al enviar — la petición debe responder con status 200
 
-[Persona 2] Rate limiting básico en formularios
+[Persona 2] Rate limiting básico
   Archivo: app/api/contact/route.ts, app/api/quote/route.ts
   Criterio: máximo 5 envíos por IP por hora
+  Pruebas:
+    1. Enviar el formulario 6 veces seguidas — el 6to intento debe mostrar un error de límite excedido
+    2. El mensaje de error debe ser claro: "Demasiados intentos, intenta en una hora"
+    3. Un IP diferente debe poder enviar normalmente después del bloqueo del primero
 
-[Persona 2] Guardar leads en JSON local (sin base de datos)
+[Persona 2] Guardar leads en JSON local
   Archivo: src/lib/leads.ts (nuevo), data/leads.json
   Criterio: cada envío agrega una entrada al archivo JSON
+  Pruebas:
+    1. Enviar un formulario — revisar que data/leads.json tiene una nueva entrada
+    2. La entrada debe incluir: fecha/hora, nombre, email, teléfono, programa y mensaje
+    3. Enviar 3 formularios seguidos — deben aparecer 3 entradas en el JSON
+    4. El JSON debe ser válido (no debe corromperse con entradas concurrentes)
 
 🟢 ENTREGABLE S5: Usuario solicita info → email llega a CILC en segundos
 
@@ -174,22 +322,47 @@ SEMANA 6 · 6–11 jul · WhatsApp y CTAs
 [Persona 1] Widget WhatsApp flotante mejorado con animación y tooltip
   Archivo: src/components/shared/WhatsAppButton.tsx
   Criterio: pulsación de atención cada 10 seg, tooltip con "¿Tienes dudas?"
+  Pruebas:
+    1. Esperar 10 segundos en cualquier página — el botón debe hacer una animación de pulso
+    2. Pasar el mouse encima del botón — debe aparecer el tooltip "¿Tienes dudas?"
+    3. En móvil — el tooltip debe aparecer al hacer tap (o simplemente abrirse WhatsApp)
+    4. La animación de pulso debe detenerse mientras el tooltip está visible
 
 [Persona 1] Sticky CTA bar en móvil en páginas de programa
   Archivo: src/components/shared/ProgramPage.tsx
   Criterio: barra fija en fondo en móvil con WhatsApp y Cotizar
+  Pruebas:
+    1. Abrir /idiomas en móvil — debe aparecer una barra fija en la parte inferior
+    2. La barra debe tener 2 botones: WhatsApp (verde) y Cotizar (azul)
+    3. Hacer scroll — la barra debe permanecer siempre visible
+    4. En escritorio — la barra NO debe aparecer
+    5. La barra no debe tapar el footer al llegar al final de la página
 
 [Persona 1] Banner "Consulta gratuita" en homepage
   Archivo: app/page.tsx
   Criterio: visible arriba del fold en escritorio y móvil
+  Pruebas:
+    1. Cargar la homepage — el banner debe ser visible sin hacer scroll
+    2. El banner debe tener un CTA claro (botón o link a contacto/WhatsApp)
+    3. En móvil — el banner debe verse completo sin texto cortado
 
-[Persona 2] Mensajes pre-llenados por programa en links wa.me
+[Persona 2] Mensajes pre-llenados por programa en wa.me links
   Archivo: src/lib/data/programs.ts (campo whatsappMessage)
   Criterio: cada programa tiene su propio mensaje de bienvenida en WhatsApp
+  Pruebas:
+    1. Hacer clic en WhatsApp desde /idiomas — el chat debe abrirse con mensaje sobre idiomas
+    2. Hacer clic desde /au-pair — el mensaje debe ser diferente, específico de Au Pair
+    3. Verificar los 6 programas — ninguno debe tener el mismo mensaje genérico
+    4. El mensaje debe incluir el nombre del programa y una pregunta de apertura natural
 
 [Persona 2] UTM tracking en links de WhatsApp y formularios
   Archivo: src/lib/analytics.ts
   Criterio: eventos de conversión registrados en GA4
+  Pruebas:
+    1. Hacer clic en el botón de WhatsApp — debe registrarse en GA4 como evento "whatsapp_click"
+    2. Enviar el formulario de contacto — debe registrarse como "form_submit"
+    3. Abrir GA4 → DebugView — verificar que los eventos aparecen con menos de 10 segundos de retraso
+    4. Los eventos deben incluir el parámetro "programa" para saber desde qué página se originó
 
 🟢 ENTREGABLE S6: WhatsApp con mensajes específicos por programa + tracking activo
 
@@ -200,26 +373,54 @@ SEMANA 7 · 13–18 jul · Blog
 [Persona 1] Layout del blog: listado y página de artículo
   Archivo: app/blog/page.tsx, app/blog/[slug]/page.tsx (nuevos)
   Criterio: diseño limpio, imagen destacada, tiempo de lectura
+  Pruebas:
+    1. Abrir /blog — debe mostrar la lista de artículos con imagen, título y fecha
+    2. Hacer clic en un artículo — debe navegar a /blog/nombre-del-articulo sin error 404
+    3. La página del artículo debe mostrar: título, imagen destacada, fecha, tiempo de lectura y contenido
+    4. En móvil — el texto del artículo debe tener tamaño legible (mínimo 16px)
+    5. El artículo debe tener links de navegación: "← Volver al blog"
 
-[Persona 1] Card de artículo con imagen, categoría y tiempo de lectura
+[Persona 1] Card de artículo reutilizable
   Archivo: src/components/blog/ArticleCard.tsx (nuevo)
   Criterio: reutilizable en blog y en sección de homepage
+  Pruebas:
+    1. La card debe verse igual en /blog y en la sección de homepage
+    2. Hacer clic en la card — debe navegar al artículo correcto
+    3. Sin imagen — debe mostrar una imagen placeholder, no romperse
+    4. Con título muy largo — el texto debe truncarse con "..." sin desbordar la card
 
-[Persona 1] Sección "Últimas noticias" en homepage (3 artículos recientes)
+[Persona 1] Sección "Últimas noticias" en homepage
   Archivo: app/page.tsx
   Criterio: actualiza automáticamente con el blog
+  Pruebas:
+    1. Publicar un nuevo artículo en el blog — debe aparecer automáticamente en homepage al recargar
+    2. La sección debe mostrar exactamente 3 artículos (los más recientes)
+    3. El link "Ver todos los artículos" debe llevar a /blog
 
 [Persona 2] MDX setup + primeros 3 artículos
   Archivo: content/blog/*.mdx (nuevos), next.config
   Criterio: MDX funcional, artículos con frontmatter completo
+  Pruebas:
+    1. Los 3 artículos deben renderizarse correctamente en /blog/[slug]
+    2. Cada artículo debe tener frontmatter con: title, date, image, category, excerpt
+    3. El contenido MDX puede usar headings, listas y links — verificar que se renderizan con estilos
+    4. Crear un 4to artículo nuevo siguiendo el mismo formato — debe publicarse sin tocar código
 
 [Persona 2] Categorías del blog
   Archivo: src/lib/data/categories.ts (nuevo)
   Criterio: Vida en el extranjero · Tips de viaje · Noticias CILC
+  Pruebas:
+    1. En /blog debe haber filtros o tabs de categorías
+    2. Hacer clic en "Tips de viaje" — solo deben mostrarse artículos de esa categoría
+    3. Cada artículo debe mostrar su categoría como badge o etiqueta
 
 [Persona 2] RSS feed básico
   Archivo: app/blog/feed.xml/route.ts (nuevo)
   Criterio: feed válido en /blog/feed.xml
+  Pruebas:
+    1. Abrir /blog/feed.xml — debe mostrar XML con los artículos del blog
+    2. Pegar la URL en https://validator.w3.org/feed — debe ser RSS válido sin errores
+    3. Agregar el feed a un lector RSS (ej. Feedly) — los artículos deben aparecer correctamente
 
 🟢 ENTREGABLE S7: Blog con 3 artículos publicados
 
@@ -230,22 +431,47 @@ SEMANA 8 · 20–25 jul · Búsqueda y filtros
 [Persona 1] Barra de búsqueda global en header
   Archivo: src/components/shared/Header.tsx, SearchBar.tsx (nuevo)
   Criterio: visible en todas las páginas, abre resultados al escribir
+  Pruebas:
+    1. La barra de búsqueda debe estar visible en el header en todas las páginas
+    2. Escribir "canadá" — deben aparecer resultados en menos de 500ms sin recargar la página
+    3. Escribir "idiomas" — debe mostrar la página de programa Idiomas en los resultados
+    4. Escribir algo sin resultados — debe mostrar "No se encontraron resultados"
+    5. Presionar Escape — la barra de resultados debe cerrarse
 
-[Persona 1] Filtros en /destinos: región, idioma, duración
+[Persona 1] Filtros en /destinos
   Archivo: app/destinos/page.tsx
   Criterio: filtros en panel lateral o chips, sin recargar página
+  Pruebas:
+    1. Aplicar filtro por región — los destinos deben filtrarse instantáneamente
+    2. Combinar filtro de región + idioma — deben aplicarse ambos
+    3. El número de resultados debe actualizarse con cada filtro (ej. "4 destinos encontrados")
+    4. En móvil — los filtros deben colapsar en un botón "Filtrar" que abre un panel
 
 [Persona 1] Página de resultados /buscar
   Archivo: app/buscar/page.tsx (nuevo)
   Criterio: muestra programas, países y artículos que coincidan
+  Pruebas:
+    1. Ir a /buscar?q=ingles — debe mostrar programas, destinos y artículos relacionados con inglés
+    2. Los resultados deben estar agrupados por tipo (Programas / Destinos / Artículos)
+    3. Hacer clic en un resultado — debe navegar a la página correcta
+    4. Búsqueda vacía (/buscar sin parámetros) — debe mostrar una invitación a escribir algo
 
 [Persona 2] Lógica de búsqueda: programas, países, artículos
   Archivo: src/lib/search.ts (nuevo)
   Criterio: busca en todos los datos disponibles, devuelve resultados agrupados
+  Pruebas:
+    1. Buscar "canada" — debe devolver el país Canadá y programas disponibles en Canadá
+    2. Buscar "au pair" — debe devolver el programa Au Pair y destinos relacionados
+    3. Buscar término sin tilde (ej. "idiomas") debe encontrar lo mismo que con tilde
+    4. La búsqueda debe ser insensible a mayúsculas/minúsculas
 
 [Persona 2] Hook useSearch con debounce
   Archivo: src/hooks/useSearch.ts (nuevo)
   Criterio: búsqueda se activa 300ms después del último teclazo
+  Pruebas:
+    1. Escribir rápido "c-a-n-a-d-á" — la búsqueda solo debe ejecutarse una vez al terminar de escribir
+    2. En DevTools → Network verificar que no se hacen múltiples peticiones al escribir rápido
+    3. Borrar todo el texto — los resultados deben desaparecer
 
 🟢 ENTREGABLE S8: Búsqueda funcional de programas y destinos
 
@@ -256,22 +482,48 @@ SEMANA 9 · 27 jul–1 ago · Testimonios y social proof
 [Persona 1] Carrusel de testimonios en homepage y páginas de programa
   Archivo: src/components/shared/TestimonialsCarousel.tsx (nuevo)
   Criterio: auto-play, navegación manual, responsive
+  Pruebas:
+    1. Cargar la homepage — el carrusel debe avanzar automáticamente cada 4-5 segundos
+    2. Hacer clic en los puntos o flechas — debe cambiar al testimonio correspondiente
+    3. Pasar el mouse encima del carrusel — el auto-play debe pausarse
+    4. En móvil — debe poderse deslizar con el dedo (swipe)
+    5. Con prefers-reduced-motion — el auto-play debe estar desactivado
 
 [Persona 1] Galería de fotos de estudiantes con lightbox
   Archivo: src/components/shared/PhotoGallery.tsx (nuevo)
   Criterio: grid de fotos, clic abre en pantalla completa
+  Pruebas:
+    1. Hacer clic en una foto — debe abrirse en pantalla completa (lightbox)
+    2. En el lightbox: flechas ← → deben navegar entre fotos
+    3. Presionar Escape — el lightbox debe cerrarse
+    4. En móvil — el lightbox debe verse sin barras de scroll
+    5. Las fotos del grid deben tener todas la misma altura (sin grids rotos)
 
 [Persona 1] Sección "Medios y certificaciones" con logos
   Archivo: app/page.tsx
   Criterio: logos de medios, asociaciones o certificaciones de CILC
+  Pruebas:
+    1. La sección debe mostrar al menos 3 logos de socios o certificaciones
+    2. Los logos deben tener el mismo tamaño y alineados correctamente
+    3. En móvil — los logos deben verse en 2 columnas sin pixelarse
+    4. Si un logo tiene link — debe abrir en nueva pestaña
 
 [Persona 2] Datos de 10+ testimonios reales
   Archivo: src/lib/data/testimonials.ts (nuevo)
   Criterio: nombre, foto, programa, país, texto del testimonio
+  Pruebas:
+    1. Verificar en el código que hay mínimo 10 testimonios
+    2. Cada testimonio debe tener todos los campos: nombre, foto, programa, país y texto
+    3. Los testimonios deben estar distribuidos entre los diferentes programas (no todos de idiomas)
+    4. Las fotos deben ser rutas válidas a imágenes existentes en /public
 
 [Persona 2] Widget de calificación (estrellas)
   Archivo: src/components/shared/Rating.tsx (nuevo)
   Criterio: promedio de calificaciones visible en homepage
+  Pruebas:
+    1. El widget debe mostrar el promedio de estrellas (ej. ★★★★☆ 4.2/5)
+    2. El número de reseñas debe aparecer junto al promedio (ej. "basado en 48 opiniones")
+    3. En móvil — el widget debe verse sin desbordamiento
 
 🟢 ENTREGABLE S9: Sección de confianza completa con testimonios reales
 
@@ -282,25 +534,51 @@ SEMANA 10 · 3–8 ago · SEO técnico
 [Persona 1] Alt descriptivos en todas las imágenes
   Archivo: todos los componentes con next/image
   Criterio: ninguna imagen tiene alt vacío o genérico
+  Pruebas:
+    1. Usar la extensión axe DevTools en Chrome — debe reportar 0 imágenes sin alt
+    2. Ver el HTML fuente (Ctrl+U) en homepage — buscar alt="" (debe ser 0 resultados)
+    3. El alt debe describir el contenido real (no "imagen1.jpg" ni "photo")
 
 [Persona 1] Breadcrumbs con JSON-LD
   Archivo: src/components/shared/Breadcrumb.tsx
   Criterio: estructura BreadcrumbList válida en Google Rich Results
+  Pruebas:
+    1. Ir a https://search.google.com/test/rich-results con la URL de /idiomas
+    2. Debe detectar el breadcrumb como dato estructurado válido
+    3. El breadcrumb visual en la página debe coincidir con el JSON-LD
 
 [Persona 1] Open Graph images personalizadas por página
   Archivo: app/opengraph-image.tsx (nuevo)
   Criterio: imagen de 1200x630 generada automáticamente por ruta
+  Pruebas:
+    1. Pegar la URL de /idiomas en https://www.opengraph.xyz
+    2. La imagen de preview debe ser específica de Idiomas (no la misma del home)
+    3. La imagen debe medir exactamente 1200x630px
+    4. Compartir el link por WhatsApp — la imagen debe aparecer correctamente
 
 [Persona 2] Metadata dinámica en todas las rutas
   Archivo: app/**/page.tsx (generateMetadata)
   Criterio: title y description únicos por página
+  Pruebas:
+    1. Abrir cada página y revisar el <title> en DevTools — debe ser único y descriptivo
+    2. La página de Idiomas debe tener title distinto a la de Au Pair
+    3. La description debe tener entre 120 y 160 caracteres
+    4. Verificar con https://metatags.io que title y description se muestran correctamente
 
 [Persona 2] robots.txt y sitemap.xml dinámico
   Archivo: app/robots.ts, app/sitemap.ts
   Criterio: sitemap incluye todas las rutas, robots permite indexación
+  Pruebas:
+    1. Abrir /robots.txt — debe permitir User-agent: * con Allow: /
+    2. Abrir /sitemap.xml — debe incluir todas las rutas del sitio
+    3. El sitemap debe tener fechas de actualización (<lastmod>) en todas las rutas
 
 [Persona 2] Verificar en Google Search Console
   Criterio: sitio verificado, sin errores de cobertura
+  Pruebas:
+    1. El sitio debe aparecer verificado en Search Console (sin ícono de error)
+    2. Enviar el sitemap en Search Console → Sitemaps — debe procesarse sin errores
+    3. Revisar el informe de Cobertura — no debe haber páginas con error 404 o 500
 
 🟢 ENTREGABLE S10: SEO técnico completo — sitio indexable por Google
 
@@ -311,24 +589,50 @@ SEMANA 11 · 10–15 ago · Performance
 [Persona 1] Skeleton screens en contenido dinámico
   Archivo: src/components/shared/Skeleton.tsx (nuevo)
   Criterio: loading states visibles antes de cargar datos
+  Pruebas:
+    1. Simular conexión lenta (DevTools → Network → Slow 3G)
+    2. Cargar una página — deben aparecer rectángulos grises animados antes del contenido real
+    3. El skeleton debe tener la misma forma que el contenido final (no bloques genéricos)
+    4. El skeleton no debe parpadear ni cambiar de tamaño cuando llega el contenido (sin CLS)
 
 [Persona 1] Lazy loading en secciones below the fold
   Archivo: app/page.tsx y páginas de programa
   Criterio: secciones inferiores cargan con IntersectionObserver
+  Pruebas:
+    1. Abrir la homepage con DevTools → Network — las secciones del fondo no deben cargarse hasta hacer scroll
+    2. Hacer scroll lentamente hacia abajo — las secciones deben aparecer con una animación suave al entrar al viewport
+    3. El contenido above the fold (lo visible sin scroll) debe cargar inmediatamente
 
 [Persona 1] Fuentes optimizadas con next/font
   Archivo: app/layout.tsx
   Criterio: sin parpadeo de fuentes (CLS = 0), carga desde Google Fonts
+  Pruebas:
+    1. Cargar la homepage — no debe haber un flash de fuente incorrecta antes de la fuente final
+    2. En DevTools → Performance grabar la carga — el CLS debe ser 0 o cercano a 0
+    3. Sin internet, la fuente de respaldo (fallback) debe verse aceptable
 
 [Persona 2] Optimización de next/image en todas las imágenes
   Archivo: todos los archivos con img o next/image
   Criterio: todas las imágenes usan next/image con sizes correcto
+  Pruebas:
+    1. Buscar en el código con grep '<img ' — no debe haber etiquetas img sin next/image
+    2. En DevTools → Network filtrar por "Img" — las imágenes deben servirse en formato WebP
+    3. Las imágenes deben tener el atributo sizes acorde a su tamaño real en pantalla
 
-[Persona 2] Bundle analysis — eliminar dependencias innecesarias
+[Persona 2] Bundle analysis
   Criterio: bundle < 200KB gzipped para la ruta principal
+  Pruebas:
+    1. Ejecutar npm run build — revisar el output por rutas grandes
+    2. En DevTools → Network recargar homepage — el JS total transferido debe ser < 200KB
+    3. Identificar y eliminar cualquier dependencia que pese más de 50KB y no sea esencial
 
-[Persona 2] Core Web Vitals objetivo
+[Persona 2] Core Web Vitals
   Criterio: LCP < 2.5s, FID < 100ms, CLS < 0.1 en móvil
+  Pruebas:
+    1. Correr Lighthouse en modo móvil en la homepage — el score debe ser 90+
+    2. LCP (Largest Contentful Paint) debe ser < 2.5 segundos
+    3. CLS (Cumulative Layout Shift) debe ser < 0.1
+    4. Usar https://pagespeed.web.dev con la URL del sitio en producción
 
 🟢 ENTREGABLE S11: Lighthouse score 90+ en móvil
 
@@ -339,22 +643,45 @@ SEMANA 12 · 17–22 ago · Galería multimedia y página Sobre nosotros
 [Persona 1] Galería de fotos de estudiantes con lightbox
   Archivo: src/components/shared/PhotoGallery.tsx, app/galeria/page.tsx (nuevos)
   Criterio: grid de fotos, clic abre en pantalla completa, categorías por destino
+  Pruebas:
+    1. Abrir /galeria — debe mostrar un grid de fotos de estudiantes
+    2. Hacer clic en una foto — debe abrirse en lightbox a pantalla completa
+    3. Filtrar por destino (ej. "Canadá") — solo deben mostrarse fotos de ese destino
+    4. Navegar entre fotos dentro del lightbox con flechas ← →
+    5. En móvil — el grid debe mostrarse en 2 columnas y el lightbox sin scroll horizontal
 
 [Persona 1] Página /sobre-nosotros con historia y equipo de CILC
   Archivo: app/sobre-nosotros/page.tsx (nuevo)
   Criterio: historia desde 2001, misión, visión, equipo, socios y certificaciones
+  Pruebas:
+    1. Abrir /sobre-nosotros — debe cargarse sin error 404
+    2. Debe mostrar: historia de CILC, misión/visión, equipo y certificaciones
+    3. En móvil — todas las secciones deben verse correctamente
+    4. El link a /sobre-nosotros debe estar en la navegación o el footer
 
-[Persona 1] Sección de socios y certificaciones en homepage
+[Persona 1] Sección de socios y logos en homepage
   Archivo: app/page.tsx
   Criterio: logos de organizaciones con las que trabaja CILC
+  Pruebas:
+    1. La sección debe mostrar al menos 3 logos de socios reales
+    2. Los logos deben tener el mismo tamaño y estar alineados
+    3. En móvil — los logos deben verse en 2 o 3 columnas sin pixelarse
 
 [Persona 2] Datos del equipo y historia de CILC
   Archivo: src/lib/data/team.ts (nuevo)
   Criterio: nombre, cargo, foto y descripción de cada integrante del equipo
+  Pruebas:
+    1. Verificar en el código que cada integrante tiene: nombre, cargo, foto y descripción
+    2. Las fotos deben existir en public/ y no devolver 404
+    3. La historia debe incluir el año de fundación (2001) y hitos relevantes
 
 [Persona 2] Datos de socios, certificaciones y premios
   Archivo: src/lib/data/partners.ts (nuevo)
   Criterio: nombre, logo y descripción de cada socio o certificación
+  Pruebas:
+    1. Verificar que cada socio tiene: nombre, logo y descripción breve
+    2. Los logos deben existir en public/ y no devolver 404
+    3. Verificar que no hay socios con datos incompletos o en blanco
 
 🟢 ENTREGABLE S12: Página "Sobre nosotros" completa + galería de estudiantes
 
@@ -365,24 +692,51 @@ SEMANA 13 · 24–29 ago · Accesibilidad y pulido
 [Persona 1] ARIA labels, focus visible, contraste de color
   Archivo: todos los componentes interactivos
   Criterio: sin errores en axe DevTools, contraste WCAG AA
+  Pruebas:
+    1. Instalar axe DevTools en Chrome y correrlo en todas las páginas — 0 errores críticos
+    2. Navegar toda la homepage solo con Tab y Enter — debe ser posible sin mouse
+    3. El foco de teclado debe ser visible (outline azul o similar) en todos los elementos
+    4. Verificar contraste en https://webaim.org/resources/contrastchecker — mínimo 4.5:1
 
 [Persona 1] Animaciones con prefers-reduced-motion
   Archivo: tailwind.config, componentes con animaciones
   Criterio: animaciones se deshabilitan si el usuario lo prefiere
+  Pruebas:
+    1. En macOS: Sistema → Accesibilidad → Pantalla → Reducir movimiento
+    2. Recargar el sitio — ninguna animación debe ejecutarse
+    3. El carrusel de testimonios debe estar detenido
+    4. El botón de WhatsApp no debe pulsar
 
 [Persona 1] Revisión de tipografía y espaciado en todos los breakpoints
   Criterio: sin texto cortado o sobrelapado en móvil, tablet y escritorio
+  Pruebas:
+    1. Revisar cada página en 375px (iPhone SE), 768px (iPad) y 1440px (desktop)
+    2. Ningún texto debe estar cortado, desbordado o superpuesto
+    3. Los márgenes entre secciones deben ser consistentes en todas las páginas
 
 [Persona 2] Limpiar errores de consola y warnings de build
   Criterio: 0 errores en consola en producción, build limpio
+  Pruebas:
+    1. Ejecutar npm run build — no deben aparecer errores ni warnings críticos
+    2. Abrir DevTools → Console en cada página — debe estar completamente vacía
+    3. Ejecutar npx tsc --noEmit — no debe haber errores de TypeScript
 
 [Persona 2] Página 404 mejorada con links de navegación
   Archivo: app/not-found.tsx
   Criterio: diseño coherente con el sitio, sugiere páginas relevantes
+  Pruebas:
+    1. Escribir una URL inexistente (ej. /pagina-que-no-existe) — debe mostrar la página 404 personalizada
+    2. La página 404 debe tener links a: Home, Programas y Contacto
+    3. El diseño debe ser coherente con el resto del sitio (header y footer visibles)
+    4. El título de la pestaña debe indicar "404 - Página no encontrada"
 
 [Persona 2] Error boundaries en secciones críticas
   Archivo: src/components/shared/ErrorBoundary.tsx (nuevo)
   Criterio: error en una sección no rompe toda la página
+  Pruebas:
+    1. Simular un error en el carrusel de testimonios — las demás secciones deben seguir funcionando
+    2. La sección con error debe mostrar un mensaje amigable ("Esta sección no está disponible")
+    3. El error no debe aparecer en la consola en producción (solo en desarrollo)
 
 🟢 ENTREGABLE S13: Sitio accesible y sin errores de consola
 
@@ -393,19 +747,46 @@ SEMANA 14 · 31 ago–5 sep · Testing y QA
 [Persona 1] Tests E2E con Playwright: flujo homepage → programa → contacto
   Archivo: tests/e2e/*.spec.ts (nuevos)
   Criterio: flujo completo de usuario sin errores
+  Pruebas:
+    1. Ejecutar npx playwright test — todos los tests deben pasar en verde
+    2. El test debe cubrir: cargar homepage → hacer clic en un programa → abrir modal de cotización → enviar formulario
+    3. El test debe ejecutarse en Chrome, Firefox y Safari (WebKit)
+    4. Si un test falla, el reporte debe mostrar capturas de pantalla del fallo
 
-[Persona 1] Pruebas en dispositivos reales (iOS Safari, Android Chrome)
+[Persona 1] Pruebas en dispositivos reales
   Criterio: sin bugs visuales en los 5 dispositivos más comunes
+  Pruebas:
+    1. Probar en iPhone (Safari) — navegación y formularios deben funcionar
+    2. Probar en Android (Chrome) — lo mismo
+    3. Probar en tablet (iPad o Android) — layout debe verse en versión tablet, no móvil ni escritorio
+    4. Probar en Windows con Edge — sin diferencias visuales relevantes
 
-[Persona 1] Checklist visual de QA por página (16 páginas)
+[Persona 1] Checklist visual de QA por página
   Criterio: todas las páginas revisadas en móvil y escritorio
+  Pruebas:
+    Revisar en cada página:
+    ☐ No hay texto cortado o desbordado
+    ☐ Todas las imágenes cargan (no hay ícono de imagen rota)
+    ☐ Todos los links funcionan (no hay 404)
+    ☐ El formulario de contacto funciona
+    ☐ El botón de WhatsApp funciona
+    ☐ En móvil el menú hamburguesa funciona
 
-[Persona 2] Tests unitarios de búsqueda y validación de formularios
+[Persona 2] Tests unitarios de búsqueda y validación
   Archivo: src/lib/__tests__/*.test.ts (nuevos)
   Criterio: cobertura > 80% en funciones críticas
+  Pruebas:
+    1. Ejecutar npm test — todos los tests deben pasar
+    2. El reporte de cobertura debe mostrar > 80% en src/lib/search.ts y src/lib/validations/
+    3. Test específico: buscar "canada" debe devolver al menos 1 resultado
+    4. Test específico: email vacío debe fallar la validación de Zod
 
 [Persona 2] Pruebas de carga en formularios y API routes
   Criterio: formulario soporta 100 envíos simultáneos sin error
+  Pruebas:
+    1. Usar una herramienta como Artillery o k6 para simular 100 peticiones simultáneas a /api/contact
+    2. Ninguna petición debe devolver error 500
+    3. El rate limiting debe bloquear IPs que superen el límite, sin afectar a otros IPs
 
 🟢 ENTREGABLE S14: Suite de tests pasando, sitio probado en móvil y escritorio
 
@@ -413,45 +794,59 @@ SEMANA 14 · 31 ago–5 sep · Testing y QA
 SEMANA 15 · 7–11 sep · Deploy y lanzamiento
 ===========================================================
 
-[Persona 1] Deploy en Vercel — configuración de dominio personalizado
+[Persona 1] Deploy en Vercel con dominio personalizado
   Criterio: sitio accesible en dominio de CILC con HTTPS
+  Pruebas:
+    1. Abrir el dominio final en Chrome — debe cargar sin advertencia de seguridad (candado verde)
+    2. Probar en modo incógnito — debe cargar igual que en sesión normal
+    3. Verificar que el dominio con www y sin www ambos funcionan (o redirigen al correcto)
+    4. Forzar HTTP (http://dominio) — debe redirigir automáticamente a HTTPS
 
 [Persona 1] Favicon, splash screen, meta theme-color
   Archivo: app/icon.png, app/apple-icon.png, app/manifest.ts
   Criterio: ícono correcto en móvil, color de barra del navegador
+  Pruebas:
+    1. Agregar el sitio al home screen de un iPhone — debe mostrar el ícono de CILC (no el genérico)
+    2. Hacer lo mismo en Android — el ícono y el splash screen deben verse correctamente
+    3. En Chrome móvil — la barra del navegador debe tener el color azul de CILC
+    4. La pestaña del navegador en escritorio debe mostrar el favicon de CILC
 
 [Persona 1] Revisión final visual en producción
   Criterio: checklist de 20 puntos completado en el sitio en vivo
+  Pruebas:
+    ☐ Homepage carga en menos de 3 segundos en móvil
+    ☐ El logo de CILC se ve correctamente
+    ☐ La navegación funciona en móvil y escritorio
+    ☐ Todas las páginas de programa cargan sin error
+    ☐ El formulario de contacto envía email a CILC
+    ☐ El botón de WhatsApp funciona con el número correcto
+    ☐ Las imágenes cargan sin error en todas las páginas
+    ☐ No hay links rotos (404)
+    ☐ El sitio se ve bien en iPhone SE (375px)
+    ☐ El sitio se ve bien en iPad (768px)
 
-[Persona 2] Variables de entorno configuradas en Vercel
+[Persona 2] Variables de entorno en Vercel
   Criterio: RESEND_API_KEY y demás variables funcionando en producción
+  Pruebas:
+    1. Enviar el formulario de contacto desde el dominio de producción — el email debe llegar
+    2. En Vercel → Settings → Environment Variables — verificar que todas las variables están configuradas
+    3. Hacer un redeploy después de agregar variables — el sitio debe seguir funcionando
 
 [Persona 2] Vercel Analytics y Speed Insights activados
   Criterio: datos de tráfico visibles desde el día 1
+  Pruebas:
+    1. Visitar el sitio en producción 5 veces — deben aparecer visitas en Vercel Analytics
+    2. Speed Insights debe mostrar los Core Web Vitals reales del sitio en producción
+    3. Los datos deben aparecer en el dashboard de Vercel en menos de 24 horas
 
 [Persona 2] DNS + SSL verificado
   Criterio: sin advertencias de seguridad en ningún browser
+  Pruebas:
+    1. Abrir el sitio en Chrome, Firefox, Safari y Edge — ninguno debe mostrar advertencia de seguridad
+    2. Usar https://www.ssllabs.com/ssltest — el certificado debe obtener calificación A o A+
+    3. El certificado SSL no debe expirar en los próximos 60 días
 
 🟢 ENTREGABLE FINAL S15: Sitio CILC en producción bajo dominio propio
-
-===========================================================
-RESUMEN DE MÓDULOS (sin empalme de archivos entre devs)
-===========================================================
-
-DEV A — NUNCA toca:
-  src/lib/**, app/api/**, next.config.*, middleware.ts
-
-DEV B — NUNCA toca:
-  src/components/**, public/**, app/*/page.tsx (solo la UI)
-
-ARCHIVOS COMPARTIDOS (coordinar antes de editar):
-  app/layout.tsx
-  app/page.tsx
-  tailwind.config.*
-  package.json
-
-Regla de archivos compartidos: avisar en el canal del equipo antes de editarlos,
-nunca dos personas al mismo tiempo.
 
 ===========================================================
 FIN DEL DOCUMENTO
