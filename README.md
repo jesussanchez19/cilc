@@ -21,66 +21,16 @@ Crear el sitio web de CILC que permita a los usuarios:
 - **Deploy**: Vercel
 - **Analytics**: Google Analytics 4
 
-## 📅 Estructura: 15 Semanas Modulares
-
-El desarrollo está dividido en **15 semanas** con tareas diarias:
-
-| Semana | Módulo | Enfoque |
-|--------|--------|---------|
-| 1-2 | Infraestructura Base | Setup, componentes, navegación |
-| 3-4 | Contenido Principal | Países, universidades, programas |
-| 5-6 | Búsqueda y Comparación | Filtros, búsqueda, comparador |
-| 7-8 | Autenticación y Perfil | Login, registro, dashboard |
-| 9-10 | Blog y Recursos | Blog con MDX, descargas |
-| 11-12 | Contacto e Integraciones | Email, Zapier, webhooks |
-| 13-14 | SEO y Analytics | Optimización, informes |
-| 15 | Testing y Deploy | QA, bugfixes, producción |
-
-## 🚀 Primeros Pasos
-
-### Requisitos
-- Node.js 18+
-- npm o yarn
-- Cuenta Vercel (para deploy)
-
-### Instalación
+## 🚀 Instalación
 
 ```bash
-# Instalar dependencias
 npm install
-
-# Ejecutar en desarrollo
 npm run dev
 ```
 
 El sitio estará disponible en `http://localhost:3000`
 
-## 📚 Documentación del Plan
-
-Para ver el plan detallado de cada semana, consulta la carpeta `docs/plan-semanas/`:
-
-- **Semana 1-2**: Infraestructura Base
-- **Semana 3-4**: Contenido Principal (Países, Universidades, Programas)
-- **Semana 5-6**: Búsqueda y Comparación
-- **Semana 7-8**: Autenticación y Dashboard
-- **Semana 9-10**: Blog y Recursos
-- **Semana 11-12**: Email e Integraciones
-- **Semana 13-14**: SEO y Analytics
-- **Semana 15**: Testing y Deploy
-
-## 🔑 Convenciones del Proyecto
-
-### Git
-- **Commits diarios**: `[S#D#] Descripción` (S=semana, D=día)
-- Ejemplo: `[S1D2] Crear componente Header`
-
-### Código
-- **TypeScript**: Obligatorio en todos los archivos
-- **Estilos**: Solo Tailwind CSS
-- **Componentes**: En `src/components/`
-- **Datos**: En `src/lib/data/`
-
-## 📊 Comandos Disponibles
+## 📊 Comandos
 
 ```bash
 npm run dev      # Desarrollo
@@ -91,5 +41,123 @@ npm run lint     # Linting
 
 ---
 
-**Inicio del Proyecto**: 28 de Mayo de 2026
-**Semana Actual**: 1 | **Día Actual**: 1
+## 🌿 Flujo de trabajo Git
+
+### Ramas principales
+
+| Rama | Propósito |
+|------|-----------|
+| `main` | Producción — solo recibe merges los viernes |
+| `develop` | Integración — todos los PR van aquí |
+
+### Ramas de trabajo
+
+Cada tarea tiene su propia rama. Nunca trabajar directo en `develop` ni en `main`.
+
+```bash
+# Antes de empezar una tarea, partir siempre desde develop
+git checkout develop
+git pull origin develop
+
+# Crear la rama de la tarea
+git checkout -b feature/Sanchez/nombre-tarea   # Persona 1
+git checkout -b feature/Flores/nombre-tarea    # Persona 2
+```
+
+### Ciclo completo de una tarea
+
+```bash
+# 1. Crear la rama desde develop (ver arriba)
+
+# 2. Trabajar y hacer commits
+git add src/components/shared/Navigation.tsx
+git commit -m "[S1] Menú hamburguesa en móvil"
+
+# 3. Subir la rama a GitHub
+git push origin feature/Sanchez/menu-hamburguesa
+
+# 4. Abrir un Pull Request hacia develop en GitHub
+# 5. El otro developer revisa y aprueba el PR
+# 6. Se mergea a develop y se elimina la rama de la tarea
+```
+
+### Entrega semanal (viernes)
+
+```bash
+# Solo cuando todas las tareas de la semana están en develop
+git checkout main
+git merge develop
+git push origin main
+```
+
+---
+
+## 👥 División de módulos
+
+Para evitar conflictos, cada persona tiene jurisdicción exclusiva sobre sus archivos.
+
+| | Persona 1 (Sanchez) | Persona 2 (Flores) |
+|---|---|---|
+| **Rol** | Frontend / UI | Datos / API |
+| **Módulos propios** | `src/components/` · `public/` · páginas UI | `src/lib/` · `app/api/` · config · SEO |
+| **Nunca tocar** | `src/lib/` · `app/api/` · `next.config.*` | `src/components/` · `public/` |
+
+### Archivos compartidos — coordinar antes de editar
+
+- `app/layout.tsx`
+- `app/page.tsx`
+- `tailwind.config.*`
+- `package.json`
+
+> Regla: avisar en el equipo antes de editar un archivo compartido. Nunca los dos al mismo tiempo.
+
+---
+
+## 🔑 Convenciones de código
+
+- **TypeScript** obligatorio en todos los archivos
+- **Estilos** solo con Tailwind CSS — sin CSS personalizado
+- **Componentes** en `src/components/`
+- **Datos** en `src/lib/data/`
+- **API routes** en `app/api/`
+
+### Formato de commits
+
+```
+[S#] Descripción breve de lo que se hizo
+```
+
+Ejemplos:
+- `[S1] Menú hamburguesa en móvil`
+- `[S2] Hero banner con imagen real`
+- `[S3] FAQs por programa`
+
+---
+
+## 📅 Plan de 15 semanas
+
+Ver el plan completo con tareas, responsables y pruebas de validación en:
+- [`docs/plan-desarrollo.md`](docs/plan-desarrollo.md) — resumen por semana
+- [`docs/kanban-trello.txt`](docs/kanban-trello.txt) — tablero Kanban para Trello
+
+| Semana | Enfoque | Entregable |
+|--------|---------|------------|
+| 1 | Navegación y contacto | Menú móvil + formulario funcional |
+| 2 | Homepage | Imágenes reales + GA4 |
+| 3 | Páginas de programas | 6 páginas completas |
+| 4 | Destinos | Sección navegable con datos reales |
+| 5 | Flujo de leads | Cotización llega a CILC por email |
+| 6 | WhatsApp y CTAs | Mensajes por programa + tracking |
+| 7 | Blog | 3 artículos publicados |
+| 8 | Búsqueda | Búsqueda de programas y destinos |
+| 9 | Testimonios | Carrusel y galería de estudiantes |
+| 10 | SEO técnico | Sitio indexable en Google |
+| 11 | Performance | Lighthouse 90+ en móvil |
+| 12 | Sobre nosotros | Página de equipo + galería |
+| 13 | Accesibilidad | Sin errores de consola ni axe |
+| 14 | Testing y QA | Suite de tests + pruebas en dispositivos |
+| 15 | Deploy | Sitio en producción bajo dominio CILC |
+
+---
+
+**Inicio**: 1 de junio de 2026 · **Entrega final**: 11 de septiembre de 2026
