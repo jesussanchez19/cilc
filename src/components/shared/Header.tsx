@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Header() {
   return (
@@ -8,12 +9,8 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <div className="text-2xl font-bold text-blue-700">CILC</div>
-            <div className="hidden sm:flex flex-col leading-tight">
-              <span className="text-xs font-semibold text-gray-700">Canadian & International</span>
-              <span className="text-xs text-gray-500">Language Centers</span>
-            </div>
+          <Link href="/" className="flex items-center gap-3 shrink-0">
+            <Image src="/logo.png" alt="CILC Logo" width={120} height={40} className="h-10 w-auto object-contain" />
           </Link>
 
           {/* Search bar */}
