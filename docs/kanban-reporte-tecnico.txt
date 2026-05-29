@@ -66,6 +66,16 @@ Actividad del programa: 1.1 Revisión de estructura y funcionamiento del sistema
     4. Cuatrimestre de término: MAYO-AGOSTO 2026
     5. Distribución visual a lo largo de toda la hoja
 
+[REPORTE] Iniciar Capítulo 1 — Análisis de la página web actual
+  Sección: 12. Desarrollo (Capítulo 1)
+  Criterio: documentar el análisis en paralelo mientras se hace · mín 10 cuartillas al cerrar
+  Pruebas:
+    1. Título: "CAPÍTULO 1 ANÁLISIS DE LA PÁGINA WEB ACTUAL" (14pt, negritas, mayúsculas)
+    2. Incluir: descripción de CILC, área de Marketing, contexto del proyecto
+    3. Incluir capturas del sitio original como figuras (Figura 1.1, 1.2...)
+    4. Describir la estructura de navegación del sitio actual
+    5. Describir las herramientas usadas para el análisis (PageSpeed, axe, DevTools)
+
 [REPORTE] Redactar Agradecimientos y Dedicatorias
   Sección: 3. Agradecimientos y Dedicatorias
   Criterio: obligatorio agradecer a CILC, máximo 1 hoja
@@ -83,7 +93,7 @@ Actividad del programa: 1.1 Revisión de estructura y funcionamiento del sistema
     3. Describir brevemente los capítulos que tendrá el reporte
     4. Mínimo 2 cuartillas escritas
 
-🟢 ENTREGA S1: Portadilla + Agradecimientos + borrador de Introducción
+🟢 ENTREGA S1: Portadilla + Agradecimientos + borrador de Introducción + Capítulo 1 iniciado
 
 ===========================================================
 SEMANA 2 · 11–15 may · Análisis — Identificación de problemas
@@ -123,7 +133,14 @@ Actividad del programa: 1.2 Identificación de errores y áreas de mejora
     3. Cada definición con su referencia bibliográfica en formato APA
     4. Términos en otro idioma en cursiva (ej. *framework*)
 
-🟢 ENTREGA S2: Objetivos + Programa y Cronograma para firma de asesores
+[REPORTE] Avanzar Capítulo 1 — documentar problemas detectados
+  Criterio: los errores identificados esta semana quedan documentados en el capítulo
+  Pruebas:
+    1. Cada problema detectado tiene: descripción, captura (Figura 1.X) y clasificación
+    2. Incluir tabla resumen de problemas: Problema | Tipo | Impacto
+    3. La tabla se referencia en el texto como figura
+
+🟢 ENTREGA S2: Objetivos + Programa y Cronograma para firma de asesores + Capítulo 1 avanzado
 
 ===========================================================
 SEMANA 3 · 18–22 may · Diseño — Nuevas vistas y mejoras visuales
@@ -293,16 +310,15 @@ Actividad del programa: 3.1 Corrección de errores funcionales (continuación)
     2. Incluir fragmentos de código relevantes (en bloque de código, courier new)
     3. Figuras de capturas con numeración correcta (3.X)
 
-[REPORTE] Iniciar borrador de Capítulo 1 — Análisis
-  Sección: 12. Desarrollo (Capítulo 1)
-  Criterio: documentar el análisis realizado en semanas 1-2 · mín 10 cuartillas
+[REPORTE] Cerrar Capítulo 1 — Análisis
+  Criterio: mínimo 10 cuartillas · capítulo completo antes de continuar
   Pruebas:
-    1. Título: "CAPÍTULO 1 ANÁLISIS DE LA PÁGINA WEB ACTUAL" (14pt, negritas)
-    2. Incluir: descripción de CILC, estructura del sitio original, problemas detectados
-    3. Incluir capturas del sitio original como figuras (Figura 1.1, 1.2...)
-    4. Descripción de herramientas usadas para el análisis (PageSpeed, axe, etc.)
+    1. Contar cuartillas: mínimo 10
+    2. El capítulo tiene introducción, desarrollo y cierre
+    3. Todas las figuras (1.X) referenciadas en el texto
+    4. Incluye: descripción de CILC, sitio original, problemas, herramientas de análisis
 
-🟢 ENTREGA S7: Capítulo 1 iniciado + Capítulo 3 avanzado
+🟢 ENTREGA S7: Capítulo 1 cerrado (mín 10 cuartillas) + Capítulo 3 avanzado
 
 ===========================================================
 SEMANA 8 · 22–26 jun · Desarrollo — Nuevas funcionalidades (inicio)
