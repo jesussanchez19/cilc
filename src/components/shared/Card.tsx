@@ -26,7 +26,7 @@ export default function Card({
       onClick={onClick}
     >
       {image && (
-        <div className="relative h-48 w-full bg-gray-200">
+        <div className="relative aspect-4/3 w-full bg-gray-200">
           <Image
             src={image}
             alt={title}
