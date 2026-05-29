@@ -1,36 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📚 Estudios en el Extranjero - Portal Informativo
 
-## Getting Started
+Portal web completo para ayudar a estudiantes a encontrar, comparar y solicitar programas de educación en el extranjero.
 
-First, run the development server:
+## 🌐 URL
+https://www.estudiosenelextranjero.com.mx/
+
+## 🎯 Objetivo General
+
+Crear una plataforma completa que permita a estudiantes:
+- Explorar países y universidades
+- Buscar y comparar programas académicos
+- Acceder a recursos y guías
+- Solicitar información y seguimiento
+- Gestionar su perfil y aplicaciones
+
+## 🏗️ Tech Stack
+
+- **Framework**: Next.js 14+ (App Router)
+- **Lenguaje**: TypeScript
+- **Estilos**: Tailwind CSS
+- **Base de Datos**: Supabase (PostgreSQL)
+- **Autenticación**: NextAuth.js
+- **Email**: Resend o SendGrid
+- **Deploy**: Vercel
+- **Contenido**: MDX (para blog)
+- **Analytics**: Google Analytics 4
+
+## 📅 Estructura: 15 Semanas Modulares
+
+El desarrollo está dividido en **15 semanas** con tareas diarias:
+
+| Semana | Módulo | Enfoque |
+|--------|--------|---------|
+| 1-2 | Infraestructura Base | Setup, componentes, navegación |
+| 3-4 | Contenido Principal | Países, universidades, programas |
+| 5-6 | Búsqueda y Comparación | Filtros, búsqueda, comparador |
+| 7-8 | Autenticación y Perfil | Login, registro, dashboard |
+| 9-10 | Blog y Recursos | Blog con MDX, descargas |
+| 11-12 | Contacto e Integraciones | Email, Zapier, webhooks |
+| 13-14 | SEO y Analytics | Optimización, informes |
+| 15 | Testing y Deploy | QA, bugfixes, producción |
+
+## 🚀 Primeros Pasos
+
+### Requisitos
+- Node.js 18+
+- npm o yarn
+- Cuenta Supabase
+- Cuenta Vercel (para deploy)
+
+### Instalación
 
 ```bash
+# Instalar dependencias
+npm install
+
+# Configurar variables de entorno
+cp .env.example .env.local
+
+# Ejecutar en desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+El sitio estará disponible en `http://localhost:3000`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📚 Documentación del Plan
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Para ver el plan detallado de cada semana, consulta la carpeta `docs/plan-semanas/`:
 
-## Learn More
+- **Semana 1-2**: Infraestructura Base
+- **Semana 3-4**: Contenido Principal (Países, Universidades, Programas)
+- **Semana 5-6**: Búsqueda y Comparación
+- **Semana 7-8**: Autenticación y Dashboard
+- **Semana 9-10**: Blog y Recursos
+- **Semana 11-12**: Email e Integraciones
+- **Semana 13-14**: SEO y Analytics
+- **Semana 15**: Testing y Deploy
 
-To learn more about Next.js, take a look at the following resources:
+## 🔑 Convenciones del Proyecto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Git
+- **Commits diarios**: `[S#D#] Descripción` (S=semana, D=día)
+- Ejemplo: `[S1D2] Crear componente Header`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Código
+- **TypeScript**: Obligatorio en todos los archivos
+- **Estilos**: Solo Tailwind CSS
+- **Componentes**: En `src/components/`
+- **Datos**: En `src/lib/data/`
 
-## Deploy on Vercel
+## 📊 Comandos Disponibles
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run dev      # Desarrollo
+npm run build    # Build para producción
+npm start        # Ejecutar build en producción
+npm run lint     # Linting
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+**Inicio del Proyecto**: 28 de Mayo de 2026
+**Semana Actual**: 1 | **Día Actual**: 1
