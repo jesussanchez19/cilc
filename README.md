@@ -1,29 +1,24 @@
-# 📚 Estudios en el Extranjero - Portal Informativo
+# CILC - Canadian & International Language Centers
 
-Portal web completo para ayudar a estudiantes a encontrar, comparar y solicitar programas de educación en el extranjero.
+Sitio web oficial de CILC, agencia mexicana especializada en estudios en el extranjero con más de 23 años de experiencia.
 
-## 🌐 URL
+## 🌐 URL de referencia
 https://www.estudiosenelextranjero.com.mx/
 
-## 🎯 Objetivo General
+## 🎯 Objetivo
 
-Crear una plataforma completa que permita a estudiantes:
-- Explorar países y universidades
-- Buscar y comparar programas académicos
-- Acceder a recursos y guías
-- Solicitar información y seguimiento
-- Gestionar su perfil y aplicaciones
+Crear el sitio web de CILC que permita a los usuarios:
+- Conocer los 6 programas disponibles (Idiomas, Au Pair, Años Académicos, Estudia y Trabaja, Formación Corporativa, Idiomas en Línea)
+- Explorar destinos y países
+- Contactar a CILC vía formulario o WhatsApp
 
 ## 🏗️ Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
+- **Framework**: Next.js (App Router)
 - **Lenguaje**: TypeScript
 - **Estilos**: Tailwind CSS
-- **Base de Datos**: Supabase (PostgreSQL)
-- **Autenticación**: NextAuth.js
-- **Email**: Resend o SendGrid
+- **Email**: Resend
 - **Deploy**: Vercel
-- **Contenido**: MDX (para blog)
 - **Analytics**: Google Analytics 4
 
 ## 📅 Estructura: 15 Semanas Modulares
@@ -46,7 +41,6 @@ El desarrollo está dividido en **15 semanas** con tareas diarias:
 ### Requisitos
 - Node.js 18+
 - npm o yarn
-- Cuenta Supabase
 - Cuenta Vercel (para deploy)
 
 ### Instalación
