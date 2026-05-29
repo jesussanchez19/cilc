@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Estudios en el Extranjero | CILC',
+  title: 'CILC | Canadian & International Language Centers',
   description:
-    'Portal informativo para encontrar, comparar y solicitar programas de educación en el extranjero.',
+    'Más de 23 años ayudando a estudiantes mexicanos a estudiar en Canadá, Estados Unidos, Inglaterra e Irlanda. Asesoría personalizada en programas de idiomas, Au Pair, años académicos y más.',
   keywords:
-    'educación, universidades, extranjero, estudios, programas académicos',
+    'estudios en el extranjero, programas de idiomas, Au Pair, años académicos, estudia y trabaja, Canadá, Estados Unidos, Inglaterra, Irlanda, CILC',
 };
 
 export default function RootLayout({
