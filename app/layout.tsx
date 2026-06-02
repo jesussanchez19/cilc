@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/shared/Header';
 import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
+import WhatsAppButton from '@/components/shared/WhatsAppButton';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,13 +32,18 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      // scroll-smooth activa el desplazamiento suave nativo del navegador
+      // cuando se usa <a href="#seccion"> o router.push('#seccion')
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-white">
         <Header />
         <Navigation />
         <main className="flex-1">{children}</main>
         <Footer />
+
+        {/* Botón WhatsApp flotante — visible en todas las páginas */}
+        <WhatsAppButton />
       </body>
     </html>
   );
