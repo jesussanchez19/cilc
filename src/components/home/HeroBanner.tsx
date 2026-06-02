@@ -14,8 +14,7 @@ export default function HeroBanner() {
             Estudios en el Extranjero que Transforman tu Futuro
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100">
-            Asesoría personalizada para estudiar en Canadá, Estados Unidos, Inglaterra e Irlanda.
-            Sin costo, sin compromiso.
+            Asesoría personalizada para estudiar en Canadá, Estados Unidos, Inglaterra, entre muchos otros.
           </p>
           <div className="flex gap-4">
             <Link
