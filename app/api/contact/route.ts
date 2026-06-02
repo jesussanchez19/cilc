@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
   const { error } = await resend.emails.send({
     from: 'CILC Web <onboarding@resend.dev>',
-    to: 'jesussanchez19062002@gmail.com',
+    to: 'jesussanchez19062002@gmail.com', // TODO: cambiar por el correo oficial de CILC
     replyTo: email,
     subject: `[CILC Web] ${subject} — ${name}`,
     html: `
