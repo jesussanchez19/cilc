@@ -12,14 +12,14 @@ ETIQUETAS SUGERIDAS:
   🟢 Entregable — Resultado visible al cliente al final de la semana
 
 REGLA DE RAMAS GIT:
-  Persona 1 crea: feature/Sanchez/nombre-tarea
-  Persona 2 crea: feature/Flores/nombre-tarea
+  Persona 1 (Flores  — Frontend): feature/Flores/nombre-tarea
+  Persona 2 (Sánchez — Backend):  feature/Sanchez/nombre-tarea
   Ambos hacen PR a: develop
   develop → main solo los viernes (entrega semanal)
 
 MÓDULOS SIN EMPALME:
-  Persona 1 — NUNCA toca: src/lib/**, app/api/**, next.config.*, middleware.ts
-  Persona 2 — NUNCA toca: src/components/**, public/**, app/*/page.tsx
+  Flores  (Persona 1) — NUNCA toca: src/lib/**, app/api/**, next.config.*, middleware.ts
+  Sánchez (Persona 2) — NUNCA toca: src/components/**, public/**, app/*/page.tsx
   Archivos compartidos (avisar antes de editar): app/layout.tsx · app/page.tsx · tailwind.config.* · package.json
 
 ===========================================================
@@ -182,13 +182,6 @@ SEMANA 3 · 15–20 jun · Páginas de programas
     3. Hacer clic en una pregunta abierta — debe cerrarse
     4. Abrir dos preguntas — verificar si el diseño permite varias abiertas o solo una
 
-[Persona 2] Precios orientativos por programa
-  Archivo: src/lib/data/programs.ts
-  Criterio: rango de precios visible en cada página de programa
-  Pruebas:
-    1. Cada página de programa debe mostrar un rango de precios (ej. "Desde $X,XXX USD")
-    2. Los precios deben tener una nota aclaratoria ("precios orientativos, sujetos a cambio")
-    3. Verificar que ningún precio está en blanco o en cero
 
 [Persona 2] Schema.org structured data para programas
   Archivo: src/components/shared/ProgramPage.tsx
