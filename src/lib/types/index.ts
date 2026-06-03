@@ -7,10 +7,13 @@ export interface Country {
   image: string;
   region: string;
   language: string;
-  costOfLiving: number;
+  costOfLiving: number;       // costo mensual estimado en USD
+  costOfLivingNote: string;   // desglose del costo
   universities: number;
   students: number;
   climate: string;
+  visa: string;               // tipo de visa requerida para mexicanos
+  visaNote: string;           // detalles del proceso de visa
 }
 
 export interface University {
