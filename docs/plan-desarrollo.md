@@ -70,7 +70,7 @@ main          ← producción (merge viernes de cada semana)
 | Persona 1 | Persona 2 |
 |---|---|
 | Rediseño de ProgramPage: hero con imagen real, galería de fotos | FAQs por programa (datos en `src/lib/data/faqs.ts`) |
-| Sección de testimonios placeholder en cada programa | Precios orientativos y tabla de comparación (datos) |
+| Sección de testimonios placeholder en cada programa | FAQs y Schema.org structured data por programa |
 | Breadcrumbs en todas las páginas internas | Schema.org structured data para programas |
 
 **Entregable:** 6 páginas de programas con contenido e imágenes reales
