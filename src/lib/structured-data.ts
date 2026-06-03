@@ -25,12 +25,6 @@ export function programJsonLd(program: Program) {
     },
     timeToComplete: program.duration,
     educationalProgramMode: 'onsite',
-    offers: {
-      '@type': 'Offer',
-      price: program.priceFrom,
-      priceCurrency: 'USD',
-      description: program.priceNote,
-    },
   };
 }
 

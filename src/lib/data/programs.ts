@@ -12,8 +12,6 @@ export interface Program {
   highlights: string[];
   includes: string[];
   idealFor: string;
-  priceFrom: string; // precio orientativo en USD
-  priceNote: string; // aclaración sobre el precio
 }
 
 export const programs: Program[] = [
@@ -45,8 +43,6 @@ export const programs: Program[] = [
       'Acompañamiento durante tu estancia',
     ],
     idealFor: 'Estudiantes y profesionales que quieren dominar un idioma en su ambiente natural.',
-    priceFrom: 'Desde $1,500 USD',
-    priceNote: 'Precio orientativo por 4 semanas. Varía según destino y escuela. Sujeto a cambio.',
   },
   {
     id: 'au-pair',
@@ -76,8 +72,6 @@ export const programs: Program[] = [
       'Seguimiento durante tu estancia',
     ],
     idealFor: 'Jóvenes de 18–26 años con experiencia en cuidado de niños que desean una inmersión cultural completa.',
-    priceFrom: 'Desde $500 USD',
-    priceNote: 'Costo de gestión y documentación. La familia anfitriona cubre alojamiento y estipendio.',
   },
   {
     id: 'anos-academicos',
@@ -107,8 +101,6 @@ export const programs: Program[] = [
       'Acompañamiento integral',
     ],
     idealFor: 'Estudiantes de 12 a 25 años que quieren cursar parte de su educación formal en el extranjero.',
-    priceFrom: 'Desde $8,000 USD',
-    priceNote: 'Precio orientativo por semestre. Incluye inscripción y alojamiento. Sujeto a cambio.',
   },
   {
     id: 'estudia-trabaja',
@@ -138,8 +130,6 @@ export const programs: Program[] = [
       'Apoyo en búsqueda de empleo inicial',
     ],
     idealFor: 'Jóvenes profesionales que quieren experiencia laboral internacional y mejorar su idioma mientras generan ingresos.',
-    priceFrom: 'Desde $3,500 USD',
-    priceNote: 'Precio orientativo por 24 semanas. El trabajo cubre parte de los gastos. Sujeto a cambio.',
   },
   {
     id: 'formacion-corporativa',
@@ -169,8 +159,6 @@ export const programs: Program[] = [
       'Acompañamiento ejecutivo',
     ],
     idealFor: 'Corporativos con expansión internacional, startups tecnológicas, empresas exportadoras y directivos que requieren actualización global.',
-    priceFrom: 'Cotización a la medida',
-    priceNote: 'El precio varía según número de participantes, destino y duración. Solicita tu cotización.',
   },
   {
     id: 'idiomas-en-linea',
@@ -200,8 +188,6 @@ export const programs: Program[] = [
       'Preparación para exámenes internacionales',
     ],
     idealFor: 'Estudiantes y profesionales que quieren aprender o mejorar un idioma sin salir de México.',
-    priceFrom: 'Desde $2,500 MXN',
-    priceNote: 'Precio orientativo mensual por grupo. Clases individuales desde $4,500 MXN/mes.',
   },
 ];
 
