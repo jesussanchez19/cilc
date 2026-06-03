@@ -12,14 +12,14 @@ ETIQUETAS SUGERIDAS:
   🟢 Entregable — Resultado visible al cliente al final de la semana
 
 REGLA DE RAMAS GIT:
-  Persona 1 crea: feature/Sanchez/nombre-tarea
-  Persona 2 crea: feature/Flores/nombre-tarea
+  Persona 1 (Flores  — Frontend): feature/Flores/nombre-tarea
+  Persona 2 (Sánchez — Backend):  feature/Sanchez/nombre-tarea
   Ambos hacen PR a: develop
   develop → main solo los viernes (entrega semanal)
 
 MÓDULOS SIN EMPALME:
-  Persona 1 — NUNCA toca: src/lib/**, app/api/**, next.config.*, middleware.ts
-  Persona 2 — NUNCA toca: src/components/**, public/**, app/*/page.tsx
+  Flores  (Persona 1) — NUNCA toca: src/lib/**, app/api/**, next.config.*, middleware.ts
+  Sánchez (Persona 2) — NUNCA toca: src/components/**, public/**, app/*/page.tsx
   Archivos compartidos (avisar antes de editar): app/layout.tsx · app/page.tsx · tailwind.config.* · package.json
 
 ===========================================================
