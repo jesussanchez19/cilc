@@ -2,12 +2,11 @@
 
 import { useState } from 'react';
 
-// ─── Configura tu número aquí (formato internacional sin + ni espacios) ───
 const PHONES = [
   { display: '55 1894 4494', wa: '525518944494' },
   { display: '55 7278 5966', wa: '525572785966' },
   { display: '55 1218 2442', wa: '525512182442' },
-]; // ← pon tu número real
+];
 const WHATSAPP_MESSAGE = '¡Hola! Me interesa recibir información sobre sus programas de estudios en el extranjero.';
 
 export default function WhatsAppButton() {
@@ -25,7 +24,6 @@ export default function WhatsAppButton() {
       onMouseLeave={() => setHovered(false)}
       className="fixed bottom-6 left-6 z-50 flex items-center gap-3 group"
     >
-      {/* Tooltip de texto — aparece al hover en escritorio */}
       <span
         className={`
           hidden md:block
@@ -39,14 +37,10 @@ export default function WhatsAppButton() {
         ¿Tienes dudas? ¡Escríbenos!
       </span>
 
-      {/* Botón circular verde WhatsApp */}
       <div className="relative w-14 h-14 flex items-center justify-center">
-        {/* Pulso animado */}
         <span className="absolute inset-0 rounded-full bg-green-400 opacity-30 animate-ping" />
 
-        {/* Círculo principal */}
         <div className="relative w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 transition-colors shadow-lg flex items-center justify-center">
-          {/* Ícono oficial de WhatsApp */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 32 32"

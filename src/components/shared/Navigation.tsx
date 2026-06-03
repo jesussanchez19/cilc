@@ -22,15 +22,12 @@ export default function Navigation() {
   const menuRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
 
-  // IntersectionObserver: detecta cuando la navbar sale del viewport.
-  // Funciona en móvil (iOS/Android), escritorio y Next.js App Router.
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Cuando la navbar deja de verse → mostrar hamburguesa
         setScrolled(!entry.isIntersecting);
       },
       { threshold: 0, rootMargin: '0px' }
@@ -58,7 +55,7 @@ export default function Navigation() {
 
   return (
     <>
-      {/* ── NAVBAR NORMAL (visible cuando está arriba) ── */}
+      {/* NAVBAR NORMAL */}
       <nav
         ref={navRef}
         className={`bg-blue-700 text-white transition-all duration-300 ${
@@ -87,14 +84,14 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* ── BOTÓN HAMBURGUESA FLOTANTE (aparece al hacer scroll) ── */}
+      {/* Hamburguesa aparece al hacer scroll */}
       <div
         ref={menuRef}
         className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
           scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        {/* Menú desplegable (se abre hacia arriba) */}
+        {/* Menú se abre hacia arriba */}
         <div
           className={`absolute bottom-14 right-0 w-56 bg-blue-700 rounded-xl shadow-2xl overflow-hidden transition-all duration-200 origin-bottom-right ${
             menuOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'
@@ -118,19 +115,16 @@ export default function Navigation() {
           })}
         </div>
 
-        {/* Botón circular hamburguesa / X */}
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           className="w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-700"
         >
           {menuOpen ? (
-            // Icono X
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            // Icono hamburguesa
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>

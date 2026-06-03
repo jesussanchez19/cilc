@@ -2,15 +2,11 @@ import HeroBanner from '@/components/home/HeroBanner';
 import FeaturedPrograms from '@/components/home/FeaturedPrograms';
 import StatsSection from '@/components/home/StatsSection';
 
-// ─────────────────────────────────────────────────────────────────
-//  Cambia solo el valor de `image` por el nombre de tu archivo.
-//  Coloca las imágenes en:  public/images/<nombre-del-archivo>
-// ─────────────────────────────────────────────────────────────────
 const VALUE_PROPS = [
   {
     title: 'Asesoría sin costo',
     desc: 'Te acompañamos desde el diagnóstico inicial hasta tu regreso. Sin costos de asesoría, sin letra pequeña.',
-    image: '/images/xp-cilc/asesoria.png',        // ← pon aquí tu imagen
+    image: '/images/xp-cilc/asesoria.png', 
     color: 'text-blue-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -21,7 +17,7 @@ const VALUE_PROPS = [
   {
     title: 'Diagnóstico personalizado',
     desc: 'No vendemos paquetes. Diseñamos tu ruta según tu perfil, objetivos y presupuesto.',
-    image: '/images/xp-cilc/diagnostico.png',     // ← pon aquí tu imagen
+    image: '/images/xp-cilc/diagnostico.png',
     color: 'text-violet-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -32,7 +28,7 @@ const VALUE_PROPS = [
   {
     title: 'Acompañamiento real',
     desc: 'Estamos contigo antes, durante y después de tu experiencia. No desaparecemos al venderte.',
-    image: '/images/xp-cilc/acompanamiento.png',  // ← pon aquí tu imagen
+    image: '/images/xp-cilc/acompanamiento.png',
     color: 'text-emerald-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -43,7 +39,7 @@ const VALUE_PROPS = [
   {
     title: 'Trámites simplificados',
     desc: 'Gestionamos visa, seguro médico, inscripción y logística. Tú solo preocúpate por vivir la experiencia.',
-    image: '/images/xp-cilc/tramites.png',        // ← pon aquí tu imagen
+    image: '/images/xp-cilc/tramites.png', 
     color: 'text-amber-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -54,7 +50,7 @@ const VALUE_PROPS = [
   {
     title: '+23 años de experiencia',
     desc: 'Hemos ayudado a miles de estudiantes mexicanos a estudiar en el extranjero con éxito comprobado.',
-    image: '/images/xp-cilc/experiencia.png',     // ← pon aquí tu imagen
+    image: '/images/xp-cilc/experiencia.png',
     color: 'text-rose-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -65,7 +61,7 @@ const VALUE_PROPS = [
   {
     title: 'Red global de escuelas',
     desc: 'Trabajamos con instituciones acreditadas en Canadá, USA, Inglaterra, Irlanda y más países.',
-    image: '/images/xp-cilc/red-global.png',      // ← pon aquí tu imagen
+    image: '/images/xp-cilc/red-global.png',
     color: 'text-cyan-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -82,7 +78,6 @@ export default function Home() {
       <FeaturedPrograms />
       <StatsSection />
 
-      {/* ── Por qué elegirnos ── */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -106,7 +101,6 @@ export default function Home() {
                 key={title}
                 className="relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group min-h-[200px] flex items-end"
               >
-                {/* Imagen de fondo con blur del 35% */}
                 <div
                   className="absolute inset-0 bg-cover bg-center scale-105 group-hover:scale-100 transition-transform duration-500"
                   style={{
@@ -115,17 +109,13 @@ export default function Home() {
                   }}
                 />
 
-                {/* Capa oscura encima de la imagen para legibilidad */}
                 <div className="absolute inset-0 bg-black/55 group-hover:bg-black/45 transition-colors duration-300" />
 
-                {/* Contenido sobre la imagen */}
                 <div className="relative z-10 p-7 flex gap-4 items-start w-full">
-                  {/* Icono */}
                   <div className={`shrink-0 w-11 h-11 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center ${color} group-hover:scale-110 transition-transform duration-200`}>
                     {icon}
                   </div>
 
-                  {/* Texto */}
                   <div>
                     <h3 className="font-bold text-white text-base mb-1">{title}</h3>
                     <p className="text-white/75 text-sm leading-relaxed">{desc}</p>
@@ -137,7 +127,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
       <section className="py-20 bg-blue-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">¿Listo para transformar tu futuro?</h2>

@@ -2,11 +2,7 @@ import Link from 'next/link';
 import { programs, programColorMap } from '@/lib/data/programs';
 
 export default function FeaturedPrograms() {
-  // ─────────────────────────────────────────────────────────────────
-  //  Mapa de imágenes por program.slug
-  //  Coloca tus imágenes en: public/images/programs/<nombre>.png
-  //  Solo cambia el nombre del archivo si es diferente.
-  // ─────────────────────────────────────────────────────────────────
+
   const programImages: Record<string, string> = {
     'idiomas':               '/images/programs/idiomas.png',
     'au-pair':               '/images/programs/au-pair.png',
@@ -35,7 +31,6 @@ export default function FeaturedPrograms() {
               <Link key={program.id} href={`/${program.slug}`} className="group block h-full">
                 <div className={`bg-white rounded-xl border-2 ${colors.border} hover:shadow-xl transition-shadow duration-300 h-full flex flex-col overflow-hidden`}>
 
-                  {/* ── Imagen de cabecera — clara, sin blur, sin icono ── */}
                   <div className="relative h-44 overflow-hidden shrink-0">
                     {imgSrc ? (
                       <div
@@ -43,14 +38,12 @@ export default function FeaturedPrograms() {
                         style={{ backgroundImage: `url('${imgSrc}')` }}
                       />
                     ) : (
-                      /* Fallback si aún no tienes imagen: fondo de color de marca */
                       <div className={`absolute inset-0 ${colors.light} flex items-center justify-center`}>
                         <span className="text-5xl">{program.icon}</span>
                       </div>
                     )}
                   </div>
 
-                  {/* ── Contenido de texto ── */}
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">{program.title}</h3>
                     <p className={`text-sm font-medium ${colors.text} mb-3`}>{program.subtitle}</p>

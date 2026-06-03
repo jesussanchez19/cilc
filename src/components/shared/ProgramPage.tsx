@@ -8,18 +8,6 @@ interface ProgramPageProps {
   program: Program;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  IMÁGENES POR PROGRAMA
-//  Carpeta base: public/images/programs/<slug>/
-//
-//  Estructura esperada por cada programa:
-//    hero.png          → imagen del banner principal
-//    gallery-1.png     → primera foto del carrusel
-//    gallery-2.png     → segunda foto del carrusel
-//    gallery-3.png     → tercera foto del carrusel
-//
-//  Ejemplo: public/images/programs/idiomas/hero.png
-// ─────────────────────────────────────────────────────────────────────────────
 function getProgramImages(slug: string) {
   const base = `/images/programs/${slug}`;
   return {
@@ -32,11 +20,6 @@ function getProgramImages(slug: string) {
   };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  TESTIMONIOS POR PROGRAMA
-//  Foto:  public/images/programs/<slug>/testimonio-<n>.png
-//  Edita el texto, nombre y país de cada testimonio aquí abajo.
-// ─────────────────────────────────────────────────────────────────────────────
 const testimoniosPorPrograma: Record<string, { foto: string; nombre: string; pais: string; texto: string }[]> = {
   'idiomas': [
     { foto: '/images/programs/idiomas/testimonio-1.png', nombre: 'Sofía Ramírez', pais: 'Canadá 🇨🇦', texto: 'Aprender inglés en Vancouver cambió mi vida. CILC me guió en cada paso y la experiencia superó mis expectativas.' },
@@ -70,7 +53,6 @@ const testimoniosPorPrograma: Record<string, { foto: string; nombre: string; pai
   ],
 };
 
-// ── Carrusel ─────────────────────────────────────────────────────────────────
 function Carrusel({ images, accentBg }: { images: string[]; accentBg: string }) {
   const [current, setCurrent] = useState(0);
   const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
@@ -78,7 +60,7 @@ function Carrusel({ images, accentBg }: { images: string[]; accentBg: string }) 
 
   return (
     <div className="relative w-full overflow-hidden rounded-2xl shadow-lg aspect-video bg-gray-100">
-      {/* Imágenes */}
+      
       {images.map((src, i) => (
         <div
           key={src}
@@ -91,7 +73,6 @@ function Carrusel({ images, accentBg }: { images: string[]; accentBg: string }) 
         </div>
       ))}
 
-      {/* Flechas */}
       <button
         onClick={prev}
         aria-label="Anterior"
@@ -111,7 +92,6 @@ function Carrusel({ images, accentBg }: { images: string[]; accentBg: string }) 
         </svg>
       </button>
 
-      {/* Dots */}
       <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
         {images.map((_, i) => (
           <button
@@ -125,7 +105,6 @@ function Carrusel({ images, accentBg }: { images: string[]; accentBg: string }) 
   );
 }
 
-// ── Componente principal ──────────────────────────────────────────────────────
 export default function ProgramPage({ program }: ProgramPageProps) {
   const colors = programColorMap[program.color];
   const imgs = getProgramImages(program.slug);
@@ -134,23 +113,39 @@ export default function ProgramPage({ program }: ProgramPageProps) {
   return (
     <div>
 
-      {/* ── HERO con imagen real ── */}
       <div className="relative min-h-[480px] flex items-end overflow-hidden">
-        {/* Imagen de fondo */}
+        
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url('${imgs.hero}')` }}
         />
-        {/* Degradado para legibilidad */}
+        
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-        {/* Contenido */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-32 w-full">
           <div className="max-w-3xl">
-            <h1 className="text-5xl font-bold text-white mb-4">{program.title}</h1>
-            <p className="text-xl text-white/90 mb-3">{program.subtitle}</p>
-            <p className="text-base text-white/75 mb-8 leading-relaxed">{program.description}</p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <h1
+              className="text-5xl font-bold text-white mb-4 animate-slide-up"
+              style={{ animationDelay: '0ms', animationFillMode: 'both' }}
+            >
+              {program.title}
+            </h1>
+            <p
+              className="text-xl text-white/90 mb-3 animate-slide-up"
+              style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+            >
+              {program.subtitle}
+            </p>
+            <p
+              className="text-base text-white/75 mb-8 leading-relaxed animate-slide-up"
+              style={{ animationDelay: '300ms', animationFillMode: 'both' }}
+            >
+              {program.description}
+            </p>
+            <div
+              className="flex flex-col sm:flex-row gap-4 animate-slide-up"
+              style={{ animationDelay: '450ms', animationFillMode: 'both' }}
+            >
               <Link
                 href="/contact"
                 className="inline-block px-8 py-4 bg-white text-gray-900 rounded-xl font-bold hover:bg-gray-100 transition text-center"
@@ -168,11 +163,23 @@ export default function ProgramPage({ program }: ProgramPageProps) {
             </div>
           </div>
         </div>
+
+        {/* Animacion */}
+        <style>{`
+          @keyframes slideUp {
+            from { opacity: 0; transform: translateY(32px); }
+            to   { opacity: 1; transform: translateY(0); }
+          }
+          .animate-slide-up {
+            opacity: 0;
+            animation: slideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+          }
+        `}</style>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-        {/* ── Quick stats ── */}
+        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <div className={`${colors.light} p-6 rounded-xl text-center`}>
             <div className={`text-2xl font-bold ${colors.text} mb-1`}>{program.duration}</div>
@@ -188,7 +195,6 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         </div>
 
-        {/* ── Highlights + Includes ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div>
             <h2 className="text-3xl font-bold mb-6">Puntos clave</h2>
@@ -214,13 +220,12 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         </div>
 
-        {/* ── CARRUSEL DE FOTOS ── */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-6">Galería del programa</h2>
           <Carrusel images={imgs.gallery} accentBg={colors.bg} />
         </div>
 
-        {/* ── Countries ── */}
+        
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-6">Destinos disponibles</h2>
           <div className="flex flex-wrap gap-3">
@@ -235,7 +240,6 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         </div>
 
-        {/* ── Ideal for ── */}
         <div className={`${colors.light} border ${colors.border} rounded-xl p-8 mb-16`}>
           <h2 className="text-2xl font-bold mb-3">¿Para quién es este programa?</h2>
           <p className="text-gray-700 text-lg">{program.idealFor}</p>
@@ -248,7 +252,7 @@ export default function ProgramPage({ program }: ProgramPageProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {testimonios.map((t) => (
                 <div key={t.nombre} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-4">
-                  {/* Foto + nombre */}
+                  
                   <div className="flex items-center gap-4">
                     <div
                       className="w-14 h-14 rounded-full bg-cover bg-center shrink-0 ring-2 ring-offset-2 ring-gray-200"
@@ -259,11 +263,11 @@ export default function ProgramPage({ program }: ProgramPageProps) {
                       <p className={`text-xs font-medium ${colors.text}`}>{t.pais}</p>
                     </div>
                   </div>
-                  {/* Estrellas */}
+                  
                   <div className="flex gap-0.5 text-yellow-400 text-sm">
                     {'★★★★★'}
                   </div>
-                  {/* Texto */}
+                  
                   <p className="text-gray-600 text-sm leading-relaxed">"{t.texto}"</p>
                 </div>
               ))}
@@ -271,7 +275,6 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         )}
 
-        {/* ── CTA ── */}
         <div className="bg-gray-900 text-white rounded-2xl p-12 text-center">
           <h2 className="text-3xl font-bold mb-4">¿Te interesa este programa?</h2>
           <p className="text-gray-300 mb-8 text-lg max-w-xl mx-auto">

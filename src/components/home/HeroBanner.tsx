@@ -7,25 +7,22 @@ export default function HeroBanner() {
   return (
     <section className="relative min-h-[92vh] flex items-center overflow-hidden">
 
-      {/* ── IMAGEN DE FONDO ── */}
+      {/* Fondo */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero-banner.png"
-          alt="Estudiante mexicana en París frente a la Torre Eiffel"
+          alt="Estudiante mexicana en París frente a la Torre Eiffel de mis videos"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
-        {/* Degradado oscuro a la izquierda para legibilidad del texto */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-transparent" />
       </div>
 
-      {/* ── CONTENIDO ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
         <div className="max-w-2xl">
 
-          {/* Etiqueta superior — animación slide-up delay 0 */}
           <p
             className="
               text-blue-300 text-xs sm:text-sm font-semibold uppercase tracking-widest mb-5
@@ -36,7 +33,7 @@ export default function HeroBanner() {
             Canadian &amp; International Language Centers · +23 años de experiencia
           </p>
 
-          {/* Título principal — delay 150ms */}
+          {/* Título principal */}
           <h1
             className="
               text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight mb-6
@@ -49,7 +46,7 @@ export default function HeroBanner() {
             que Transforman tu Futuro
           </h1>
 
-          {/* Subtítulo — delay 300ms */}
+          {/* Subtítulo */}
           <p
             className="
               text-lg sm:text-xl text-gray-200 mb-10 leading-relaxed
@@ -61,7 +58,6 @@ export default function HeroBanner() {
             Canadá, Estados Unidos, Inglaterra, Irlanda y más.
           </p>
 
-          {/* CTAs — delay 450ms */}
           <div
             className="flex flex-col sm:flex-row gap-4 animate-slide-up"
             style={{ animationDelay: '450ms', animationFillMode: 'both' }}
@@ -91,7 +87,6 @@ export default function HeroBanner() {
             </Link>
           </div>
 
-          {/* Badges de confianza — delay 600ms */}
           <div
             className="flex flex-wrap gap-6 mt-12 animate-slide-up"
             style={{ animationDelay: '600ms', animationFillMode: 'both' }}
@@ -110,7 +105,7 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* ── ANIMACIÓN CSS (keyframes inline para no depender de config extra) ── */}
+      {/* ANIMACIÓN CSS */}
       <style>{`
         @keyframes slideUp {
           from {
