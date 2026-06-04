@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/formacion-corporativa', label: 'Formación Corporativa' },
   { href: '/idiomas-en-linea',      label: 'Idiomas en Línea' },
   { href: '/contact',               label: 'Contacto' },
+  { href: '/destinos',              label: 'Destinos' },
 ];
 
 export default function Navigation() {
