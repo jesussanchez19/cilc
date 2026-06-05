@@ -5,12 +5,10 @@ import './globals.css';
 import Header from '@/components/shared/Header';
 import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
-<<<<<<< HEAD
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
-=======
 import { GA_ID } from '@/lib/analytics';
->>>>>>> 972406a1f667fd84e57734cf0bdaafc4a88420b3
+import { GA_ID } from '@/lib/analytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
