@@ -21,30 +21,6 @@ export default function Header() {
               className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             />
           </div>
-
-          {/* Navigation */}
-          <nav className="flex gap-6 items-center">
-            <Link href="/countries" className="text-gray-700 hover:text-blue-600 transition font-medium hidden md:block">
-              Países
-            </Link>
-            <Link href="/universities" className="text-gray-700 hover:text-blue-600 transition font-medium hidden md:block">
-              Universidades
-            </Link>
-            <a
-              href="https://wa.me/525518944494"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden md:flex items-center gap-1 text-gray-700 hover:text-green-600 transition font-medium"
-            >
-              <span>WhatsApp</span>
-            </a>
-            <Link
-              href="/contact"
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium text-sm"
-            >
-              Contactar
-            </Link>
-          </nav>
         </div>
       </div>
     </header>

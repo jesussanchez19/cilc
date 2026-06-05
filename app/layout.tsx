@@ -5,6 +5,9 @@ import './globals.css';
 import Header from '@/components/shared/Header';
 import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
+import WhatsAppButton from '@/components/shared/WhatsAppButton';
+import Breadcrumb from '@/components/shared/Breadcrumb';
+import { GA_ID } from '@/lib/analytics';
 import { GA_ID } from '@/lib/analytics';
 
 const geistSans = Geist({
@@ -67,7 +70,8 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-white">
         {GA_ID && (
@@ -88,8 +92,11 @@ export default function RootLayout({
         )}
         <Header />
         <Navigation />
+        <Breadcrumb />
         <main className="flex-1">{children}</main>
         <Footer />
+
+        <WhatsAppButton />
       </body>
     </html>
   );
