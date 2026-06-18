@@ -12,6 +12,7 @@ export interface Program {
   highlights: string[];
   includes: string[];
   idealFor: string;
+  whatsappMessage: string;
 }
 
 export const programs: Program[] = [
@@ -43,6 +44,7 @@ export const programs: Program[] = [
       'Acompañamiento durante tu estancia',
     ],
     idealFor: 'Estudiantes y profesionales que quieren dominar un idioma en su ambiente natural.',
+    whatsappMessage: 'Hola, me interesa el programa de Idiomas en el extranjero. ¿Me pueden orientar sobre destinos, duración y costos?',
   },
   {
     id: 'au-pair',
@@ -72,6 +74,7 @@ export const programs: Program[] = [
       'Seguimiento durante tu estancia',
     ],
     idealFor: 'Jóvenes de 18–26 años con experiencia en cuidado de niños que desean una inmersión cultural completa.',
+    whatsappMessage: 'Hola, me interesa el programa Au Pair. Tengo experiencia con niños y quisiera conocer los requisitos y destinos disponibles.',
   },
   {
     id: 'anos-academicos',
@@ -101,6 +104,7 @@ export const programs: Program[] = [
       'Acompañamiento integral',
     ],
     idealFor: 'Estudiantes de 12 a 25 años que quieren cursar parte de su educación formal en el extranjero.',
+    whatsappMessage: 'Hola, me interesa el programa de Años Académicos. ¿Pueden orientarme sobre opciones para estudiar un semestre o año completo en el extranjero?',
   },
   {
     id: 'estudia-trabaja',
@@ -130,6 +134,7 @@ export const programs: Program[] = [
       'Apoyo en búsqueda de empleo inicial',
     ],
     idealFor: 'Jóvenes profesionales que quieren experiencia laboral internacional y mejorar su idioma mientras generan ingresos.',
+    whatsappMessage: 'Hola, me interesa el programa Estudia y Trabaja. ¿Cómo funciona el permiso de trabajo y cuáles son los destinos disponibles?',
   },
   {
     id: 'formacion-corporativa',
@@ -159,6 +164,7 @@ export const programs: Program[] = [
       'Acompañamiento ejecutivo',
     ],
     idealFor: 'Corporativos con expansión internacional, startups tecnológicas, empresas exportadoras y directivos que requieren actualización global.',
+    whatsappMessage: 'Hola, me interesa el programa de Formación Corporativa para mi empresa. ¿Pueden enviarme información sobre opciones, destinos y costos?',
   },
   {
     id: 'idiomas-en-linea',
@@ -188,6 +194,7 @@ export const programs: Program[] = [
       'Preparación para exámenes internacionales',
     ],
     idealFor: 'Estudiantes y profesionales que quieren aprender o mejorar un idioma sin salir de México.',
+    whatsappMessage: 'Hola, me interesa tomar clases de Idiomas en Línea con CILC. ¿Cómo funciona la evaluación de nivel gratuita y cuáles son los horarios disponibles?',
   },
 ];
 
