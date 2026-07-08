@@ -1,0 +1,286 @@
+===========================================================
+CILC — RESUMEN DE IMPLEMENTACIÓN
+Proyecto: Mejora y Rediseño de Página Web en Lenguaje Place
+Última actualización: 02/06/2026
+===========================================================
+
+Este documento registra cronológicamente las funcionalidades
+implementadas en el sitio web de CILC. Sirve como referencia
+para la redacción del reporte técnico de estadía.
+
+===========================================================
+BASE DEL PROYECTO (antes de semana 1)
+===========================================================
+
+Se inicializó el proyecto con Next.js 16.2.6 utilizando el App
+Router, TypeScript en modo estricto y Tailwind CSS para los estilos.
+Se configuró la estructura de carpetas y se crearon los componentes
+base del sitio: Header, Navigation, Footer y Card.
+
+Se desarrollaron las siguientes páginas:
+- Inicio (/)
+- 6 páginas de programas: /idiomas, /au-pair, /anos-academicos,
+  /estudia-trabaja, /formacion-corporativa, /idiomas-en-linea
+- Página de contacto (/contacto)
+- Página de países (/countries)
+- Página de detalle de país (/countries/[id])
+
+Se crearon los datos iniciales de 16 países y 61 universidades
+en archivos TypeScript dentro de src/lib/data/.
+
+El sitio se subió al repositorio:
+  github.com/jesussanchez19/cilc
+Rama de integración: develop
+Rama de producción: main
+
+===========================================================
+SEMANA 1 · Sánchez (Backend)
+Formulario de contacto funcional
+===========================================================
+
+PROBLEMA RESUELTO:
+El formulario de contacto solo simulaba el envío (console.log).
+No llegaba ningún correo a CILC.
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. Integración con Resend (servicio de envío de emails)
+   - Archivo: app/api/contact/route.ts
+   - Se creó una API Route de Next.js que recibe los datos del
+     formulario, los valida y los envía por email usando Resend.
+   - El email llega al correo configurado con: nombre, email,
+     teléfono, asunto y mensaje del usuario.
+   - Se implementó rate limiting: máximo 5 envíos por IP por hora
+     para evitar spam.
+
+2. Validación de formulario con Zod
+   - Archivo: src/lib/validations/contact.ts
+   - Se definió un schema de validación con Zod que verifica:
+     nombre (mínimo 2 caracteres), email (formato válido),
+     asunto (requerido) y mensaje (mínimo 10 caracteres).
+   - La validación se ejecuta tanto en el frontend (mensajes de
+     error por campo) como en el backend (protección server-side).
+
+3. Actualización del componente ContactForm
+   - Archivo: src/components/shared/ContactForm.tsx
+   - Se conectó el formulario a la API real.
+   - Se agregaron estados de carga (spinner), éxito (mensaje verde)
+     y error (mensaje rojo).
+   - Los campos se deshabilitan durante el envío para evitar
+     doble envío.
+
+4. Configuración de variables de entorno
+   - Archivo: .env.example
+   - Se documentó la variable RESEND_API_KEY para que cualquier
+     desarrollador pueda configurar el entorno.
+   - El archivo .env.local (con la clave real) está excluido del
+     repositorio mediante .gitignore.
+
+HERRAMIENTAS UTILIZADAS:
+- Resend (resend.com) — servicio de email transaccional
+- Zod — librería de validación de esquemas TypeScript
+- Next.js API Routes — endpoints del lado del servidor
+
+===========================================================
+SEMANA 2 · Sánchez (Backend)
+Google Analytics 4, Open Graph y Sitemap
+===========================================================
+
+PROBLEMA RESUELTO:
+El sitio no tenía métricas de visitas, no mostraba vista previa
+al compartir links en redes sociales y no tenía sitemap para
+motores de búsqueda.
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. Google Analytics 4
+   - Archivos: app/layout.tsx, src/lib/analytics.ts, src/types/gtag.d.ts
+   - Se integró el script de GA4 usando next/script con estrategia
+     afterInteractive para no afectar el rendimiento de carga.
+   - El script solo se carga si existe la variable de entorno
+     NEXT_PUBLIC_GA_ID, lo que permite activarlo/desactivarlo
+     sin tocar el código.
+   - Se creó la función trackEvent() para registrar eventos
+     personalizados (clics en CTAs, envíos de formulario, etc.).
+   - ID de medición configurado: G-1ZXHE8R2P8
+   - Propiedad creada en Google Analytics: "CILC Web - Desarrollo"
+
+2. Open Graph y metadatos
+   - Archivo: app/layout.tsx
+   - Se configuraron los metadatos de Open Graph para que al
+     compartir links en WhatsApp, Facebook o Twitter se muestre:
+     imagen (1200x630px), título, descripción y URL.
+   - Se configuró Twitter Card con summary_large_image.
+   - Se activó robots: index y follow para permitir indexación.
+   - Se configuró metadataBase con el dominio del sitio.
+
+3. Sitemap XML
+   - Archivo: app/sitemap.ts
+   - Se generó un sitemap dinámico accesible en /sitemap.xml.
+   - Incluye las 8 rutas principales con su prioridad y
+     frecuencia de actualización:
+     / (prioridad 1.0), programas (0.9), contacto (0.7).
+
+HERRAMIENTAS UTILIZADAS:
+- Google Analytics 4 — análisis de tráfico web
+- Next.js Metadata API — gestión de metadatos y Open Graph
+- next/script — carga optimizada de scripts de terceros
+
+===========================================================
+SEMANA 3 · Sánchez (Backend)
+FAQs y Schema.org Structured Data
+===========================================================
+
+PROBLEMA RESUELTO:
+Las páginas de programas no tenían preguntas frecuentes ni
+datos estructurados para mejorar su posicionamiento en Google.
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. Preguntas frecuentes (FAQs) por programa
+   - Archivo: src/lib/data/faqs.ts
+   - Se crearon 6 preguntas y respuestas para cada uno de los
+     6 programas (total: 36 FAQs).
+   - Las preguntas responden las dudas más comunes de los
+     estudiantes sobre cada programa.
+   - Estructura: objeto indexado por ID de programa con arreglo
+     de pares { question, answer }.
+
+2. Schema.org Structured Data
+   - Archivo: src/lib/structured-data.ts
+   - Se implementaron dos funciones generadoras de JSON-LD:
+     · programJsonLd(program): genera datos estructurados tipo
+       EducationalOccupationalProgram para cada página de programa.
+     · organizationJsonLd(): genera datos tipo EducationalOrganization
+       con información completa de CILC (nombre, dirección, teléfono).
+   - Los JSON-LD permiten que Google muestre información enriquecida
+     en los resultados de búsqueda (Rich Results).
+
+NOTA: Los datos de FAQs y Schema.org están listos en la capa de
+datos. La integración visual en las páginas corresponde a Flores
+(frontend), quien añadirá los acordeones de FAQs y los scripts
+JSON-LD en los componentes correspondientes.
+
+HERRAMIENTAS UTILIZADAS:
+- Schema.org — vocabulario de datos estructurados
+- JSON-LD — formato de serialización para datos estructurados
+
+===========================================================
+SEMANA 4 · Sánchez (Backend)
+Datos completos de países y redirección
+===========================================================
+
+PROBLEMA RESUELTO:
+Los datos de países estaban incompletos: no tenían información
+sobre requisitos de visa ni desglose del costo de vida, datos
+clave para la toma de decisión de los estudiantes.
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. Enriquecimiento de datos de países
+   - Archivos: src/lib/types/index.ts, src/lib/data/countries.ts
+   - Se agregaron 3 nuevos campos a la interfaz Country:
+     · costOfLivingNote: desglose mensual estimado (renta, comida,
+       transporte, extras) en USD.
+     · visa: tipo de visa requerida para ciudadanos mexicanos.
+     · visaNote: descripción del proceso, tiempo estimado y dónde
+       tramitarla.
+   - Se actualizaron los 16 países con información real y verificada
+     de requisitos migratorios para mexicanos.
+
+2. Redirección permanente /countries → /destinos
+   - Archivo: next.config.ts
+   - Se configuraron redirects 301 (permanentes) en Next.js:
+     · /countries → /destinos
+     · /countries/:id → /destinos/:id
+   - Esto garantiza que las URLs antiguas sigan funcionando y que
+     Google transfiera el posicionamiento a las nuevas URLs.
+
+HERRAMIENTAS UTILIZADAS:
+- Next.js Redirects — configuración de redirecciones permanentes
+
+===========================================================
+SEMANA 5 · Sánchez (Backend)
+API de cotizaciones y guardado de leads
+===========================================================
+
+PROBLEMA RESUELTO:
+No existía un flujo para que los usuarios solicitaran cotizaciones
+de programas específicos, y los contactos recibidos no se
+almacenaban para seguimiento posterior.
+
+SOLUCIÓN IMPLEMENTADA:
+
+1. API route para cotizaciones
+   - Archivo: app/api/quote/route.ts
+   - Se creó un endpoint POST que recibe: nombre, email, teléfono,
+     programa de interés y mensaje opcional.
+   - Valida los datos con Zod antes de procesarlos.
+   - Envía email de notificación a CILC con los datos del interesado.
+   - Implementa rate limiting: máximo 5 solicitudes por IP por hora.
+
+2. Validación del formulario de cotización
+   - Archivo: src/lib/validations/quote.ts
+   - Schema Zod con campos: nombre, email, teléfono (requerido,
+     mínimo 8 dígitos), programa y mensaje (opcional).
+
+3. Guardado de leads en archivo JSON
+   - Archivo: src/lib/leads.ts
+   - Se implementó un helper que escribe cada solicitud en
+     data/leads.json con: id único, tipo (contact/quote),
+     datos del usuario y fecha/hora del registro.
+   - El archivo data/leads.json está excluido del repositorio
+     (.gitignore) ya que contiene datos personales de usuarios.
+   - Cada lead tiene ID único generado con timestamp + string
+     aleatorio para evitar colisiones.
+
+NOTA: El modal visual de cotización (QuoteModal) corresponde a
+Flores (frontend), quien lo conectará a este endpoint.
+
+HERRAMIENTAS UTILIZADAS:
+- Resend — envío de emails de notificación
+- Zod — validación de esquemas
+- Node.js fs/promises — lectura y escritura de archivos JSON
+
+===========================================================
+PENDIENTE DE FLORES (Frontend — Semanas 1-5)
+===========================================================
+
+Las siguientes funcionalidades están pendientes de implementar
+por Flores en la rama feature/Flores/Semana1:
+
+- Menú hamburguesa en móvil (Navigation.tsx)
+- Botón WhatsApp flotante global (WhatsAppButton.tsx)
+- Scroll suave al navegar (layout.tsx)
+- Diseño visual del email de Resend (HTML del email)
+- Páginas /destinos y /destinos/[id] (renombrar desde /countries)
+- Integrar FAQs en acordeón en ProgramPage.tsx
+- Agregar scripts JSON-LD de Schema.org en páginas de programa
+- Modal QuoteModal conectado a /api/quote
+
+===========================================================
+ESTADO ACTUAL DE RAMAS EN GITHUB
+===========================================================
+
+develop (integración):
+  ✅ S1 — Resend + Zod + formulario (PR #7)
+  ✅ S2 — GA4 + Open Graph + Sitemap (PR #8)
+  ✅ S3 — FAQs + Schema.org (PR #11)
+  ✅ S4 — Datos países + redirect (PR #9)
+  ✅ S5 — API quote + leads (PR #10)
+
+main (producción):
+  ⏳ Pendiente de merge — se hará al finalizar el proyecto
+
+Ramas activas de Sánchez:
+  feature/Sanchez/semana-2  (base de referencia)
+  feature/Sanchez/semana-3  (mergeada)
+  feature/Sanchez/semana-4  (mergeada)
+  feature/Sanchez/semana-5  (mergeada)
+
+Ramas activas de Flores:
+  feature/Flores/Semana1  (en progreso — PR #6 abierto)
+
+===========================================================
+FIN DEL DOCUMENTO
+===========================================================
