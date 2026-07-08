@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { searchAll, groupResultsByType, SearchResult } from '@/lib/search';
 
 interface BuscarPageProps {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }
 
 export const metadata = { title: 'Buscar | CILC' };
@@ -37,8 +37,9 @@ function ResultCard({ r }: { r: SearchResult }) {
   );
 }
 
-export default function BuscarPage({ searchParams }: BuscarPageProps) {
-  const q = searchParams.q?.trim() ?? '';
+export default async function BuscarPage({ searchParams }: BuscarPageProps) {
+  const { q: rawQ } = await searchParams;
+  const q = rawQ?.trim() ?? '';
   const results = q ? searchAll(q) : [];
   const grouped = groupResultsByType(results);
 
