@@ -7,7 +7,7 @@ import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
-import { GA_ID } from '@/lib/analytics';
+
 import { GA_ID } from '@/lib/analytics';
 
 const geistSans = Geist({

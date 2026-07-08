@@ -1,18 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-const PHONES = [
-  { display: '55 1894 4494', wa: '525518944494' },
-  { display: '55 7278 5966', wa: '525572785966' },
-  { display: '55 1218 2442', wa: '525512182442' },
-];
+const WHATSAPP_NUMBER = '52 1 55 1894 4494';
 const WHATSAPP_MESSAGE = '¡Hola! Me interesa recibir información sobre sus programas de estudios en el extranjero.';
+const PULSE_INTERVAL_MS = 10000;
+const PULSE_DURATION_MS = 1800;
 
 export default function WhatsAppButton() {
   const [hovered, setHovered] = useState(false);
+  const [tapped, setTapped] = useState(false); 
+  const [pulsing, setPulsing] = useState(false);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const url = `https://wa.me/${PHONES[0].wa}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+  const tooltipVisible = hovered || tapped;
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      if (!tooltipVisible) {
+        setPulsing(true);
+        pulseTimeoutRef.current = setTimeout(() => setPulsing(false), PULSE_DURATION_MS);
+      }
+    }, PULSE_INTERVAL_MS);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
+    };
+  }, [tooltipVisible]);
+
+  useEffect(() => {
+    if (tooltipVisible && pulsing) {
+      setPulsing(false);
+      if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
+    }
+  }, [tooltipVisible, pulsing]);
+
+  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+
+  const handleTouchStart = () => setTapped(true);
 
   return (
     <a
@@ -22,23 +49,25 @@ export default function WhatsAppButton() {
       aria-label="Contactar por WhatsApp"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onTouchStart={handleTouchStart}
       className="fixed bottom-6 left-6 z-50 flex items-center gap-3 group"
     >
       <span
         className={`
-          hidden md:block
           bg-white text-gray-800 text-sm font-medium
           px-3 py-2 rounded-lg shadow-lg border border-gray-100
           whitespace-nowrap
           transition-all duration-200
-          ${hovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'}
+          ${tooltipVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 pointer-events-none'}
         `}
       >
-        ¿Tienes dudas? ¡Escríbenos!
+        ¿Tienes dudas?
       </span>
 
       <div className="relative w-14 h-14 flex items-center justify-center">
-        <span className="absolute inset-0 rounded-full bg-green-400 opacity-30 animate-ping" />
+        {pulsing && !tooltipVisible && (
+          <span className="absolute inset-0 rounded-full bg-green-400 opacity-40 animate-ping" />
+        )}
 
         <div className="relative w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 transition-colors shadow-lg flex items-center justify-center">
           <svg

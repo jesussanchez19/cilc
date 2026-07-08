@@ -90,6 +90,7 @@ export default function ProgramPage({ program }: ProgramPageProps) {
 
   return (
     <div>
+      {/* ── HERO ── */}
       <div className="relative min-h-[480px] flex items-end overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${imgs.hero}')` }} />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
@@ -119,12 +120,14 @@ export default function ProgramPage({ program }: ProgramPageProps) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
           <div className={`${colors.light} p-6 rounded-xl text-center`}><div className={`text-2xl font-bold ${colors.text} mb-1`}>{program.duration}</div><p className="text-gray-600 text-sm">Duración</p></div>
           <div className={`${colors.light} p-6 rounded-xl text-center`}><div className={`text-2xl font-bold ${colors.text} mb-1`}>{program.ageRange}</div><p className="text-gray-600 text-sm">Rango de edad</p></div>
           <div className={`${colors.light} p-6 rounded-xl text-center`}><div className={`text-2xl font-bold ${colors.text} mb-1`}>{program.countries.length}</div><p className="text-gray-600 text-sm">Destinos disponibles</p></div>
         </div>
 
+        {/* Highlights + Includes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div>
             <h2 className="text-3xl font-bold mb-6">Puntos clave</h2>
@@ -136,21 +139,25 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         </div>
 
+        {/* Galería */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-6">Galería del programa</h2>
           <Carrusel images={imgs.gallery} accentBg={colors.bg} />
         </div>
 
+        {/* Destinos */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-6">Destinos disponibles</h2>
           <div className="flex flex-wrap gap-3">{program.countries.map((c) => (<span key={c} className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-medium text-sm border ${colors.border}`}>{c}</span>))}</div>
         </div>
 
+        {/* Ideal for */}
         <div className={`${colors.light} border ${colors.border} rounded-xl p-8 mb-16`}>
           <h2 className="text-2xl font-bold mb-3">¿Para quién es este programa?</h2>
           <p className="text-gray-700 text-lg">{program.idealFor}</p>
         </div>
 
+        {/* Testimonios */}
         {testimonios.length > 0 && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold mb-8 text-center">Lo que dicen nuestros estudiantes</h2>
@@ -169,6 +176,7 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         )}
 
+        {/* CTA Final */}
         <div className="bg-gray-900 text-white rounded-2xl p-12 text-center">
           <h2 className="text-3xl font-bold mb-4">¿Te interesa este programa?</h2>
           <p className="text-gray-300 mb-8 text-lg max-w-xl mx-auto">Agenda tu Diagnóstico Internacional Estratégico — es gratuito y sin compromiso.</p>
@@ -183,6 +191,30 @@ export default function ProgramPage({ program }: ProgramPageProps) {
       </div>
 
       <QuoteModal isOpen={modalOpen} onClose={() => setModalOpen(false)} programaInicial={programaParaModal} />
+
+      {/* ── Sticky CTA bar — solo visible en móvil (Actividad 2) ── */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-[0_-4px_12px_rgba(0,0,0,0.08)] px-4 py-3 flex gap-3">
+        <a
+          href="https://wa.me/525518944494"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex items-center justify-center gap-2 py-3 bg-green-500 text-white rounded-xl font-bold text-sm active:bg-green-600 transition"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-4 h-4" fill="currentColor" aria-hidden="true">
+            <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333zm0 24.267a11.022 11.022 0 01-5.614-1.533l-.403-.238-4.047 1.056 1.08-3.94-.264-.416A10.98 10.98 0 015.003 16c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11z" />
+          </svg>
+          WhatsApp
+        </a>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm active:bg-blue-700 transition"
+        >
+          Cotizar
+        </button>
+      </div>
+
+      {/* Espaciador para que la sticky bar no tape el footer/contenido en móvil */}
+      <div className="md:hidden h-20" />
     </div>
   );
 }
