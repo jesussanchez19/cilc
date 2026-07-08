@@ -1,12 +1,43 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import HeroBanner from '@/components/home/HeroBanner';
 import FeaturedPrograms from '@/components/home/FeaturedPrograms';
 import StatsSection from '@/components/home/StatsSection';
+import ArticleCard from '@/components/blog/ArticleCard';
+import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
+import { getLatestArticles } from '@/lib/data/blog';
+import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
+// ─────────────────────────────────────────────────────────────────
+//  LOGOS — Medios y certificaciones (Actividad 3)
+//  Coloca los logos en: public/images/logos/<nombre>.png
+//  Tamaño recomendado: 160x60px (fondo transparente)
+// ─────────────────────────────────────────────────────────────────
+const LOGOS = [
+  { name: 'ICEF',           src: '/images/logos/icef.png',       href: 'https://www.icef.com',        alt: 'Miembro certificado ICEF — red global de educación internacional' },
+  { name: 'ALTO',           src: '/images/logos/alto.png',       href: 'https://www.altonetwork.com', alt: 'Miembro ALTO — Association of Language Travel Organisations' },
+  { name: 'Pearson',        src: '/images/logos/pearson.png',    href: 'https://www.pearson.com',     alt: 'Partner Pearson — certificaciones internacionales de inglés' },
+  { name: 'Cambridge',      src: '/images/logos/cambridge.png',  href: 'https://www.cambridgeenglish.org', alt: 'Exámenes Cambridge English — evaluaciones oficiales de inglés' },
+  { name: 'IALC',           src: '/images/logos/ialc.png',       href: 'https://www.ialc.org',        alt: 'Miembro IALC — International Association of Language Centres' },
+  { name: 'Immigration CA', src: '/images/logos/ircc.png',       href: 'https://www.canada.ca/immigration', alt: 'Canadá — Immigration, Refugees and Citizenship Canada' },
+];
+
+// ─────────────────────────────────────────────────────────────────
+//  TESTIMONIOS GLOBALES para el carrusel del homepage
+//  Fotos: public/images/testimonios/<nombre-sin-espacios>.png
+// ─────────────────────────────────────────────────────────────────
+const TESTIMONIOS_HOME: Testimonial[] = [
+  { nombre: 'Sofía Ramírez',   pais: 'Vancouver, Canadá',   bandera: '🇨🇦', programa: 'Idiomas', foto: '/images/testimonios/sofia-ramirez.png',   texto: 'Aprender inglés en Vancouver cambió mi vida. CILC me guió en cada paso y la experiencia superó todas mis expectativas.' },
+  { nombre: 'Valeria Cruz',    pais: 'París, Francia',      bandera: '🇫🇷', programa: 'Au Pair', foto: '/images/testimonios/valeria-cruz.png',    texto: 'Vivir con una familia francesa fue una experiencia única. Aprendí el idioma y gané amigos para toda la vida.' },
+  { nombre: 'Diego Herrera',   pais: 'Toronto, Canadá',     bandera: '🇨🇦', programa: 'Años Académicos', foto: '/images/testimonios/diego-herrera.png', texto: 'Un año en Toronto me abrió las puertas a una universidad internacional. Sin CILC no lo habría logrado.' },
+  { nombre: 'Andrea Flores',   pais: 'Dublín, Irlanda',     bandera: '🇮🇪', programa: 'Estudia y Trabaja', foto: '/images/testimonios/andrea-flores.png', texto: 'Estudié y trabajé al mismo tiempo. Cubrí mis gastos y acumulé experiencia laboral internacional real.' },
+  { nombre: 'Carlos Mendoza',  pais: 'Dublín, Irlanda',     bandera: '🇮🇪', programa: 'Idiomas', foto: '/images/testimonios/carlos-mendoza.png',  texto: 'En 3 meses mejoré mi inglés al nivel que necesitaba para mi trabajo. CILC eligió la escuela perfecta para mí.' },
+];
 const VALUE_PROPS = [
   {
     title: 'Asesoría sin costo',
     desc: 'Te acompañamos desde el diagnóstico inicial hasta tu regreso. Sin costos de asesoría, sin letra pequeña.',
-    image: '/images/xp-cilc/asesoria.png', 
+    image: '/images/card-asesoria.jpg',        // ← pon aquí tu imagen
     color: 'text-blue-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -17,7 +48,7 @@ const VALUE_PROPS = [
   {
     title: 'Diagnóstico personalizado',
     desc: 'No vendemos paquetes. Diseñamos tu ruta según tu perfil, objetivos y presupuesto.',
-    image: '/images/xp-cilc/diagnostico.png',
+    image: '/images/card-diagnostico.jpg',     // ← pon aquí tu imagen
     color: 'text-violet-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -28,7 +59,7 @@ const VALUE_PROPS = [
   {
     title: 'Acompañamiento real',
     desc: 'Estamos contigo antes, durante y después de tu experiencia. No desaparecemos al venderte.',
-    image: '/images/xp-cilc/acompanamiento.png',
+    image: '/images/card-acompanamiento.jpg',  // ← pon aquí tu imagen
     color: 'text-emerald-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -39,7 +70,7 @@ const VALUE_PROPS = [
   {
     title: 'Trámites simplificados',
     desc: 'Gestionamos visa, seguro médico, inscripción y logística. Tú solo preocúpate por vivir la experiencia.',
-    image: '/images/xp-cilc/tramites.png', 
+    image: '/images/card-tramites.jpg',        // ← pon aquí tu imagen
     color: 'text-amber-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -50,7 +81,7 @@ const VALUE_PROPS = [
   {
     title: '+23 años de experiencia',
     desc: 'Hemos ayudado a miles de estudiantes mexicanos a estudiar en el extranjero con éxito comprobado.',
-    image: '/images/xp-cilc/experiencia.png',
+    image: '/images/card-experiencia.jpg',     // ← pon aquí tu imagen
     color: 'text-rose-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -61,7 +92,7 @@ const VALUE_PROPS = [
   {
     title: 'Red global de escuelas',
     desc: 'Trabajamos con instituciones acreditadas en Canadá, USA, Inglaterra, Irlanda y más países.',
-    image: '/images/xp-cilc/red-global.png',
+    image: '/images/card-red-global.jpg',      // ← pon aquí tu imagen
     color: 'text-cyan-300',
     icon: (
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.6} stroke="currentColor" className="w-7 h-7">
@@ -72,12 +103,32 @@ const VALUE_PROPS = [
 ];
 
 export default function Home() {
+  const ultimosArticulos = getLatestArticles(3);
+
   return (
     <div>
+      {/* ── Banner "Consulta gratuita" — arriba del fold (Actividad 3) ── */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
+          <p className="text-sm sm:text-[15px] font-medium leading-snug">
+            🎓 Consulta gratuita — Agenda tu Diagnóstico Internacional Estratégico hoy mismo
+          </p>
+          <a
+            href="https://wa.me/525518944494?text=Hola%2C%20quiero%20agendar%20mi%20consulta%20gratuita"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 px-4 py-1.5 bg-white text-blue-700 rounded-lg font-bold text-sm hover:bg-blue-50 transition whitespace-nowrap"
+          >
+            Agendar ahora →
+          </a>
+        </div>
+      </div>
+
       <HeroBanner />
       <FeaturedPrograms />
       <StatsSection />
 
+      {/* ── Por qué elegirnos ── */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -101,6 +152,7 @@ export default function Home() {
                 key={title}
                 className="relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 group min-h-[200px] flex items-end"
               >
+                {/* Imagen de fondo con blur del 35% */}
                 <div
                   className="absolute inset-0 bg-cover bg-center scale-105 group-hover:scale-100 transition-transform duration-500"
                   style={{
@@ -109,13 +161,17 @@ export default function Home() {
                   }}
                 />
 
+                {/* Capa oscura encima de la imagen para legibilidad */}
                 <div className="absolute inset-0 bg-black/55 group-hover:bg-black/45 transition-colors duration-300" />
 
+                {/* Contenido sobre la imagen */}
                 <div className="relative z-10 p-7 flex gap-4 items-start w-full">
+                  {/* Icono */}
                   <div className={`shrink-0 w-11 h-11 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center ${color} group-hover:scale-110 transition-transform duration-200`}>
                     {icon}
                   </div>
 
+                  {/* Texto */}
                   <div>
                     <h3 className="font-bold text-white text-base mb-1">{title}</h3>
                     <p className="text-white/75 text-sm leading-relaxed">{desc}</p>
@@ -127,6 +183,66 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Medios y Certificaciones (Actividad 3) ── */}
+      <section className="py-14 bg-white border-t border-gray-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">
+            Miembros y socios certificados
+          </p>
+          {/* Grid 3 col en móvil, 6 en desktop — logos alineados */}
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
+            {LOGOS.map(({ name, src, href, alt }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
+                aria-label={`Visitar sitio de ${name} (abre en nueva pestaña)`}
+              >
+                <Image
+                  src={src}
+                  alt={alt}
+                  width={120}
+                  height={45}
+                  className="h-10 w-auto object-contain"
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Carrusel de testimonios (Actividad 1) ── */}
+      <TestimonialsCarousel testimonials={TESTIMONIOS_HOME} />
+
+      {/* ── Últimas noticias del blog (Actividad 6) ── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
+            <div>
+              <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">
+                Blog CILC
+              </span>
+              <h2 className="text-4xl font-extrabold text-gray-900">Últimas noticias</h2>
+            </div>
+            <Link
+              href="/blog"
+              className="text-blue-600 hover:text-blue-800 font-semibold text-sm whitespace-nowrap"
+            >
+              Ver todos los artículos →
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {ultimosArticulos.map((article) => (
+              <ArticleCard key={article.id} article={article} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
       <section className="py-20 bg-blue-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">¿Listo para transformar tu futuro?</h2>
