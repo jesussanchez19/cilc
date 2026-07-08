@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import ContactForm from '@/components/shared/ContactForm';
+
+export const metadata: Metadata = {
+  title: 'Contacto | CILC',
+  description: 'Más de 23 años ayudando a estudiantes mexicanos a estudiar en el extranjero. Cuéntanos tu caso y te asesoramos sin costo.',
+};
 
 const PHONES = [
   { display: '55 1894 4494', wa: '525518944494' },
