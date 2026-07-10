@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { quoteSchema } from '@/lib/validations/quote';
 import { saveLead } from '@/lib/leads';
+import { quoteAdminHtml, quoteUserHtml } from '@/lib/email/templates';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -46,22 +47,23 @@ export async function POST(req: NextRequest) {
 
   await saveLead({ type: 'quote', name, email, phone, program, message: message ?? '' });
 
-  const { error } = await resend.emails.send({
-    from: 'CILC Web <onboarding@resend.dev>',
-    to: 'jesussanchez19062002@gmail.com', // TODO: cambiar por el correo oficial de CILC
-    replyTo: email,
-    subject: `[CILC Cotización] ${program} — ${name}`,
-    html: `
-      <h2>Nueva solicitud de cotización desde el sitio web de CILC</h2>
-      <p><strong>Nombre:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Teléfono:</strong> ${phone}</p>
-      <p><strong>Programa de interés:</strong> ${program}</p>
-      ${message ? `<p><strong>Mensaje:</strong> ${message.replace(/\n/g, '<br/>')}</p>` : ''}
-    `,
-  });
+  const [adminResult, userResult] = await Promise.all([
+    resend.emails.send({
+      from: 'CILC Web <onboarding@resend.dev>',
+      to: 'jesussanchez19062002@gmail.com',
+      replyTo: email,
+      subject: `[CILC Cotización] ${program} — ${name}`,
+      html: quoteAdminHtml({ name, email, phone, program, message }),
+    }),
+    resend.emails.send({
+      from: 'CILC <onboarding@resend.dev>',
+      to: email,
+      subject: `Tu solicitud sobre ${program} — CILC`,
+      html: quoteUserHtml(name, program),
+    }),
+  ]);
 
-  if (error) {
+  if (adminResult.error || userResult.error) {
     return NextResponse.json({ error: 'Error al enviar la solicitud.' }, { status: 500 });
   }
 

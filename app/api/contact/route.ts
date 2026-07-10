@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { contactSchema } from '@/lib/validations/contact';
+import { saveLead } from '@/lib/leads';
+import { contactAdminHtml, contactUserHtml } from '@/lib/email/templates';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -43,22 +45,25 @@ export async function POST(req: NextRequest) {
 
   const { name, email, subject, message } = result.data;
 
-  const { error } = await resend.emails.send({
-    from: 'CILC Web <onboarding@resend.dev>',
-    to: 'jesussanchez19062002@gmail.com',
-    replyTo: email,
-    subject: `[CILC Web] ${subject} — ${name}`,
-    html: `
-      <h2>Nuevo mensaje desde el sitio web de CILC</h2>
-      <p><strong>Nombre:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Asunto:</strong> ${subject}</p>
-      <p><strong>Mensaje:</strong></p>
-      <p>${message.replace(/\n/g, '<br/>')}</p>
-    `,
-  });
+  await saveLead({ type: 'contact', name, email, subject, message });
 
-  if (error) {
+  const [adminResult, userResult] = await Promise.all([
+    resend.emails.send({
+      from: 'CILC Web <onboarding@resend.dev>',
+      to: 'jesussanchez19062002@gmail.com',
+      replyTo: email,
+      subject: `[CILC Web] ${subject} — ${name}`,
+      html: contactAdminHtml({ name, email, subject, message }),
+    }),
+    resend.emails.send({
+      from: 'CILC <onboarding@resend.dev>',
+      to: email,
+      subject: 'Recibimos tu mensaje — CILC',
+      html: contactUserHtml(name),
+    }),
+  ]);
+
+  if (adminResult.error || userResult.error) {
     return NextResponse.json({ error: 'Error al enviar el mensaje.' }, { status: 500 });
   }
 
