@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ProgramPage from '@/components/shared/ProgramPage';
 import { programs } from '@/lib/data/programs';
+import { programSchema, breadcrumbSchema } from '@/lib/seo/schemas';
 
 export const metadata: Metadata = {
   title: 'Formación Corporativa Internacional | CILC',
@@ -9,5 +10,11 @@ export const metadata: Metadata = {
 
 export default function FormacionCorporativaPage() {
   const program = programs.find((p) => p.id === 'formacion-corporativa')!;
-  return <ProgramPage program={program} />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(programSchema(program)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Inicio', url: '/' }, { name: program.title, url: '/formacion-corporativa' }])) }} />
+      <ProgramPage program={program} />
+    </>
+  );
 }

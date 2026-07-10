@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ProgramPage from '@/components/shared/ProgramPage';
 import { programs } from '@/lib/data/programs';
+import { programSchema, breadcrumbSchema } from '@/lib/seo/schemas';
 
 export const metadata: Metadata = {
   title: 'Idiomas en el Extranjero | CILC',
@@ -9,5 +10,11 @@ export const metadata: Metadata = {
 
 export default function IdiomasPage() {
   const program = programs.find((p) => p.id === 'idiomas')!;
-  return <ProgramPage program={program} />;
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(programSchema(program)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([{ name: 'Inicio', url: '/' }, { name: program.title, url: '/idiomas' }])) }} />
+      <ProgramPage program={program} />
+    </>
+  );
 }

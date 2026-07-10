@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { articles, getArticleBySlug } from '@/lib/data/blog';
+import { articleSchema, breadcrumbSchema } from '@/lib/seo/schemas';
 
 interface ArticlePageProps {
   params: { slug: string };
@@ -27,6 +28,18 @@ export default function ArticlePage({ params }: ArticlePageProps) {
 
   return (
     <div className="bg-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema(article)) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema([
+          { name: 'Inicio', url: '/' },
+          { name: 'Blog', url: '/blog' },
+          { name: article.title, url: `/blog/${article.slug}` },
+        ])) }}
+      />
 
       {/* ── Hero con imagen destacada ── */}
       <div className="relative h-[360px] md:h-[440px] overflow-hidden">
