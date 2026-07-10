@@ -9,6 +9,7 @@ import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 
 import { GA_ID } from '@/lib/analytics';
+import { organizationSchema } from '@/lib/seo/schemas';
  
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -93,6 +94,10 @@ export default function RootLayout({
             </Script>
           </>
         )}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
+        />
         <Header />
         <Navigation />
         <Breadcrumb />
