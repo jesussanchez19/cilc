@@ -20,10 +20,13 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-const BASE_URL = 'https://www.estudiosenelextranjero.com.mx';
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.mx';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  verification: {
+    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
+  },
   title: {
     default: 'CILC | Canadian & International Language Centers',
     template: '%s | CILC',
