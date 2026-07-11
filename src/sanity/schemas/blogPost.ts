@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { UrlImportInput } from '../components/UrlImportInput';
 
 export const blogPostSchema = defineType({
   name: 'blogPost',
@@ -21,7 +22,8 @@ export const blogPostSchema = defineType({
     defineField({
       name: 'urlExterna', title: 'URL de la publicación',
       type: 'url',
-      description: 'Pega la URL de la noticia y luego usa el botón "⬇️ Importar datos" para rellenar los campos automáticamente.',
+      description: 'Pega la URL y presiona el botón azul para importar título, resumen, imagen y fecha automáticamente.',
+      components: { input: UrlImportInput },
       hidden: ({ document }) => document?.tipo !== 'externo',
       validation: (r) =>
         r.custom((value, ctx) => {
