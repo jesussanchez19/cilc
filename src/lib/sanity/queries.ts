@@ -48,7 +48,7 @@ export interface SanityPartner {
   _id: string;
   nombre: string;
   logo: { asset: { _ref: string } };
-  alt: string;
+  cargo: string;
   url?: string;
 }
 

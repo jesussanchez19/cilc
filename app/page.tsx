@@ -177,25 +177,31 @@ export default async function Home() {
               <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
                 Miembros y socios certificados
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
-                {socios.map((s) => (
-                  s.url ? (
-                    <a
-                      key={s._id}
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
-                      aria-label={`Visitar sitio de ${s.nombre} (abre en nueva pestaña)`}
-                    >
-                      <Image src={urlFor(s.logo).width(240).url()} alt={s.alt} width={120} height={45} className="h-10 w-auto object-contain" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-start">
+                {socios.map((s) => {
+                  const inner = (
+                    <>
+                      <Image
+                        src={urlFor(s.logo).width(200).height(200).fit('crop').url()}
+                        alt={`${s.nombre} — ${s.cargo}`}
+                        width={80} height={80}
+                        className="w-20 h-20 rounded-full object-cover mx-auto mb-3 grayscale group-hover:grayscale-0 transition-all duration-300"
+                      />
+                      <p className="text-sm font-semibold text-slate-800 text-center leading-tight">{s.nombre}</p>
+                      <p className="text-xs text-slate-400 text-center mt-0.5">{s.cargo}</p>
+                    </>
+                  );
+                  return s.url ? (
+                    <a key={s._id} href={s.url} target="_blank" rel="noopener noreferrer"
+                      className="group flex flex-col items-center hover:opacity-90 transition-opacity duration-200">
+                      {inner}
                     </a>
                   ) : (
-                    <div key={s._id} className="flex items-center justify-center opacity-50">
-                      <Image src={urlFor(s.logo).width(240).url()} alt={s.alt} width={120} height={45} className="h-10 w-auto object-contain" />
+                    <div key={s._id} className="group flex flex-col items-center">
+                      {inner}
                     </div>
-                  )
-                ))}
+                  );
+                })}
               </div>
             </div>
           </section>
