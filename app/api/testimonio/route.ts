@@ -34,7 +34,9 @@ export async function POST(req: NextRequest) {
       fotoRef = { _type: 'image', asset: { _type: 'reference', _ref: asset._id } };
     }
 
-    await writeClient.create({
+    const docId = `drafts.${crypto.randomUUID()}`;
+    await writeClient.createOrReplace({
+      _id: docId,
       _type: 'solicitudTestimonio',
       nombre,
       email,

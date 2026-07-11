@@ -29,16 +29,7 @@ export interface TestimonialAprobado {
 }
 
 export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> {
-  const { createClient } = await import('next-sanity');
-  const draftClient = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production',
-    apiVersion: '2024-01-01',
-    useCdn: false,
-    token: process.env.SANITY_API_WRITE_TOKEN,
-    perspective: 'previewDrafts',
-  });
-  return draftClient.fetch(`*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`);
+  return client.fetch(`*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`);
 }
 
 // ── Blog posts ────────────────────────────────────────────────────────────────
