@@ -10,6 +10,8 @@ export default function TestimonioForm() {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', ciudad: '', texto: '' });
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [calificacion, setCalificacion] = useState(0);
+  const [hovered, setHovered] = useState(0);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -30,6 +32,7 @@ export default function TestimonioForm() {
       fd.append('programa', form.programa);
       fd.append('pais', [form.ciudad, form.pais].filter(Boolean).join(', '));
       fd.append('texto', form.texto);
+      if (calificacion > 0) fd.append('calificacion', String(calificacion));
       if (foto) fd.append('foto', foto);
 
       const res = await fetch('/api/testimonio', { method: 'POST', body: fd });
@@ -119,6 +122,39 @@ export default function TestimonioForm() {
               className="text-xs text-slate-400 hover:text-red-500 transition-colors">
               Quitar
             </button>
+          )}
+        </div>
+      </div>
+
+      {/* Calificación */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-2">¿Cómo calificarías tu experiencia? *</label>
+        <div className="flex gap-1">
+          {[1, 2, 3, 4, 5].map((star) => (
+            <button
+              key={star}
+              type="button"
+              onMouseEnter={() => setHovered(star)}
+              onMouseLeave={() => setHovered(0)}
+              onClick={() => setCalificacion(star)}
+              className="transition-transform duration-100 hover:scale-110 focus:outline-none"
+              aria-label={`${star} estrellas`}
+            >
+              <svg
+                className="w-8 h-8"
+                fill={(hovered || calificacion) >= star ? '#f59e0b' : 'none'}
+                stroke={(hovered || calificacion) >= star ? '#f59e0b' : '#d1d5db'}
+                viewBox="0 0 20 20"
+                strokeWidth={0.8}
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            </button>
+          ))}
+          {calificacion > 0 && (
+            <span className="ml-2 self-center text-sm text-slate-500">
+              {['', 'Malo', 'Regular', 'Bueno', 'Muy bueno', 'Excelente'][calificacion]}
+            </span>
           )}
         </div>
       </div>

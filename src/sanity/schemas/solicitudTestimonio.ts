@@ -16,6 +16,11 @@ export const solicitudTestimonioSchema = defineType({
     defineField({ name: 'foto', title: 'Fotografía', type: 'image', options: { hotspot: true } }),
     defineField({ name: 'texto', title: 'Testimonio', type: 'text', rows: 4 }),
     defineField({
+      name: 'calificacion', title: 'Calificación', type: 'number',
+      description: 'Estrellas (1–5)',
+      validation: (r) => r.min(1).max(5),
+    }),
+    defineField({
       name: 'videoUrl', title: 'Video de YouTube', type: 'url',
       description: 'Ej: https://www.youtube.com/watch?v=xxxxxx',
       validation: (r) => r.uri({ scheme: ['https'] }),

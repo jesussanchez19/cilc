@@ -98,6 +98,7 @@ export default async function Home() {
     texto: t.texto,
     foto: t.foto ? urlFor(t.foto).width(200).height(200).fit('crop').url() : '',
     videoUrl: t.videoUrl,
+    calificacion: t.calificacion,
   }));
 
   return (

@@ -17,6 +17,8 @@ export async function POST(req: NextRequest) {
   const pais    = fd.get('pais')   as string;
   const texto   = fd.get('texto')  as string;
   const fotoFile = fd.get('foto') as File | null;
+  const calificacionRaw = fd.get('calificacion') as string | null;
+  const calificacion = calificacionRaw ? parseInt(calificacionRaw, 10) : undefined;
 
   if (!nombre || !email || !texto) {
     return NextResponse.json({ error: 'Faltan campos obligatorios.' }, { status: 400 });
@@ -45,6 +47,7 @@ export async function POST(req: NextRequest) {
       bandera: '',
       texto,
       estado: 'pendiente',
+      ...(calificacion && { calificacion }),
       ...(fotoRef && { foto: fotoRef }),
     });
   } catch (err) {
