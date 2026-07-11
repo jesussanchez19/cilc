@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { countries } from '@/lib/data/countries';
 
 const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
 export default function TestimonioForm() {
-  const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
+  const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', ciudad: '', texto: '' });
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -17,7 +18,10 @@ export default function TestimonioForm() {
       const res = await fetch('/api/testimonio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+        ...form,
+        pais: [form.ciudad, form.pais].filter(Boolean).join(', '),
+      }),
       });
       setStatus(res.ok ? 'success' : 'error');
     } catch {
@@ -62,10 +66,19 @@ export default function TestimonioForm() {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">País / Ciudad</label>
-          <input className="input-field" placeholder="Ej: Vancouver, Canadá" value={form.pais}
-            onChange={(e) => set('pais', e.target.value)} />
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Ciudad</label>
+          <input className="input-field" placeholder="Ej: Vancouver" value={form.ciudad}
+            onChange={(e) => set('ciudad', e.target.value)} />
         </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5">País</label>
+        <select className="input-field" value={form.pais} onChange={(e) => set('pais', e.target.value)}>
+          <option value="">Selecciona un país</option>
+          {countries.map((c) => (
+            <option key={c.id} value={c.name}>{c.flag} {c.name}</option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1.5">Tu experiencia *</label>
