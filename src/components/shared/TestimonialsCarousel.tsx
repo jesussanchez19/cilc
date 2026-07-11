@@ -75,6 +75,7 @@ export default function TestimonialsCarousel({
           </h2>
         </div>
 
+
         {/* Carousel */}
         <div
           onMouseEnter={() => setPaused(true)}
@@ -188,6 +189,20 @@ export default function TestimonialsCarousel({
             Auto-play desactivado (preferencia de movimiento reducido)
           </p>
         )}
+
+        {/* Ver todos */}
+        <div className="text-center mt-10">
+          <a
+            href="/testimonios"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
+            style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)' }}
+          >
+            Ver todos los testimonios y videos
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
   );

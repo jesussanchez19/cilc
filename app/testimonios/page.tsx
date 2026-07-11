@@ -1,0 +1,132 @@
+export const dynamic = 'force-dynamic';
+
+import Image from 'next/image';
+import { getTestimoniosAprobados } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
+
+function getYouTubeId(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match?.[1] ?? null;
+}
+
+export default async function TestimoniosPage() {
+  const testimonios = await getTestimoniosAprobados();
+  const conVideo = testimonios.filter((t) => t.videoUrl);
+  const sinVideo = testimonios.filter((t) => !t.videoUrl);
+
+  return (
+    <main className="min-h-screen bg-white">
+
+      {/* Hero */}
+      <section className="py-20 text-center" style={{ background: 'var(--dark)' }}>
+        <span className="badge badge-dark mb-5 inline-flex">Testimonios</span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4"
+          style={{ letterSpacing: '-0.03em' }}>
+          Lo que dicen{' '}
+          <span className="gradient-text-light">nuestros estudiantes</span>
+        </h1>
+        <p className="text-slate-400 text-lg max-w-xl mx-auto px-4">
+          Historias reales de quienes estudiaron en el extranjero con CILC.
+        </p>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+        {/* Videos */}
+        {conVideo.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
+              Videos
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {conVideo.map((t) => {
+                const videoId = getYouTubeId(t.videoUrl!);
+                return (
+                  <div key={t._id} className="premium-card overflow-hidden">
+                    {videoId && (
+                      <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+                        <iframe
+                          src={`https://www.youtube.com/embed/${videoId}`}
+                          title={`Testimonio de ${t.nombre}`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                          className="absolute inset-0 w-full h-full"
+                        />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <div className="flex items-center gap-3 mb-3">
+                        {t.foto && (
+                          <Image
+                            src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
+                            alt={t.nombre}
+                            width={40} height={40}
+                            className="w-10 h-10 rounded-full object-cover shrink-0"
+                          />
+                        )}
+                        <div>
+                          <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
+                          <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                        </div>
+                      </div>
+                      {t.texto && (
+                        <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Sin video */}
+        {sinVideo.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
+              Experiencias
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sinVideo.map((t) => (
+                <div key={t._id} className="premium-card p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    {t.foto ? (
+                      <Image
+                        src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
+                        alt={t.nombre}
+                        width={48} height={48}
+                        className="w-12 h-12 rounded-full object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                        <span className="text-xl">{t.bandera || '🌍'}</span>
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
+                      <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                    </div>
+                  </div>
+                  <div className="flex mb-3">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {testimonios.length === 0 && (
+          <p className="text-center text-slate-400 py-20">Aún no hay testimonios publicados.</p>
+        )}
+      </div>
+    </main>
+  );
+}
