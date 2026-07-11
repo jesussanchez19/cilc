@@ -26,19 +26,14 @@ export default function Navigation() {
   useEffect(() => {
     const nav = navRef.current;
     if (!nav) return;
-
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        setScrolled(!entry.isIntersecting);
-      },
+      ([entry]) => { setScrolled(!entry.isIntersecting); },
       { threshold: 0, rootMargin: '0px' }
     );
-
     observer.observe(nav);
     return () => observer.disconnect();
   }, []);
 
-  // Cerrar menú al hacer click fuera
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -49,35 +44,38 @@ export default function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Cerrar menú al navegar
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   return (
     <>
-      {/* NAVBAR NORMAL */}
+      {/* NAVBAR */}
       <nav
         ref={navRef}
-        className={`bg-blue-700 text-white transition-all duration-300 ${
+        className={`bg-[#0f1629] border-b border-white/6 transition-all duration-300 ${
           scrolled ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-1 overflow-x-auto scrollbar-hide">
+          <div className="flex gap-0.5 overflow-x-auto scrollbar-hide">
             {NAV_LINKS.map(({ href, label }) => {
               const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
               return (
                 <Link
                   key={href}
                   href={href}
-                  className={`whitespace-nowrap px-3 py-3 text-sm font-medium transition border-b-2 ${
-                    active
-                      ? 'border-white text-white'
-                      : 'border-transparent text-blue-100 hover:text-white hover:border-blue-300'
-                  }`}
+                  className={`
+                    relative whitespace-nowrap px-3.5 py-3.5 text-[13px] font-medium
+                    transition-all duration-200 shrink-0
+                    ${active
+                      ? 'text-white'
+                      : 'text-slate-400 hover:text-slate-100'
+                    }
+                  `}
                 >
                   {label}
+                  {active && (
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-linear-to-r from-blue-500 to-indigo-400 rounded-full" />
+                  )}
                 </Link>
               );
             })}
@@ -85,18 +83,18 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* Hamburguesa aparece al hacer scroll */}
+      {/* Floating menu on scroll */}
       <div
         ref={menuRef}
         className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
           scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        {/* Menú se abre hacia arriba */}
         <div
-          className={`absolute bottom-14 right-0 w-56 bg-blue-700 rounded-xl shadow-2xl overflow-hidden transition-all duration-200 origin-bottom-right ${
+          className={`absolute bottom-16 right-0 w-60 rounded-2xl overflow-hidden transition-all duration-200 origin-bottom-right shadow-[0_24px_64px_rgba(0,0,0,0.25)] ${
             menuOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0 pointer-events-none'
           }`}
+          style={{ background: '#0f1629', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           {NAV_LINKS.map(({ href, label }) => {
             const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -104,11 +102,14 @@ export default function Navigation() {
               <Link
                 key={href}
                 href={href}
-                className={`block px-4 py-3 text-sm font-medium transition border-l-4 ${
-                  active
-                    ? 'border-white text-white bg-blue-600'
-                    : 'border-transparent text-blue-100 hover:text-white hover:bg-blue-600 hover:border-blue-300'
-                }`}
+                className={`
+                  flex items-center gap-2.5 px-4 py-3 text-[13px] font-medium
+                  border-l-2 transition-all duration-150
+                  ${active
+                    ? 'border-blue-500 text-white bg-white/6'
+                    : 'border-transparent text-slate-400 hover:text-white hover:bg-white/4 hover:border-slate-600'
+                  }
+                `}
               >
                 {label}
               </Link>
@@ -119,17 +120,26 @@ export default function Navigation() {
         <button
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-          className="w-12 h-12 rounded-full bg-blue-700 text-white shadow-lg flex items-center justify-center hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-700"
+          className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
+          style={{ background: '#0f1629', border: '1px solid rgba(255,255,255,0.12)' }}
         >
-          {menuOpen ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
+          <div className="relative w-5 h-5 flex items-center justify-center">
+            <span
+              className={`absolute block w-4 h-0.5 bg-slate-300 transition-all duration-200 ${
+                menuOpen ? 'rotate-45 translate-y-0' : '-translate-y-1.5'
+              }`}
+            />
+            <span
+              className={`absolute block w-4 h-0.5 bg-slate-300 transition-all duration-200 ${
+                menuOpen ? 'opacity-0 translate-x-2' : 'opacity-100'
+              }`}
+            />
+            <span
+              className={`absolute block w-4 h-0.5 bg-slate-300 transition-all duration-200 ${
+                menuOpen ? '-rotate-45 translate-y-0' : 'translate-y-1.5'
+              }`}
+            />
+          </div>
         </button>
       </div>
     </>

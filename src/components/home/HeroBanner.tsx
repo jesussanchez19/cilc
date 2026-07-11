@@ -2,126 +2,116 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { countries } from '@/lib/data/countries';
+
+const STATS = [
+  { value: '+23', label: 'años de exp.' },
+  { value: '+500', label: 'estudiantes/año' },
+  { value: `${countries.length}`, label: 'países destino' },
+];
 
 export default function HeroBanner() {
   return (
-    <section className="relative min-h-[92vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[94vh] flex items-center overflow-hidden">
 
-      {/* Fondo */}
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
           src="/images/hero-banner.png"
-          alt="Estudiante mexicana en París frente a la Torre Eiffel de mis videos"
+          alt="Estudiante mexicana en el extranjero"
           fill
           priority
           className="object-cover object-center"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/50 to-transparent" />
+        {/* Layered gradient overlay */}
+        <div className="absolute inset-0 bg-linear-to-r from-[#0a0f1e]/90 via-[#0a0f1e]/60 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-t from-[#0a0f1e]/50 via-transparent to-transparent" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
-        <div className="max-w-2xl">
+      {/* Subtle grid texture on dark side */}
+      <div
+        className="absolute inset-0 z-1 pointer-events-none"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+          maskImage: 'linear-gradient(to right, black 40%, transparent 70%)',
+          WebkitMaskImage: 'linear-gradient(to right, black 40%, transparent 70%)',
+        }}
+      />
 
-          <p
-            className="
-              text-blue-300 text-xs sm:text-sm font-semibold uppercase tracking-widest mb-5
-              animate-slide-up
-            "
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 w-full">
+        <div className="max-w-160">
+
+          {/* Badge */}
+          <div
+            className="badge badge-dark inline-flex mb-7 animate-slide-up"
             style={{ animationDelay: '0ms' }}
           >
-            Canadian &amp; International Language Centers · +23 años de experiencia
-          </p>
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            Canadian &amp; International Language Centers · +23 años
+          </div>
 
-          {/* Título principal */}
+          {/* Title */}
           <h1
-            className="
-              text-4xl sm:text-5xl md:text-6xl font-extrabold text-white leading-tight mb-6
-              animate-slide-up
-            "
-            style={{ animationDelay: '150ms', animationFillMode: 'both' }}
+            className="hero-title text-white mb-6 animate-slide-up"
+            style={{ animationDelay: '120ms', animationFillMode: 'both' }}
           >
             Estudios en el{' '}
-            <span className="text-blue-300">Extranjero</span>{' '}
+            <span className="gradient-text-light">Extranjero</span>{' '}
             que Transforman tu Futuro
           </h1>
 
-          {/* Subtítulo */}
+          {/* Subtitle */}
           <p
-            className="
-              text-lg sm:text-xl text-gray-200 mb-10 leading-relaxed
-              animate-slide-up
-            "
-            style={{ animationDelay: '300ms', animationFillMode: 'both' }}
+            className="text-lg sm:text-xl text-slate-300 mb-10 leading-relaxed max-w-lg animate-slide-up"
+            style={{ animationDelay: '240ms', animationFillMode: 'both' }}
           >
-            Asesoría personalizada sin costo ni compromiso para estudiar en
-            Canadá, Estados Unidos, Inglaterra, Irlanda y más.
+            Asesoría personalizada sin costo para estudiar en Canadá,
+            Estados Unidos, Inglaterra, Irlanda y más.
           </p>
 
+          {/* CTAs */}
           <div
-            className="flex flex-col sm:flex-row gap-4 animate-slide-up"
-            style={{ animationDelay: '450ms', animationFillMode: 'both' }}
+            className="flex flex-col sm:flex-row gap-3 animate-slide-up"
+            style={{ animationDelay: '360ms', animationFillMode: 'both' }}
           >
-            <Link
-              href="/countries"
-              className="
-                px-8 py-4 bg-blue-500 hover:bg-blue-400 text-white
-                rounded-xl font-bold text-base transition-all duration-200
-                shadow-lg hover:shadow-blue-500/40 hover:-translate-y-0.5
-                text-center
-              "
-            >
-              🌍 Explorar Países
+            <Link href="/countries" className="btn-primary">
+              Explorar Destinos
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
             </Link>
-            <Link
-              href="/contact"
-              className="
-                px-8 py-4 bg-white/10 hover:bg-white/20 text-white
-                rounded-xl font-bold text-base transition-all duration-200
-                border border-white/40 hover:border-white/70
-                backdrop-blur-sm hover:-translate-y-0.5
-                text-center
-              "
-            >
-              Quiero mi asesoría gratis →
+            <Link href="/contact" className="btn-ghost">
+              Quiero mi asesoría gratis
             </Link>
           </div>
 
+          {/* Stats */}
           <div
-            className="flex flex-wrap gap-6 mt-12 animate-slide-up"
-            style={{ animationDelay: '600ms', animationFillMode: 'both' }}
+            className="flex gap-1 mt-14 animate-slide-up"
+            style={{ animationDelay: '480ms', animationFillMode: 'both' }}
           >
-            {[
-              { value: '+23', label: 'años de experiencia' },
-              { value: '+500', label: 'estudiantes al año' },
-              { value: '4', label: 'países destino' },
-            ].map(({ value, label }) => (
-              <div key={label} className="text-white">
-                <p className="text-2xl font-extrabold text-blue-300">{value}</p>
-                <p className="text-xs text-gray-300 uppercase tracking-wide">{label}</p>
+            {STATS.map(({ value, label }, i) => (
+              <div key={label} className="flex items-center gap-1">
+                {i > 0 && <div className="w-px h-8 bg-white/10 mx-3" />}
+                <div>
+                  <p className="text-2xl font-extrabold text-white tracking-tight">{value}</p>
+                  <p className="text-[11px] text-slate-400 uppercase tracking-wider mt-0.5">{label}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ANIMACIÓN CSS */}
-      <style>{`
-        @keyframes slideUp {
-          from {
-            opacity: 0;
-            transform: translateY(32px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slide-up {
-          opacity: 0;
-          animation: slideUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-      `}</style>
+      {/* Floating accent — bottom right glow */}
+      <div
+        className="absolute bottom-0 right-0 w-125 h-100 pointer-events-none z-1"
+        style={{
+          background: 'radial-gradient(ellipse at bottom right, rgba(99,102,241,0.18) 0%, transparent 65%)',
+        }}
+      />
     </section>
   );
 }
