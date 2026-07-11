@@ -25,6 +25,7 @@ export interface TestimonialAprobado {
   programa: string;
   texto: string;
   foto?: { asset: { _ref: string } };
+  videoUrl?: string;
 }
 
 export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> {

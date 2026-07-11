@@ -95,6 +95,7 @@ export default async function Home() {
     programa: t.programa,
     texto: t.texto,
     foto: t.foto ? urlFor(t.foto).width(200).height(200).fit('crop').url() : '',
+    videoUrl: t.videoUrl,
   }));
 
   return (
