@@ -56,25 +56,27 @@ export default function Header() {
             />
           </Link>
 
-          {/* Search */}
-          <div className="flex-1 max-w-sm search-dark">
-            <SearchBar dark />
+          {/* CTA — centro */}
+          <div className="flex-1 flex justify-center">
+            <Link
+              href="/contact"
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-2 rounded-full text-[13px] font-bold text-white whitespace-nowrap transition-all duration-200 hover:scale-105 hover:brightness-110"
+              style={{
+                background: 'linear-gradient(135deg, #2563eb 0%, #6366f1 100%)',
+                boxShadow: '0 0 18px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.15)',
+              }}
+            >
+              Cotizar gratis
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+              </svg>
+            </Link>
           </div>
 
-          {/* CTA */}
-          <Link
-            href="/contact"
-            className="shrink-0 hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-bold text-white whitespace-nowrap transition-all duration-200 hover:scale-105 hover:brightness-110"
-            style={{
-              background: 'linear-gradient(135deg, #2563eb 0%, #6366f1 100%)',
-              boxShadow: '0 0 18px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.15)',
-            }}
-          >
-            Cotizar gratis
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-            </svg>
-          </Link>
+          {/* Search — derecha */}
+          <div className="w-64 search-dark shrink-0">
+            <SearchBar dark />
+          </div>
 
         </div>
       </div>
