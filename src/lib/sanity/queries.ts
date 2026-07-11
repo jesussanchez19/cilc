@@ -55,18 +55,21 @@ export interface SanityPost {
   readingTime?: number;
 }
 
+const PREVIEW = { perspective: 'previewDrafts' } as Parameters<typeof writeClient.fetch>[2];
+
 export async function getPosts(): Promise<SanityPost[]> {
-  return client.fetch(`*[_type == "blogPost"] | order(date desc)`);
+  return writeClient.fetch(`*[_type == "blogPost"] | order(date desc)`, {}, PREVIEW);
 }
 
 export async function getLatestPosts(count: number): Promise<SanityPost[]> {
-  return client.fetch(`*[_type == "blogPost"] | order(date desc) [0...$count]`, { count: count - 1 });
+  return writeClient.fetch(`*[_type == "blogPost"] | order(date desc) [0...$count]`, { count: count - 1 }, PREVIEW);
 }
 
 export async function getPostBySlug(slug: string): Promise<SanityPost | null> {
-  return client.fetch(
+  return writeClient.fetch(
     `*[_type == "blogPost" && slug.current == $slug][0]`,
-    { slug }
+    { slug },
+    PREVIEW,
   );
 }
 
