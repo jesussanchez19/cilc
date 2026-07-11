@@ -1,37 +1,43 @@
 import { useState } from 'react';
+import { useFormValue } from 'sanity';
 import type { DocumentActionProps } from 'sanity';
 
 export function ImportarDesdeUrlAction(props: DocumentActionProps) {
   const [loading, setLoading] = useState(false);
-  const [dialogMessage, setDialogMessage] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const doc = props.draft ?? props.published;
-  const tipo = (doc as Record<string, unknown>)?.tipo;
-  const urlExterna = (doc as Record<string, unknown>)?.urlExterna as string | undefined;
+  const tipo = useFormValue(['tipo']) as string | undefined;
+  const urlExterna = useFormValue(['urlExterna']) as string | undefined;
 
-  if (tipo !== 'externo') return null;
+  const isExterno = tipo === 'externo';
+  const hasUrl = Boolean(urlExterna);
 
   return {
     label: loading ? 'Importando…' : '⬇️ Importar datos',
-    disabled: !urlExterna || loading,
-    title: urlExterna
-      ? 'Importar título, resumen, imagen y fecha desde la URL'
-      : 'Escribe primero la URL externa',
-    dialog: dialogMessage
+    disabled: !isExterno || !hasUrl || loading,
+    title: !isExterno
+      ? 'Solo disponible para artículos tipo "Enlace externo"'
+      : !hasUrl
+        ? 'Escribe primero la URL de la publicación'
+        : 'Importar título, resumen, imagen y fecha desde la URL',
+
+    dialog: errorMsg
       ? {
           type: 'confirm' as const,
           tone: 'critical' as const,
-          message: dialogMessage,
-          onConfirm: () => setDialogMessage(null),
-          onCancel: () => setDialogMessage(null),
+          message: errorMsg,
+          onConfirm: () => setErrorMsg(null),
+          onCancel: () => setErrorMsg(null),
         }
       : undefined,
+
     onHandle: async () => {
       if (!urlExterna) return;
       setLoading(true);
+      setErrorMsg(null);
       try {
         const res = await fetch(`/api/fetch-og?url=${encodeURIComponent(urlExterna)}`);
-        if (!res.ok) throw new Error('HTTP ' + res.status);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
 
         const patches: Array<{ set: Record<string, unknown> }> = [];
@@ -39,11 +45,11 @@ export function ImportarDesdeUrlAction(props: DocumentActionProps) {
         if (data.excerpt) patches.push({ set: { excerpt: data.excerpt } });
         if (data.imagenUrl) patches.push({ set: { imagenUrl: data.imagenUrl } });
         if (data.date) patches.push({ set: { date: data.date } });
-
         if (patches.length) props.patch.execute(patches);
+
         props.onComplete();
       } catch {
-        setDialogMessage('No se pudieron importar los datos. Verifica que la URL sea pública e intenta de nuevo.');
+        setErrorMsg('No se pudieron importar los datos. Verifica que la URL sea pública e intenta de nuevo.');
       } finally {
         setLoading(false);
       }
