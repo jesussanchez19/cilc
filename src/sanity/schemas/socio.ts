@@ -6,7 +6,7 @@ export const socioSchema = defineType({
   type: 'document',
   fields: [
     defineField({ name: 'nombre', title: 'Nombre', type: 'string', validation: (r) => r.required() }),
-    defineField({ name: 'logo', title: 'Logo', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
+    defineField({ name: 'logo', title: 'Fotografía', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
     defineField({ name: 'alt', title: 'Texto alternativo', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'url', title: 'Sitio web', type: 'url' }),
     defineField({ name: 'orden', title: 'Orden', type: 'number', initialValue: 0 }),
