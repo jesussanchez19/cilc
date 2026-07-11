@@ -7,7 +7,7 @@ export const socioSchema = defineType({
   fields: [
     defineField({ name: 'nombre', title: 'Nombre *', type: 'string', validation: (r) => r.required() }),
     defineField({ name: 'logo', title: 'Fotografía *', type: 'image', options: { hotspot: true }, validation: (r) => r.required() }),
-    defineField({ name: 'alt', title: 'Texto alternativo *', type: 'string', validation: (r) => r.required() }),
+    defineField({ name: 'alt', title: 'Descripción de la imagen *', type: 'string', description: 'Ej: "Fotografía de Juan García, socio certificado CILC"', validation: (r) => r.required() }),
     defineField({ name: 'url', title: 'Sitio web', type: 'url' }),
     defineField({ name: 'orden', title: 'Orden', type: 'number', initialValue: 0 }),
   ],
