@@ -8,12 +8,12 @@ export interface Testimonial {
   bandera: string;
   programa: string;
   texto: string;
-  foto: string;        // ruta en /public/images/testimonios/<nombre>.png
+  foto: string;
 }
 
 interface TestimonialsCarouselProps {
   testimonials: Testimonial[];
-  autoPlayMs?: number; // default 4500ms
+  autoPlayMs?: number;
 }
 
 export default function TestimonialsCarousel({
@@ -26,7 +26,6 @@ export default function TestimonialsCarousel({
   const touchStartX = useRef<number | null>(null);
   const total = testimonials.length;
 
-  // Detectar prefers-reduced-motion (Actividad 1.5)
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mq.matches);
@@ -38,14 +37,12 @@ export default function TestimonialsCarousel({
   const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
   const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
 
-  // Auto-play — se pausa en hover y con prefers-reduced-motion
   useEffect(() => {
     if (paused || reducedMotion) return;
     const id = setInterval(next, autoPlayMs);
     return () => clearInterval(id);
   }, [paused, reducedMotion, next, autoPlayMs]);
 
-  // Swipe touch (móvil)
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -59,75 +56,93 @@ export default function TestimonialsCarousel({
   const t = testimonials[current];
 
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24" style={{ background: 'var(--dark)', position: 'relative', overflow: 'hidden' }}>
 
-        {/* Encabezado */}
-        <div className="text-center mb-12">
-          <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">
-            Testimonios
-          </span>
-          <h2 className="text-4xl font-extrabold text-gray-900">Lo que dicen nuestros estudiantes</h2>
+      {/* Background glow */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 100%, rgba(99,102,241,0.12) 0%, transparent 70%)' }} />
+
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+
+        {/* Header */}
+        <div className="text-center mb-14">
+          <span className="badge badge-dark mb-5">Testimonios</span>
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-white"
+            style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
+            Lo que dicen{' '}
+            <span className="gradient-text-light">nuestros estudiantes</span>
+          </h2>
         </div>
 
-        {/* Carrusel */}
+        {/* Carousel */}
         <div
-          className="relative"
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           aria-roledescription="carrusel"
           aria-label="Testimonios de estudiantes"
+          className="relative"
         >
-          {/* Tarjeta activa */}
           <div
             key={current}
-            className={`bg-white rounded-2xl shadow-md p-8 md:p-12 text-center ${
-              reducedMotion ? '' : 'animate-fade-in'
-            }`}
+            className={`rounded-2xl p-8 md:p-12 text-center ${reducedMotion ? '' : 'animate-fade-in'}`}
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.08)',
+              backdropFilter: 'blur(12px)',
+            }}
           >
-            {/* Foto */}
+            {/* Avatar */}
             <div
-              className="w-20 h-20 rounded-full bg-cover bg-center mx-auto mb-5 ring-4 ring-blue-100"
-              style={{ backgroundImage: `url('${t.foto}')` }}
+              className="w-20 h-20 rounded-full bg-cover bg-center mx-auto mb-6"
+              style={{
+                backgroundImage: `url('${t.foto}')`,
+                boxShadow: '0 0 0 3px rgba(255,255,255,0.1), 0 0 0 6px rgba(99,102,241,0.2)',
+              }}
               role="img"
               aria-label={`Foto de ${t.nombre}`}
             />
 
-            {/* Estrellas */}
-            <div className="flex justify-center gap-1 text-yellow-400 text-xl mb-4" aria-label="5 estrellas">
-              {'★★★★★'}
+            {/* Stars */}
+            <div className="flex justify-center gap-1 mb-5" aria-label="5 estrellas">
+              {[...Array(5)].map((_, i) => (
+                <svg key={i} className="w-5 h-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
             </div>
 
-            {/* Texto */}
-            <blockquote className="text-gray-700 text-lg leading-relaxed mb-6 italic max-w-2xl mx-auto">
-              "{t.texto}"
+            {/* Quote */}
+            <blockquote className="text-slate-300 text-lg leading-relaxed mb-7 italic max-w-xl mx-auto">
+              &ldquo;{t.texto}&rdquo;
             </blockquote>
 
             {/* Info */}
-            <p className="font-bold text-gray-900 text-base">{t.nombre}</p>
-            <p className="text-sm text-blue-600 font-medium mt-0.5">
-              {t.bandera} {t.pais} · {t.programa}
+            <p className="font-bold text-white text-base">{t.nombre}</p>
+            <p className="text-sm text-blue-400 font-medium mt-1">
+              {t.bandera} {t.pais} &middot; {t.programa}
             </p>
           </div>
 
-          {/* Flechas */}
+          {/* Arrow buttons */}
           <button
             onClick={prev}
             aria-label="Testimonio anterior"
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-5 md:-translate-x-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
             onClick={next}
             aria-label="Siguiente testimonio"
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-5 md:translate-x-10 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -142,30 +157,21 @@ export default function TestimonialsCarousel({
               aria-selected={i === current}
               aria-label={`Ir al testimonio ${i + 1}`}
               onClick={() => setCurrent(i)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                i === current ? 'bg-blue-600 w-6' : 'bg-gray-300 hover:bg-gray-400'
-              }`}
+              className="h-1.5 rounded-full transition-all duration-300"
+              style={{
+                width: i === current ? '24px' : '6px',
+                background: i === current ? 'linear-gradient(90deg,#3b82f6,#6366f1)' : 'rgba(255,255,255,0.2)',
+              }}
             />
           ))}
         </div>
 
-        {/* Indicador de pausa por reduced-motion */}
         {reducedMotion && (
-          <p className="text-center text-xs text-gray-400 mt-3">
+          <p className="text-center text-xs text-slate-500 mt-4">
             Auto-play desactivado (preferencia de movimiento reducido)
           </p>
         )}
       </div>
-
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.4s ease-out forwards;
-        }
-      `}</style>
     </section>
   );
 }

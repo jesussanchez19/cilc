@@ -14,34 +14,37 @@ export default function ArticleCard({ article }: ArticleCardProps) {
 
   return (
     <Link href={`/blog/${article.slug}`} className="group block h-full">
-      <article className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col">
+      <article className="premium-card h-full flex flex-col overflow-hidden">
 
-        {/* Imagen con fallback automático */}
-        <div className="relative h-48 overflow-hidden shrink-0 bg-gray-100">
+        {/* Image */}
+        <div className="relative h-52 overflow-hidden shrink-0 bg-slate-100">
           <div
-            className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+            className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500 ease-out"
             style={{ backgroundImage: `url('${article.image}'), url('${FALLBACK_IMG}')` }}
           />
-          <span className="absolute top-3 left-3 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-blue-700">
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+          {/* Category */}
+          <span className="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[11px] font-bold text-blue-700"
+            style={{ background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(8px)' }}>
             {article.category}
           </span>
         </div>
 
-        {/* Contenido */}
-        <div className="p-5 flex flex-col flex-1">
-          {/* Título truncado a 2 líneas — nunca desborda la card */}
-          <h3 className="font-bold text-gray-900 text-base mb-2 line-clamp-2 leading-snug">
+        {/* Content */}
+        <div className="p-6 flex flex-col flex-1">
+          <h3 className="font-bold text-slate-900 text-base mb-2.5 line-clamp-2 leading-snug group-hover:text-blue-600 transition-colors duration-200">
             {article.title}
           </h3>
-          {/* Extracto truncado a 3 líneas */}
-          <p className="text-gray-500 text-sm leading-relaxed line-clamp-3 flex-1">
+          <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 flex-1">
             {article.excerpt}
           </p>
 
-          {/* Meta: fecha + tiempo de lectura */}
-          <div className="flex items-center gap-3 mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400">
+          {/* Meta */}
+          <div className="flex items-center gap-3 mt-5 pt-4 border-t border-slate-100 text-xs text-slate-400">
             <span>{fecha}</span>
-            <span>·</span>
+            <span className="w-1 h-1 rounded-full bg-slate-200" />
             <span>{article.readingTime} min de lectura</span>
           </div>
         </div>

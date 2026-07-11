@@ -85,39 +85,49 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(10,15,30,0.7)', backdropFilter: 'blur(8px)' }}
     >
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-
-        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+      <div
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl animate-scale-in"
+        style={{
+          background: '#ffffff',
+          boxShadow: 'var(--shadow-xl)',
+        }}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5"
+          style={{ borderBottom: '1px solid rgba(15,23,42,0.07)' }}>
           <div>
-            <h2 className="text-xl font-bold text-gray-900">Obtén tu cotización</h2>
-            <p className="text-sm text-gray-500 mt-0.5">Gratis y sin compromiso</p>
+            <h2 className="text-lg font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>
+              Obtén tu cotización
+            </h2>
+            <p className="text-sm text-slate-400 mt-0.5">Gratis y sin compromiso · Respuesta en &lt;24h</p>
           </div>
           <button
             onClick={onClose}
             aria-label="Cerrar"
-            className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition text-gray-500"
+            className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-150 text-slate-400 hover:text-slate-600"
+            style={{ background: 'var(--surface-2)' }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-4.5 h-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         <div className="p-6">
-
           {status === 'success' ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="text-center py-10 animate-scale-in">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
+                style={{ background: 'linear-gradient(135deg,#d1fae5,#a7f3d0)' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">¡Solicitud enviada!</h3>
-              <p className="text-gray-500 mb-6">Nos pondremos en contacto contigo muy pronto.</p>
-              <button onClick={reset}
-                className="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition text-sm">
+              <h3 className="text-xl font-extrabold text-slate-900 mb-2">¡Solicitud enviada!</h3>
+              <p className="text-slate-400 mb-7">Nos pondremos en contacto contigo muy pronto.</p>
+              <button onClick={reset} className="btn-primary" style={{ background: 'var(--blue-600)' }}>
                 Cerrar
               </button>
             </div>
@@ -125,77 +135,75 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
             <form onSubmit={handleSubmit} className="space-y-4">
 
               {status === 'error' && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm">
+                <div className="p-3.5 rounded-xl text-sm animate-fade-in"
+                  style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>
                   {errorMsg}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Programa *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Programa *</label>
                 <select
-                  value={programa}
-                  onChange={(e) => setPrograma(e.target.value)}
-                  required
-                  disabled={status === 'loading'}
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  value={programa} onChange={(e) => setPrograma(e.target.value)}
+                  required disabled={status === 'loading'}
+                  className="input-field"
                 >
                   <option value="">Selecciona un programa</option>
-                  {PROGRAMAS.map((p) => (
-                    <option key={p} value={p}>{p}</option>
-                  ))}
+                  {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Nombre *</label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nombre *</label>
                 <input
                   type="text" required value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                   disabled={status === 'loading'}
                   placeholder="Tu nombre completo"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="input-field"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Email *</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email *</label>
                   <input
                     type="email" required value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={status === 'loading'}
                     placeholder="tu@email.com"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="input-field"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Teléfono</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Teléfono</label>
                   <input
                     type="tel" value={telefono}
                     onChange={(e) => setTelefono(e.target.value)}
                     disabled={status === 'loading'}
                     placeholder="55 1234 5678"
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    className="input-field"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">¿Alguna pregunta? <span className="text-gray-400 font-normal">(opcional)</span></label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                  ¿Alguna pregunta? <span className="text-slate-400 font-normal">(opcional)</span>
+                </label>
                 <textarea
-                  value={mensaje}
-                  onChange={(e) => setMensaje(e.target.value)}
-                  disabled={status === 'loading'}
-                  rows={3}
+                  value={mensaje} onChange={(e) => setMensaje(e.target.value)}
+                  disabled={status === 'loading'} rows={3}
                   placeholder="Cuéntanos un poco sobre ti y tus objetivos..."
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 resize-none"
+                  className="input-field resize-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={status === 'loading'}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="btn-primary w-full disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+                style={{ background: 'var(--blue-600)', justifyContent: 'center', marginTop: '0.5rem' }}
               >
                 {status === 'loading' ? (
                   <>
@@ -209,10 +217,6 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                   'Solicitar cotización gratis'
                 )}
               </button>
-
-              <p className="text-center text-xs text-gray-400">
-                Sin costo · Sin compromiso · Respuesta en menos de 24h
-              </p>
             </form>
           )}
         </div>
