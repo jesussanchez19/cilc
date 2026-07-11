@@ -90,6 +90,11 @@ export default async function Home() {
     getTestimoniosAprobados(),
   ]);
 
+  const conCalificacion = testimoniosRaw.filter((t) => t.calificacion);
+  const promedioCalificacion = conCalificacion.length > 0
+    ? conCalificacion.reduce((sum, t) => sum + (t.calificacion ?? 0), 0) / conCalificacion.length
+    : undefined;
+
   const testimonios: Testimonial[] = testimoniosRaw.map((t) => ({
     nombre: t.nombre,
     pais: t.pais,
@@ -123,7 +128,7 @@ export default async function Home() {
 
       <HeroBanner />
       <FeaturedPrograms />
-      <StatsSection />
+      <StatsSection promedioCalificacion={promedioCalificacion} />
 
       {/* ── Por qué elegirnos ── */}
       <LazySection animation="slide">
