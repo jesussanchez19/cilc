@@ -93,7 +93,7 @@ export default function TestimonioForm() {
 
       {/* Foto */}
       <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">Fotografía <span className="text-slate-400 font-normal">(opcional)</span></label>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5">Foto tuya en el destino <span className="text-slate-400 font-normal">(opcional)</span></label>
         <div className="flex items-center gap-4">
           {preview ? (
             <Image src={preview} alt="Vista previa" width={64} height={64}
