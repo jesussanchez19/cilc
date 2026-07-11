@@ -7,16 +7,9 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
 import LazySection from '@/components/shared/LazySection';
 import { getLatestArticles } from '@/lib/data/blog';
+import { getSocios } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
-
-const LOGOS = [
-  { name: 'ICEF',           src: '/images/logos/icef.png',       href: 'https://www.icef.com',        alt: 'Miembro certificado ICEF — red global de educación internacional' },
-  { name: 'ALTO',           src: '/images/logos/alto.png',       href: 'https://www.altonetwork.com', alt: 'Miembro ALTO — Association of Language Travel Organisations' },
-  { name: 'Pearson',        src: '/images/logos/pearson.png',    href: 'https://www.pearson.com',     alt: 'Partner Pearson — certificaciones internacionales de inglés' },
-  { name: 'Cambridge',      src: '/images/logos/cambridge.png',  href: 'https://www.cambridgeenglish.org', alt: 'Exámenes Cambridge English — evaluaciones oficiales de inglés' },
-  { name: 'IALC',           src: '/images/logos/ialc.png',       href: 'https://www.ialc.org',        alt: 'Miembro IALC — International Association of Language Centres' },
-  { name: 'Immigration CA', src: '/images/logos/ircc.png',       href: 'https://www.canada.ca/immigration', alt: 'Canadá — Immigration, Refugees and Citizenship Canada' },
-];
 
 const TESTIMONIOS_HOME: Testimonial[] = [
   { nombre: 'Sofía Ramírez',   pais: 'Vancouver, Canadá',   bandera: '🇨🇦', programa: 'Idiomas', foto: '/images/testimonios/sofia-ramirez.png',   texto: 'Aprender inglés en Vancouver cambió mi vida. CILC me guió en cada paso y la experiencia superó todas mis expectativas.' },
@@ -95,8 +88,11 @@ const VALUE_PROPS = [
   },
 ];
 
-export default function Home() {
-  const ultimosArticulos = getLatestArticles(3);
+export default async function Home() {
+  const [ultimosArticulos, socios] = await Promise.all([
+    Promise.resolve(getLatestArticles(3)),
+    getSocios(),
+  ]);
 
   return (
     <div>
@@ -173,30 +169,38 @@ export default function Home() {
         </section>
       </LazySection>
 
-      {/* ── Logos ── */}
-      <LazySection animation="fade">
-        <section className="py-14 bg-white" style={{ borderTop: '1px solid rgba(15,23,42,0.06)' }}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
-              Miembros y socios certificados
-            </p>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
-              {LOGOS.map(({ name, src, href, alt }) => (
-                <a
-                  key={name}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
-                  aria-label={`Visitar sitio de ${name} (abre en nueva pestaña)`}
-                >
-                  <Image src={src} alt={alt} width={120} height={45} className="h-10 w-auto object-contain" />
-                </a>
-              ))}
+      {/* ── Socios y Miembros — solo si el admin agregó contenido en Sanity ── */}
+      {socios.length > 0 && (
+        <LazySection animation="fade">
+          <section className="py-14 bg-white" style={{ borderTop: '1px solid rgba(15,23,42,0.06)' }}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
+                Miembros y socios certificados
+              </p>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
+                {socios.map((s) => (
+                  s.url ? (
+                    <a
+                      key={s._id}
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
+                      aria-label={`Visitar sitio de ${s.nombre} (abre en nueva pestaña)`}
+                    >
+                      <Image src={urlFor(s.logo).width(240).url()} alt={s.alt} width={120} height={45} className="h-10 w-auto object-contain" />
+                    </a>
+                  ) : (
+                    <div key={s._id} className="flex items-center justify-center opacity-50">
+                      <Image src={urlFor(s.logo).width(240).url()} alt={s.alt} width={120} height={45} className="h-10 w-auto object-contain" />
+                    </div>
+                  )
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      </LazySection>
+          </section>
+        </LazySection>
+      )}
 
       {/* ── Testimonios ── */}
       <LazySection animation="slide">

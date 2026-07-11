@@ -42,6 +42,20 @@ export async function getPostBySlug(slug: string): Promise<SanityPost | null> {
   );
 }
 
+// ── Socios y Miembros ─────────────────────────────────────────────────────────
+
+export interface SanityPartner {
+  _id: string;
+  nombre: string;
+  logo: { asset: { _ref: string } };
+  alt: string;
+  url?: string;
+}
+
+export async function getSocios(): Promise<SanityPartner[]> {
+  return client.fetch(`*[_type == "socio"] | order(orden asc)`);
+}
+
 // ── Miembros del equipo ───────────────────────────────────────────────────────
 
 export interface SanityMember {
