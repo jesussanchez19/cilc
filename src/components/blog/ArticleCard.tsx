@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import type { SanityPost } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
