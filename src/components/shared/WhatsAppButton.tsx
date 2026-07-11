@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-const WHATSAPP_NUMBER = '52 1 55 1894 4494';
+const WHATSAPP_NUMBER = '52 55 1894 4494';
 const WHATSAPP_MESSAGE = '¡Hola! Me interesa recibir información sobre sus programas de estudios en el extranjero.';
 const PULSE_INTERVAL_MS = 10000;
 const PULSE_DURATION_MS = 1800;
@@ -37,7 +37,7 @@ export default function WhatsAppButton() {
     }
   }, [tooltipVisible, pulsing]);
 
-  const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`;
+  const url = `https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero`;
 
   const handleTouchStart = () => setTapped(true);
 
