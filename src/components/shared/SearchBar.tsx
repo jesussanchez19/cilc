@@ -17,7 +17,11 @@ const TYPE_DOT: Record<SearchResult['type'], string> = {
   articulo: '#8b5cf6',
 };
 
-export default function SearchBar() {
+interface SearchBarProps {
+  dark?: boolean;
+}
+
+export default function SearchBar({ dark = false }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -82,7 +86,10 @@ export default function SearchBar() {
     <div ref={wrapperRef} className="relative w-full max-w-xs">
       <form onSubmit={handleSubmit}>
         <div className="relative">
-          <svg xmlns="http://www.w3.org/2000/svg" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg xmlns="http://www.w3.org/2000/svg"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors duration-200"
+            style={{ color: dark ? 'rgba(255,255,255,0.38)' : 'var(--text-subtle)' }}
+            fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
           </svg>
           <input
@@ -92,20 +99,36 @@ export default function SearchBar() {
             onFocus={() => query && setOpen(true)}
             placeholder="Buscar programas, destinos..."
             className="w-full pl-9 pr-4 py-2 rounded-xl text-sm transition-all duration-200 outline-none"
-            style={{
+            style={dark ? {
+              background: 'rgba(255,255,255,0.07)',
+              border: '1.5px solid rgba(255,255,255,0.10)',
+              color: 'rgba(255,255,255,0.88)',
+            } : {
               background: 'var(--surface-2)',
               border: '1.5px solid rgba(15,23,42,0.10)',
               color: 'var(--text)',
             }}
             onFocusCapture={(e) => {
-              (e.target as HTMLInputElement).style.background = '#fff';
-              (e.target as HTMLInputElement).style.borderColor = 'var(--blue-500)';
-              (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(59,130,246,0.12)';
+              if (dark) {
+                (e.target as HTMLInputElement).style.background = 'rgba(255,255,255,0.11)';
+                (e.target as HTMLInputElement).style.borderColor = 'rgba(99,102,241,0.55)';
+                (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(99,102,241,0.15)';
+              } else {
+                (e.target as HTMLInputElement).style.background = '#fff';
+                (e.target as HTMLInputElement).style.borderColor = 'var(--blue-500)';
+                (e.target as HTMLInputElement).style.boxShadow = '0 0 0 3px rgba(59,130,246,0.12)';
+              }
             }}
             onBlurCapture={(e) => {
-              (e.target as HTMLInputElement).style.background = 'var(--surface-2)';
-              (e.target as HTMLInputElement).style.borderColor = 'rgba(15,23,42,0.10)';
-              (e.target as HTMLInputElement).style.boxShadow = 'none';
+              if (dark) {
+                (e.target as HTMLInputElement).style.background = 'rgba(255,255,255,0.07)';
+                (e.target as HTMLInputElement).style.borderColor = 'rgba(255,255,255,0.10)';
+                (e.target as HTMLInputElement).style.boxShadow = 'none';
+              } else {
+                (e.target as HTMLInputElement).style.background = 'var(--surface-2)';
+                (e.target as HTMLInputElement).style.borderColor = 'rgba(15,23,42,0.10)';
+                (e.target as HTMLInputElement).style.boxShadow = 'none';
+              }
             }}
           />
         </div>

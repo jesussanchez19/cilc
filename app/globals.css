@@ -319,6 +319,25 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   100% { background-position: 0% 50%; }
 }
 
+@keyframes scanLine {
+  0%   { left: -200px; opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
+  100% { left: calc(100% + 200px); opacity: 0; }
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  35%       { transform: translate(24px, -12px) scale(1.06); }
+  68%       { transform: translate(-12px, 8px) scale(0.97); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  40%       { transform: translate(-18px, 12px) scale(0.96); }
+  72%       { transform: translate(14px, -16px) scale(1.04); }
+}
+
 /* ═══════════════════════════════════════════════════════
    Animation Classes
 ═══════════════════════════════════════════════════════ */
@@ -354,6 +373,11 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 
 .animate-pulse-blue {
   animation: pulse-blue 2.5s ease-in-out infinite;
+}
+
+/* Dark search placeholder */
+.search-dark input::placeholder {
+  color: rgba(255, 255, 255, 0.30) !important;
 }
 
 /* Skeleton */
