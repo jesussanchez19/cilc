@@ -103,6 +103,12 @@ export const blogPostSchema = defineType({
       name: 'readingTime', title: 'Tiempo de lectura (min)', type: 'number',
       hidden: ({ document }) => document?.tipo === 'externo',
     }),
+
+    defineField({
+      name: 'visible', title: 'Visible en el sitio', type: 'boolean',
+      description: 'Desactiva para ocultar este artículo sin eliminarlo.',
+      initialValue: true,
+    }),
   ],
 
   preview: {
