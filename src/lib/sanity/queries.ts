@@ -17,6 +17,20 @@ export async function getTestimonials(): Promise<SanityTestimonial[]> {
   return client.fetch(`*[_type == "testimonial"] | order(_createdAt asc)`);
 }
 
+export interface TestimonialAprobado {
+  _id: string;
+  nombre: string;
+  pais: string;
+  bandera: string;
+  programa: string;
+  texto: string;
+  foto?: { asset: { _ref: string } };
+}
+
+export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> {
+  return client.fetch(`*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`);
+}
+
 // ── Blog posts ────────────────────────────────────────────────────────────────
 
 export interface SanityPost {

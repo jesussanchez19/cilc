@@ -1,0 +1,84 @@
+'use client';
+
+import { useState } from 'react';
+
+const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
+
+export default function TestimonioForm() {
+  const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/testimonio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      setStatus(res.ok ? 'success' : 'error');
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (status === 'success') {
+    return (
+      <div className="text-center py-12 animate-scale-in">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="text-xl font-bold text-slate-900 mb-2">¡Gracias por compartir tu experiencia!</h3>
+        <p className="text-slate-500 text-sm">Revisaremos tu testimonio y lo publicaremos pronto.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Nombre *</label>
+          <input className="input-field" placeholder="Tu nombre completo" value={form.nombre}
+            onChange={(e) => set('nombre', e.target.value)} required />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Email *</label>
+          <input className="input-field" type="email" placeholder="tu@email.com" value={form.email}
+            onChange={(e) => set('email', e.target.value)} required />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
+          <select className="input-field" value={form.programa} onChange={(e) => set('programa', e.target.value)}>
+            <option value="">Selecciona un programa</option>
+            {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">País / Ciudad</label>
+          <input className="input-field" placeholder="Ej: Vancouver, Canadá" value={form.pais}
+            onChange={(e) => set('pais', e.target.value)} />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1.5">Tu experiencia *</label>
+        <textarea className="input-field resize-none" rows={4}
+          placeholder="Cuéntanos cómo fue tu experiencia con CILC..."
+          value={form.texto} onChange={(e) => set('texto', e.target.value)} required />
+      </div>
+      {status === 'error' && (
+        <p className="text-sm text-red-600">Ocurrió un error. Intenta de nuevo.</p>
+      )}
+      <button type="submit" disabled={status === 'loading'} className="btn-primary w-full justify-center">
+        {status === 'loading' ? 'Enviando...' : 'Enviar testimonio'}
+      </button>
+    </form>
+  );
+}

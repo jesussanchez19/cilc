@@ -7,17 +7,10 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
 import LazySection from '@/components/shared/LazySection';
 import { getLatestArticles } from '@/lib/data/blog';
-import { getSocios } from '@/lib/sanity/queries';
+import { getSocios, getTestimoniosAprobados } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
-const TESTIMONIOS_HOME: Testimonial[] = [
-  { nombre: 'Sofía Ramírez',   pais: 'Vancouver, Canadá',   bandera: '🇨🇦', programa: 'Idiomas', foto: '/images/testimonios/sofia-ramirez.png',   texto: 'Aprender inglés en Vancouver cambió mi vida. CILC me guió en cada paso y la experiencia superó todas mis expectativas.' },
-  { nombre: 'Valeria Cruz',    pais: 'París, Francia',      bandera: '🇫🇷', programa: 'Au Pair', foto: '/images/testimonios/valeria-cruz.png',    texto: 'Vivir con una familia francesa fue una experiencia única. Aprendí el idioma y gané amigos para toda la vida.' },
-  { nombre: 'Diego Herrera',   pais: 'Toronto, Canadá',     bandera: '🇨🇦', programa: 'Años Académicos', foto: '/images/testimonios/diego-herrera.png', texto: 'Un año en Toronto me abrió las puertas a una universidad internacional. Sin CILC no lo habría logrado.' },
-  { nombre: 'Andrea Flores',   pais: 'Dublín, Irlanda',     bandera: '🇮🇪', programa: 'Estudia y Trabaja', foto: '/images/testimonios/andrea-flores.png', texto: 'Estudié y trabajé al mismo tiempo. Cubrí mis gastos y acumulé experiencia laboral internacional real.' },
-  { nombre: 'Carlos Mendoza',  pais: 'Dublín, Irlanda',     bandera: '🇮🇪', programa: 'Idiomas', foto: '/images/testimonios/carlos-mendoza.png',  texto: 'En 3 meses mejoré mi inglés al nivel que necesitaba para mi trabajo. CILC eligió la escuela perfecta para mí.' },
-];
 
 const VALUE_PROPS = [
   {
@@ -89,10 +82,20 @@ const VALUE_PROPS = [
 ];
 
 export default async function Home() {
-  const [ultimosArticulos, socios] = await Promise.all([
+  const [ultimosArticulos, socios, testimoniosRaw] = await Promise.all([
     Promise.resolve(getLatestArticles(3)),
     getSocios(),
+    getTestimoniosAprobados(),
   ]);
+
+  const testimonios: Testimonial[] = testimoniosRaw.map((t) => ({
+    nombre: t.nombre,
+    pais: t.pais,
+    bandera: t.bandera ?? '',
+    programa: t.programa,
+    texto: t.texto,
+    foto: t.foto ? urlFor(t.foto).width(200).height(200).fit('crop').url() : '',
+  }));
 
   return (
     <div>
@@ -208,10 +211,12 @@ export default async function Home() {
         </LazySection>
       )}
 
-      {/* ── Testimonios ── */}
-      <LazySection animation="slide">
-        <TestimonialsCarousel testimonials={TESTIMONIOS_HOME} />
-      </LazySection>
+      {/* ── Testimonios — solo si hay aprobados en Sanity ── */}
+      {testimonios.length > 0 && (
+        <LazySection animation="slide">
+          <TestimonialsCarousel testimonials={testimonios} />
+        </LazySection>
+      )}
 
       {/* ── Blog ── */}
       <LazySection animation="slide">
