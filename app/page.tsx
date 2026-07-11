@@ -5,6 +5,7 @@ import FeaturedPrograms from '@/components/home/FeaturedPrograms';
 import StatsSection from '@/components/home/StatsSection';
 import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
+import LazySection from '@/components/shared/LazySection';
 import { getLatestArticles } from '@/lib/data/blog';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
@@ -128,7 +129,8 @@ export default function Home() {
       <FeaturedPrograms />
       <StatsSection />
 
-      {/* ── Por qué elegirnos ── */}
+      {/* ── Por qué elegirnos — lazy loaded (below the fold) ── */}
+      <LazySection animation="slide">
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -182,14 +184,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
-      {/* ── Medios y Certificaciones (Actividad 3) ── */}
+      {/* ── Medios y Certificaciones — lazy ── */}
+      <LazySection animation="fade">
       <section className="py-14 bg-white border-t border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-center text-xs font-semibold uppercase tracking-widest text-gray-400 mb-8">
             Miembros y socios certificados
           </p>
-          {/* Grid 3 col en móvil, 6 en desktop — logos alineados */}
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
             {LOGOS.map(({ name, src, href, alt }) => (
               <a
@@ -212,11 +215,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
-      {/* ── Carrusel de testimonios (Actividad 1) ── */}
-      <TestimonialsCarousel testimonials={TESTIMONIOS_HOME} />
+      {/* ── Carrusel de testimonios — lazy ── */}
+      <LazySection animation="slide">
+        <TestimonialsCarousel testimonials={TESTIMONIOS_HOME} />
+      </LazySection>
 
-      {/* ── Últimas noticias del blog (Actividad 6) ── */}
+      {/* ── Últimas noticias del blog — lazy ── */}
+      <LazySection animation="slide">
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
@@ -241,8 +248,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
 
       {/* ── CTA ── */}
+      <LazySection animation="fade">
       <section className="py-20 bg-blue-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4">¿Listo para transformar tu futuro?</h2>
@@ -267,6 +276,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </LazySection>
     </div>
   );
 }
