@@ -1,12 +1,10 @@
-import { programs } from '@/lib/data/programs';
-import { countries } from '@/lib/data/countries';
+const STATS = [
+  { value: '23+', label: 'Años de experiencia', desc: 'Abriendo puertas al mundo desde 2001' },
+  { value: '6',   label: 'Programas disponibles', desc: 'Diseñados para cada etapa de tu vida' },
+  { value: '12+', label: 'Destinos en el mundo', desc: 'Canadá, USA, Inglaterra, Irlanda y más' },
+];
 
 export default function StatsSection() {
-  const STATS = [
-    { value: '23+',                    label: 'Años de experiencia',   desc: 'Abriendo puertas al mundo desde 2001' },
-    { value: `${programs.length}`,     label: 'Programas disponibles', desc: 'Diseñados para cada etapa de tu vida' },
-    { value: `${countries.length}`,     label: 'Destinos en el mundo',  desc: 'Canadá, USA, Inglaterra, Irlanda y más' },
-  ];
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

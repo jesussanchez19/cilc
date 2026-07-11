@@ -2,12 +2,11 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { countries } from '@/lib/data/countries';
 
 const STATS = [
   { value: '+23', label: 'años de exp.' },
   { value: '+500', label: 'estudiantes/año' },
-  { value: `${countries.length}`, label: 'países destino' },
+  { value: '4', label: 'países destino' },
 ];
 
 export default function HeroBanner() {
