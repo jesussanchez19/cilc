@@ -183,7 +183,7 @@ export default function Footer() {
               © 2026 Canadian &amp; International Language Centers. Todos los derechos reservados.
             </p>
             <div className="flex gap-6 text-xs">
-              <Link href="#" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Privacidad</Link>
+              <Link href="/aviso-de-privacidad" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Aviso de Privacidad</Link>
               <Link href="#" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Términos</Link>
               <Link href="/contact" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Contacto</Link>
             </div>

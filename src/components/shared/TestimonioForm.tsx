@@ -12,6 +12,7 @@ export default function TestimonioForm() {
   const [preview, setPreview] = useState<string | null>(null);
   const [calificacion, setCalificacion] = useState(0);
   const [hovered, setHovered] = useState(0);
+  const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -165,10 +166,29 @@ export default function TestimonioForm() {
           placeholder="Cuéntanos cómo fue tu experiencia con CILC..."
           value={form.texto} onChange={(e) => set('texto', e.target.value)} required />
       </div>
+      {/* Consentimiento */}
+      <label className="flex items-start gap-3 cursor-pointer group">
+        <input
+          type="checkbox"
+          checked={aceptaPrivacidad}
+          onChange={(e) => setAceptaPrivacidad(e.target.checked)}
+          required
+          className="mt-0.5 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shrink-0"
+        />
+        <span className="text-sm text-slate-600 leading-snug">
+          He leído y acepto el{' '}
+          <a href="/aviso-de-privacidad" target="_blank" rel="noopener noreferrer"
+            className="text-blue-600 hover:underline font-medium">
+            Aviso de Privacidad
+          </a>
+          {' '}y autorizo el uso de mis datos para publicar mi testimonio en el sitio de CILC.
+        </span>
+      </label>
+
       {status === 'error' && (
         <p className="text-sm text-red-600">Ocurrió un error. Intenta de nuevo.</p>
       )}
-      <button type="submit" disabled={status === 'loading'} className="btn-primary w-full justify-center">
+      <button type="submit" disabled={status === 'loading' || !aceptaPrivacidad} className="btn-primary w-full justify-center">
         {status === 'loading' ? 'Enviando...' : 'Enviar testimonio'}
       </button>
     </form>
