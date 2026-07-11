@@ -1,4 +1,5 @@
 import { client } from './client';
+import { writeClient } from './writeClient';
 
 // ── Testimonios ───────────────────────────────────────────────────────────────
 
@@ -30,7 +31,11 @@ export interface TestimonialAprobado {
 }
 
 export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> {
-  return client.fetch(`*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`);
+  return writeClient.fetch(
+    `*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`,
+    {},
+    { perspective: 'previewDrafts' } as Parameters<typeof writeClient.fetch>[2],
+  );
 }
 
 // ── Blog posts ────────────────────────────────────────────────────────────────
