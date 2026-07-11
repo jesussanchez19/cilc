@@ -26,9 +26,10 @@ export default function AvisoPrivacidadPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-3">1. Responsable del tratamiento</h2>
           <p>
-            <strong>Canadian &amp; International Language Centers, S.C. (CILC)</strong>, con domicilio en la
-            Ciudad de México, es responsable del uso y protección de sus datos personales, en términos de lo
-            dispuesto por la <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</em> (LFPDPPP)
+            <strong>Canadian &amp; International Language Centers, S.C. (CILC)</strong>, con domicilio en
+            Av. Insurgentes Sur 863, Piso 7, Col. Nápoles, C.P. 03810, Ciudad de México, México,
+            es responsable del uso y protección de sus datos personales, en términos de lo dispuesto por la{' '}
+            <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</em> (LFPDPPP)
             y su Reglamento.
           </p>
           <p className="mt-2">
