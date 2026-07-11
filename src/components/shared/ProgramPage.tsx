@@ -97,11 +97,11 @@ export default function ProgramPage({ program }: ProgramPageProps) {
   return (
     <div>
       {/* HERO */}
-      <div className="relative min-h-125 flex items-end overflow-hidden">
-        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('${imgs.hero}')` }} />
+      <div className="relative min-h-160 flex items-end overflow-hidden">
+        <div className={`absolute inset-0 bg-cover ${program.slug === 'anos-academicos' ? 'bg-top' : 'bg-center'}`} style={{ backgroundImage: `url('${imgs.hero}')` }} />
         <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/95 via-[#0f172a]/55 to-[#0f172a]/20" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 pt-32 w-full">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-48 w-full">
           <div className="max-w-3xl">
             <span className="badge badge-dark mb-5 inline-flex animate-slide-up" style={{ animationDelay: '0ms', animationFillMode: 'both' }}>
               {program.icon} {program.subtitle}
