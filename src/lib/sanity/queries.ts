@@ -42,18 +42,25 @@ export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> 
 
 export interface SanityPost {
   _id: string;
-  slug: { current: string };
+  tipo: 'propio' | 'externo';
   title: string;
+  slug?: { current: string };
   excerpt: string;
-  content: string;
-  image: { asset: { _ref: string } };
+  content?: unknown[];
+  image?: { asset: { _ref: string } };
+  imagenUrl?: string;
+  urlExterna?: string;
   date: string;
   category: string;
-  readingTime: number;
+  readingTime?: number;
 }
 
 export async function getPosts(): Promise<SanityPost[]> {
   return client.fetch(`*[_type == "blogPost"] | order(date desc)`);
+}
+
+export async function getLatestPosts(count: number): Promise<SanityPost[]> {
+  return client.fetch(`*[_type == "blogPost"] | order(date desc) [0...$count]`, { count: count - 1 });
 }
 
 export async function getPostBySlug(slug: string): Promise<SanityPost | null> {

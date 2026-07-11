@@ -8,8 +8,7 @@ import StatsSection from '@/components/home/StatsSection';
 import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
 import LazySection from '@/components/shared/LazySection';
-import { getLatestArticles } from '@/lib/data/blog';
-import { getSocios, getTestimoniosAprobados } from '@/lib/sanity/queries';
+import { getSocios, getTestimoniosAprobados, getLatestPosts } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
@@ -85,7 +84,7 @@ const VALUE_PROPS = [
 
 export default async function Home() {
   const [ultimosArticulos, socios, testimoniosRaw] = await Promise.all([
-    Promise.resolve(getLatestArticles(3)),
+    getLatestPosts(3),
     getSocios(),
     getTestimoniosAprobados(),
   ]);
@@ -228,36 +227,38 @@ export default async function Home() {
       )}
 
       {/* ── Blog ── */}
-      <LazySection animation="slide">
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
-              <div>
-                <span className="badge mb-4">Blog CILC</span>
-                <h2 className="text-4xl font-extrabold text-slate-900"
-                  style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
-                  Últimas noticias
-                </h2>
+      {ultimosArticulos.length > 0 && (
+        <LazySection animation="slide">
+          <section className="py-24 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-end justify-between mb-12 flex-wrap gap-4">
+                <div>
+                  <span className="badge mb-4">Blog CILC</span>
+                  <h2 className="text-4xl font-extrabold text-slate-900"
+                    style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
+                    Últimas noticias
+                  </h2>
+                </div>
+                <Link
+                  href="/blog"
+                  className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1.5 transition-colors duration-150 whitespace-nowrap"
+                >
+                  Ver todos los artículos
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </Link>
               </div>
-              <Link
-                href="/blog"
-                className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1.5 transition-colors duration-150 whitespace-nowrap"
-              >
-                Ver todos los artículos
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                </svg>
-              </Link>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {ultimosArticulos.map((article) => (
-                <ArticleCard key={article.id} article={article} />
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {ultimosArticulos.map((post) => (
+                  <ArticleCard key={post._id} post={post} />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      </LazySection>
+          </section>
+        </LazySection>
+      )}
 
       {/* ── CTA final ── */}
       <LazySection animation="fade">
