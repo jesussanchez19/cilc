@@ -44,6 +44,7 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
   const sectionRef = useRef<HTMLElement>(null);
   const [counts, setCounts] = useState(STATS.map(() => 0));
   const [animated, setAnimated] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -53,15 +54,13 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
     const timer = setTimeout(() => {
       observer = new IntersectionObserver(
         ([entry]) => {
+          setVisible(entry.isIntersecting);
           if (entry.isIntersecting && !animated) {
             setAnimated(true);
-            observer.disconnect();
-
             const targets = STATS.map((s) => s.value);
             const duration = 1600;
             const startTime = performance.now();
             let rafId: number;
-
             function tick(now: number) {
               const elapsed = now - startTime;
               const progress = Math.min(elapsed / duration, 1);
@@ -69,7 +68,6 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
               setCounts(targets.map((t) => Math.round(eased * t)));
               if (progress < 1) rafId = requestAnimationFrame(tick);
             }
-
             rafId = requestAnimationFrame(tick);
           }
         },
@@ -96,7 +94,8 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
           {STATS.map(({ suffix, label, desc }, i) => (
             <div
               key={label}
-              className="bg-white px-10 py-12 text-center relative group hover:bg-blue-50/40 transition-colors duration-300"
+              className={`bg-white px-10 py-12 text-center relative group hover:bg-blue-50/40 transition-colors duration-300 reveal ${visible ? 'is-visible' : ''}`}
+              style={{ transitionDelay: visible ? `${i * 100}ms` : '0ms' }}
             >
               <div
                 className="text-6xl font-extrabold mb-2 gradient-text"

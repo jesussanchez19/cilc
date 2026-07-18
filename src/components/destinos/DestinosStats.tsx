@@ -23,25 +23,20 @@ export default function DestinosStats() {
     const timer = setTimeout(() => {
       observer = new IntersectionObserver(
         ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-
-            if (!animated.current) {
-              animated.current = true;
-              const targets = STATS.map((s) => s.target);
-              const duration = 1400;
-              const start = performance.now();
-
-              function tick(now: number) {
-                const elapsed = now - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const eased = 1 - Math.pow(1 - progress, 3);
-                setCounts(targets.map((t) => Math.round(eased * t)));
-                if (progress < 1) requestAnimationFrame(tick);
-              }
-              requestAnimationFrame(tick);
+          setVisible(entry.isIntersecting);
+          if (entry.isIntersecting && !animated.current) {
+            animated.current = true;
+            const targets = STATS.map((s) => s.target);
+            const duration = 1400;
+            const start = performance.now();
+            function tick(now: number) {
+              const elapsed = now - start;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              setCounts(targets.map((t) => Math.round(eased * t)));
+              if (progress < 1) requestAnimationFrame(tick);
             }
+            requestAnimationFrame(tick);
           }
         },
         { threshold: 0.4 }
@@ -59,7 +54,7 @@ export default function DestinosStats() {
           {i > 0 && <div className="w-px h-8 bg-white/10" />}
           <div
             className={`text-center reveal ${visible ? 'is-visible' : ''}`}
-            style={{ transitionDelay: `${i * 140}ms` }}
+            style={{ transitionDelay: visible ? `${i * 140}ms` : '0ms' }}
           >
             <p className="text-2xl font-extrabold text-white tracking-tight tabular-nums">
               {counts[i]}{suffix}

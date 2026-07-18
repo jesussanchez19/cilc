@@ -92,7 +92,7 @@ function useSection(threshold = 0.15) {
     let obs: IntersectionObserver;
     const timer = setTimeout(() => {
       obs = new IntersectionObserver(
-        ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+        ([e]) => { setVisible(e.isIntersecting); },
         { threshold }
       );
       obs.observe(el);

@@ -37,8 +37,11 @@ export default function AnimateIn({
       observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
+            el.style.transitionDelay = `${delay}ms`;
             el.classList.add('is-visible');
-            observer.disconnect();
+          } else {
+            el.style.transitionDelay = '0ms';
+            el.classList.remove('is-visible');
           }
         },
         { threshold }
@@ -53,11 +56,7 @@ export default function AnimateIn({
   }, [threshold]);
 
   return (
-    <div
-      ref={ref}
-      className={`${cls} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <div ref={ref} className={`${cls} ${className}`}>
       {children}
     </div>
   );
