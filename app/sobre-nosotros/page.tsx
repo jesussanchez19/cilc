@@ -261,7 +261,7 @@ export default function SobreNosotrosPage() {
 
           <div className="space-y-4 max-w-4xl mx-auto">
             {RAZONES_2026.map(({ num, title, desc }, i) => (
-              <AnimateIn key={num} animation="left" delay={i * 80}>
+              <AnimateIn key={num} animation="left" delay={i * 120} threshold={0.4}>
                 <div className="flex gap-6 items-start p-7 rounded-2xl group transition-all duration-300"
                   style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
                   <span className="shrink-0 text-4xl font-black"
@@ -277,7 +277,7 @@ export default function SobreNosotrosPage() {
             ))}
           </div>
 
-          <AnimateIn animation="up" delay={RAZONES_2026.length * 80 + 60} className="text-center mt-12">
+          <AnimateIn animation="up" delay={RAZONES_2026.length * 120 + 80} threshold={0.5} className="text-center mt-12">
             <Link href="/contact" className="btn-primary">
               Quiero aprovechar 2026
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
