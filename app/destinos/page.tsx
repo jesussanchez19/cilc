@@ -1,6 +1,7 @@
 import { countries } from '@/lib/data/countries';
 import CountryGrid from '@/components/shared/CountryGrid';
 import DestinosStats from '@/components/destinos/DestinosStats';
+import AnimateIn from '@/components/shared/AnimateIn';
 
 export const metadata = {
   title: 'Destinos | CILC',
@@ -22,15 +23,17 @@ export default function DestinosPage() {
           }} />
 
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="badge badge-dark mb-6">Destinos</span>
+          <span className="badge badge-dark mb-6 animate-slide-up inline-flex"
+            style={{ animationDelay: '0ms', animationFillMode: 'both' }}>Destinos</span>
           <h1
-            className="text-5xl sm:text-6xl font-extrabold text-white mb-5"
-            style={{ letterSpacing: '-0.04em', lineHeight: '1.04' }}
+            className="text-5xl sm:text-6xl font-extrabold text-white mb-5 animate-slide-up"
+            style={{ letterSpacing: '-0.04em', lineHeight: '1.04', animationDelay: '100ms', animationFillMode: 'both' }}
           >
             El mundo es tu{' '}
             <span className="gradient-text-light">aula</span>
           </h1>
-          <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
             Explora los países donde puedes estudiar con CILC.
             Filtra por región o idioma para encontrar el destino perfecto para ti.
           </p>

@@ -53,13 +53,15 @@ export default function GaleriaPage() {
           style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="badge badge-dark mb-5">Nuestros Estudiantes</span>
-          <h1 className="text-5xl sm:text-6xl font-extrabold text-white mb-5"
-            style={{ letterSpacing: '-0.04em', lineHeight: '1.04' }}>
+          <span className="badge badge-dark mb-5 animate-slide-up inline-flex"
+            style={{ animationDelay: '0ms', animationFillMode: 'both' }}>Nuestros Estudiantes</span>
+          <h1 className="text-5xl sm:text-6xl font-extrabold text-white mb-5 animate-slide-up"
+            style={{ letterSpacing: '-0.04em', lineHeight: '1.04', animationDelay: '100ms', animationFillMode: 'both' }}>
             Galería de<br />
             <span className="gradient-text-light">Experiencias</span>
           </h1>
-          <p className="text-slate-400 text-xl max-w-xl mx-auto leading-relaxed">
+          <p className="text-slate-400 text-xl max-w-xl mx-auto leading-relaxed animate-slide-up"
+            style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
             Historias reales de estudiantes mexicanos que transformaron su futuro con CILC.
           </p>
         </div>

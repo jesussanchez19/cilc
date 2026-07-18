@@ -106,11 +106,11 @@ export default function ProgramPage({ program }: ProgramPageProps) {
   const testimonios = testimoniosPorPrograma[program.slug] ?? [];
   const [modalOpen, setModalOpen] = useState(false);
 
-  const stats  = useSection(0.2);
-  const hl     = useSection(0.1);
-  const incl   = useSection(0.1);
-  const badges = useSection(0.1);
-  const test   = useSection(0.1);
+  const stats  = useSection(0.25);
+  const hl     = useSection(0.25);
+  const incl   = useSection(0.25);
+  const badges = useSection(0.2);
+  const test   = useSection(0.2);
 
   const programaNombre: Record<string, string> = {
     'idiomas': 'Idiomas', 'au-pair': 'Au Pair', 'anos-academicos': 'Años Académicos',

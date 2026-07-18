@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 
 import ArticleCard from '@/components/blog/ArticleCard';
+import AnimateIn from '@/components/shared/AnimateIn';
 import { getPosts } from '@/lib/sanity/queries';
 
 export const metadata = {
@@ -18,13 +19,15 @@ export default async function BlogPage() {
 
       {/* Hero */}
       <section className="py-20 text-center" style={{ background: 'var(--dark)' }}>
-        <span className="badge badge-dark mb-5 inline-flex">Blog & Noticias</span>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4"
-          style={{ letterSpacing: '-0.03em' }}>
+        <span className="badge badge-dark mb-5 inline-flex animate-slide-up"
+          style={{ animationDelay: '0ms', animationFillMode: 'both' }}>Blog & Noticias</span>
+        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4 animate-slide-up"
+          style={{ letterSpacing: '-0.03em', animationDelay: '100ms', animationFillMode: 'both' }}>
           Noticias y{' '}
           <span className="gradient-text-light">recursos CILC</span>
         </h1>
-        <p className="text-slate-400 text-lg max-w-xl mx-auto px-4">
+        <p className="text-slate-400 text-lg max-w-xl mx-auto px-4 animate-slide-up"
+          style={{ animationDelay: '200ms', animationFillMode: 'both' }}>
           Artículos propios, noticias del sector y publicaciones relevantes para tu experiencia en el extranjero.
         </p>
       </section>
@@ -33,8 +36,10 @@ export default async function BlogPage() {
 
         {posts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {posts.map((post) => (
-              <ArticleCard key={post._id} post={post} />
+            {posts.map((post, i) => (
+              <AnimateIn key={post._id} animation="scale" delay={Math.min(i, 5) * 80} threshold={0.1}>
+                <ArticleCard post={post} />
+              </AnimateIn>
             ))}
           </div>
         ) : (
