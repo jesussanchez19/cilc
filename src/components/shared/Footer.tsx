@@ -26,7 +26,6 @@ const NAV_COLS = [
     title: 'Explorar',
     links: [
       { href: '/destinos',      label: 'Destinos' },
-      { href: '/destinos',      label: 'Países' },
       { href: '/universities',  label: 'Universidades' },
       { href: '/blog',          label: 'Blog' },
       { href: '/galeria',       label: 'Galería' },
