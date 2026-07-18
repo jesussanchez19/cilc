@@ -31,18 +31,25 @@ export default function AnimateIn({
     const el = ref.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          el.classList.add('is-visible');
-          observer.disconnect();
-        }
-      },
-      { threshold }
-    );
+    let observer: IntersectionObserver;
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    const timer = setTimeout(() => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            el.classList.add('is-visible');
+            observer.disconnect();
+          }
+        },
+        { threshold }
+      );
+      observer.observe(el);
+    }, 80);
+
+    return () => {
+      clearTimeout(timer);
+      observer?.disconnect();
+    };
   }, [threshold]);
 
   return (
