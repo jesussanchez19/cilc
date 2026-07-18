@@ -15,6 +15,15 @@ import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
 
+const LOGOS = [
+  { name: 'ICEF',           src: '/images/logos/icef.png',       href: 'https://www.icef.com',        alt: 'Miembro certificado ICEF — red global de educación internacional' },
+  { name: 'ALTO',           src: '/images/logos/alto.png',       href: 'https://www.altonetwork.com', alt: 'Miembro ALTO — Association of Language Travel Organisations' },
+  { name: 'Pearson',        src: '/images/logos/pearson.png',    href: 'https://www.pearson.com',     alt: 'Partner Pearson — certificaciones internacionales de inglés' },
+  { name: 'Cambridge',      src: '/images/logos/cambridge.png',  href: 'https://www.cambridgeenglish.org', alt: 'Exámenes Cambridge English — evaluaciones oficiales de inglés' },
+  { name: 'IALC',           src: '/images/logos/ialc.png',       href: 'https://www.ialc.org',        alt: 'Miembro IALC — International Association of Language Centres' },
+  { name: 'Immigration CA', src: '/images/logos/ircc.png',       href: 'https://www.canada.ca/immigration', alt: 'Canadá — Immigration, Refugees and Citizenship Canada' },
+];
+
 const VALUE_PROPS = [
   {
     title: 'Asesoría sin costo',
