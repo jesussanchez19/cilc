@@ -89,12 +89,15 @@ function useSection(threshold = 0.15) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
+    let obs: IntersectionObserver;
+    const timer = setTimeout(() => {
+      obs = new IntersectionObserver(
+        ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+        { threshold }
+      );
+      obs.observe(el);
+    }, 80);
+    return () => { clearTimeout(timer); obs?.disconnect(); };
   }, [threshold]);
 
   return { ref, visible };

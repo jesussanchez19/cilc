@@ -49,34 +49,36 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
     const el = sectionRef.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !animated) {
-          setAnimated(true);
-          observer.disconnect();
+    let observer: IntersectionObserver;
+    const timer = setTimeout(() => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && !animated) {
+            setAnimated(true);
+            observer.disconnect();
 
-          const targets = STATS.map((s) => s.value);
-          const duration = 1600;
-          const startTime = performance.now();
-          let rafId: number;
+            const targets = STATS.map((s) => s.value);
+            const duration = 1600;
+            const startTime = performance.now();
+            let rafId: number;
 
-          function tick(now: number) {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCounts(targets.map((t) => Math.round(eased * t)));
-            if (progress < 1) rafId = requestAnimationFrame(tick);
+            function tick(now: number) {
+              const elapsed = now - startTime;
+              const progress = Math.min(elapsed / duration, 1);
+              const eased = 1 - Math.pow(1 - progress, 3);
+              setCounts(targets.map((t) => Math.round(eased * t)));
+              if (progress < 1) rafId = requestAnimationFrame(tick);
+            }
+
+            rafId = requestAnimationFrame(tick);
           }
+        },
+        { threshold: 0.3 }
+      );
+      observer.observe(el);
+    }, 80);
 
-          rafId = requestAnimationFrame(tick);
-          return () => cancelAnimationFrame(rafId);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
+    return () => { clearTimeout(timer); observer?.disconnect(); };
   }, [animated]);
 
   const cols = promedioCalificacion !== undefined

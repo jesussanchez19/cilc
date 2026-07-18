@@ -19,34 +19,37 @@ export default function DestinosStats() {
     const el = ref.current;
     if (!el) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
+    let observer: IntersectionObserver;
+    const timer = setTimeout(() => {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            observer.disconnect();
 
-          if (!animated.current) {
-            animated.current = true;
-            const targets = STATS.map((s) => s.target);
-            const duration = 1400;
-            const start = performance.now();
+            if (!animated.current) {
+              animated.current = true;
+              const targets = STATS.map((s) => s.target);
+              const duration = 1400;
+              const start = performance.now();
 
-            function tick(now: number) {
-              const elapsed = now - start;
-              const progress = Math.min(elapsed / duration, 1);
-              const eased = 1 - Math.pow(1 - progress, 3);
-              setCounts(targets.map((t) => Math.round(eased * t)));
-              if (progress < 1) requestAnimationFrame(tick);
+              function tick(now: number) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                setCounts(targets.map((t) => Math.round(eased * t)));
+                if (progress < 1) requestAnimationFrame(tick);
+              }
+              requestAnimationFrame(tick);
             }
-            requestAnimationFrame(tick);
           }
-        }
-      },
-      { threshold: 0.4 }
-    );
+        },
+        { threshold: 0.4 }
+      );
+      observer.observe(el);
+    }, 80);
 
-    observer.observe(el);
-    return () => observer.disconnect();
+    return () => { clearTimeout(timer); observer?.disconnect(); };
   }, []);
 
   return (
