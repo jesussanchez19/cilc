@@ -413,6 +413,11 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   animation: slideUp 0.7s var(--ease-expo) forwards;
 }
 
+.animate-slide-right {
+  opacity: 0;
+  animation: slideRight 0.5s var(--ease-expo) forwards;
+}
+
 .animate-fade-in {
   animation: fadeIn 0.45s ease-out forwards;
 }
@@ -506,6 +511,7 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
     scroll-behavior: auto !important;
   }
   .animate-slide-up,
+  .animate-slide-right,
   .animate-fade-in,
   .animate-scale-in,
   .animate-float,

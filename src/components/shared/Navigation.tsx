@@ -57,13 +57,14 @@ export default function Navigation() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex gap-0.5 overflow-x-auto scrollbar-hide">
-            {NAV_LINKS.map(({ href, label }) => {
+            {NAV_LINKS.map(({ href, label }, idx) => {
               const active = href === '/' ? pathname === '/' : pathname.startsWith(href);
               return (
                 <Link
                   key={href}
                   href={href}
                   className={`
+                    animate-slide-right
                     relative whitespace-nowrap px-3.5 py-3.5 text-[13px] font-medium
                     transition-all duration-200 shrink-0
                     ${active
@@ -71,6 +72,7 @@ export default function Navigation() {
                       : 'text-slate-400 hover:text-slate-100'
                     }
                   `}
+                  style={{ animationDelay: `${idx * 50}ms` }}
                 >
                   {label}
                   {active && (
