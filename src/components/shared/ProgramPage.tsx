@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Program, programColorMap } from '@/lib/data/programs';
 import QuoteModal from './QuoteModal';
 
@@ -82,11 +82,35 @@ function Carrusel({ images, accentColor }: { images: string[]; accentColor: stri
   );
 }
 
+function useSection(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+
+  return { ref, visible };
+}
+
 export default function ProgramPage({ program }: ProgramPageProps) {
   const colors = programColorMap[program.color];
   const imgs = getProgramImages(program.slug);
   const testimonios = testimoniosPorPrograma[program.slug] ?? [];
   const [modalOpen, setModalOpen] = useState(false);
+
+  const stats  = useSection(0.2);
+  const hl     = useSection(0.1);
+  const incl   = useSection(0.1);
+  const badges = useSection(0.1);
+  const test   = useSection(0.1);
 
   const programaNombre: Record<string, string> = {
     'idiomas': 'Idiomas', 'au-pair': 'Au Pair', 'anos-academicos': 'Años Académicos',
@@ -134,29 +158,37 @@ export default function ProgramPage({ program }: ProgramPageProps) {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
+        {/* Stats — scale in with stagger */}
+        <div ref={stats.ref} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
           {[
-            { value: program.duration, label: 'Duración' },
-            { value: program.ageRange, label: 'Rango de edad' },
+            { value: program.duration,                  label: 'Duración' },
+            { value: program.ageRange,                  label: 'Rango de edad' },
             { value: `${program.countries.length} destinos`, label: 'Disponibles' },
-          ].map(({ value, label }) => (
-            <div key={label} className="premium-card p-6 text-center">
+          ].map(({ value, label }, i) => (
+            <div
+              key={label}
+              className={`premium-card p-6 text-center reveal-scale ${stats.visible ? 'is-visible' : ''}`}
+              style={{ transitionDelay: `${i * 110}ms` }}
+            >
               <div className={`text-2xl font-extrabold ${colors.text} mb-1`}>{value}</div>
               <p className="text-slate-500 text-sm">{label}</p>
             </div>
           ))}
         </div>
 
-        {/* Highlights + Includes */}
+        {/* Highlights + Includes — slide from left / right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
-          <div>
+          <div ref={hl.ref}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               Puntos clave
             </h2>
             <ul className="space-y-3">
-              {program.highlights.map((h) => (
-                <li key={h} className="flex items-start gap-3">
+              {program.highlights.map((h, i) => (
+                <li
+                  key={h}
+                  className={`flex items-start gap-3 reveal-left ${hl.visible ? 'is-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 60}ms` }}
+                >
                   <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
                     style={{ background: `${colors.text.includes('blue') ? '#dbeafe' : '#f3e8ff'}` }}>
                     <svg xmlns="http://www.w3.org/2000/svg" className={`w-3 h-3 ${colors.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
@@ -168,13 +200,17 @@ export default function ProgramPage({ program }: ProgramPageProps) {
               ))}
             </ul>
           </div>
-          <div>
+          <div ref={incl.ref}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               ¿Qué incluye?
             </h2>
             <ul className="space-y-3">
-              {program.includes.map((item) => (
-                <li key={item} className="flex items-start gap-3">
+              {program.includes.map((item, i) => (
+                <li
+                  key={item}
+                  className={`flex items-start gap-3 reveal-right ${incl.visible ? 'is-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 60}ms` }}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
@@ -193,14 +229,18 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           <Carrusel images={imgs.gallery} accentColor="#3b82f6" />
         </div>
 
-        {/* Destinations */}
+        {/* Destinations — pop in with stagger */}
         <div className="mb-16">
           <h2 className="text-2xl font-extrabold text-slate-900 mb-5" style={{ letterSpacing: '-0.02em' }}>
             Destinos disponibles
           </h2>
-          <div className="flex flex-wrap gap-2">
-            {program.countries.map((c) => (
-              <span key={c} className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border}`}>
+          <div ref={badges.ref} className="flex flex-wrap gap-2">
+            {program.countries.map((c, i) => (
+              <span
+                key={c}
+                className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''}`}
+                style={{ transitionDelay: `${i * 45}ms` }}
+              >
                 {c}
               </span>
             ))}
@@ -215,15 +255,19 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           <p className="text-slate-600 text-[15px] leading-relaxed">{program.idealFor}</p>
         </div>
 
-        {/* Testimonials */}
+        {/* Testimonials — blur in with stagger */}
         {testimonios.length > 0 && (
           <div className="mb-16">
             <h2 className="text-2xl font-extrabold text-slate-900 mb-8 text-center" style={{ letterSpacing: '-0.02em' }}>
               Lo que dicen nuestros estudiantes
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {testimonios.map((t) => (
-                <div key={t.nombre} className="premium-card p-6 flex flex-col gap-4">
+            <div ref={test.ref} className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {testimonios.map((t, i) => (
+                <div
+                  key={t.nombre}
+                  className={`premium-card p-6 flex flex-col gap-4 reveal-blur ${test.visible ? 'is-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 130}ms` }}
+                >
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-cover bg-center shrink-0"
                       style={{ backgroundImage: `url('${t.foto}')`, boxShadow: '0 0 0 2px rgba(59,130,246,0.3), 0 0 0 4px rgba(59,130,246,0.1)' }} />
@@ -246,10 +290,28 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         )}
 
-        {/* CTA Final */}
+        {/* CTA Final — border beam */}
         <div className="rounded-2xl p-12 text-center relative overflow-hidden" style={{ background: 'var(--dark)' }}>
           <div className="absolute inset-0 pointer-events-none"
             style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(37,99,235,0.2) 0%, transparent 70%)' }} />
+
+          {/* Beam azul → rojo (logo CILC) — borde superior */}
+          <span
+            className="absolute top-0 left-0 h-px w-36 rounded-full pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(27,103,232,0.9), rgba(227,30,36,0.9), transparent)',
+              animation: 'scanLine 3.5s ease-in-out infinite',
+            }}
+          />
+          {/* Beam rojo → azul — borde inferior (offset) */}
+          <span
+            className="absolute bottom-0 left-0 h-px w-36 rounded-full pointer-events-none"
+            style={{
+              background: 'linear-gradient(90deg, transparent, rgba(227,30,36,0.9), rgba(27,103,232,0.9), transparent)',
+              animation: 'scanLine 3.5s ease-in-out infinite 1.75s',
+            }}
+          />
+
           <div className="relative">
             <h2 className="text-3xl font-extrabold text-white mb-4" style={{ letterSpacing: '-0.03em' }}>
               ¿Te interesa este programa?

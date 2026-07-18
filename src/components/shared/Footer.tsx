@@ -1,9 +1,8 @@
 'use client';
 
-'use client';
-
 import Link from 'next/link';
 import Image from 'next/image';
+import AnimateIn from '@/components/shared/AnimateIn';
 
 const PHONES = [
   { display: '55 1894 4494', wa: '525518944494' },
@@ -40,9 +39,9 @@ export default function Footer() {
   return (
     <footer style={{ background: 'var(--dark)', color: 'white', position: 'relative', overflow: 'hidden' }}>
 
-      {/* Top glow */}
+      {/* Top glow — logo gradient: azul → rojo */}
       <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.4), transparent)' }} />
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(27,103,232,0.6), rgba(227,30,36,0.6), transparent)' }} />
 
       {/* Background accent */}
       <div className="absolute top-0 right-0 w-96 h-96 pointer-events-none"
@@ -52,15 +51,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-14">
 
           {/* Brand col */}
-          <div className="md:col-span-4">
-            {/* Logo */}
+          <AnimateIn animation="left" threshold={0.05} className="md:col-span-4">
             <Link href="/" className="inline-block mb-4">
               <Image
                 src="/logo.png"
                 alt="CILC Logo"
                 width={110}
                 height={38}
-                className="h-10 w-auto object-contain brightness-0 invert"
+                className="h-10 w-auto object-contain"
               />
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
@@ -70,7 +68,6 @@ export default function Footer() {
 
             {/* Social icons */}
             <div className="flex gap-3">
-              {/* Facebook */}
               <a href="#" aria-label="Facebook"
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -78,7 +75,6 @@ export default function Footer() {
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
                 </svg>
               </a>
-              {/* Instagram */}
               <a href="#" aria-label="Instagram"
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -88,7 +84,6 @@ export default function Footer() {
                   <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
                 </svg>
               </a>
-              {/* LinkedIn */}
               <a href="#" aria-label="LinkedIn"
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -97,7 +92,6 @@ export default function Footer() {
                   <circle cx="4" cy="4" r="2"/>
                 </svg>
               </a>
-              {/* YouTube */}
               <a href="#" aria-label="YouTube"
                 className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-400 hover:text-white transition-all duration-200 hover:scale-110"
                 style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}>
@@ -107,31 +101,33 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-          </div>
+          </AnimateIn>
 
           {/* Nav cols */}
-          {NAV_COLS.map(({ title, links }) => (
+          {NAV_COLS.map(({ title, links }, colIdx) => (
             <div key={title} className="md:col-span-2">
-              <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-5">
-                {title}
-              </h3>
-              <ul className="space-y-3">
-                {links.map(({ href, label }) => (
-                  <li key={href}>
+              <AnimateIn animation="up" delay={colIdx * 60} threshold={0.05}>
+                <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-5">
+                  {title}
+                </h3>
+              </AnimateIn>
+              <div className="space-y-3">
+                {links.map(({ href, label }, i) => (
+                  <AnimateIn key={href} animation="up" delay={colIdx * 60 + (i + 1) * 45} threshold={0.05}>
                     <Link
                       href={href}
-                      className="text-slate-400 hover:text-white text-sm transition-colors duration-150"
+                      className="block text-slate-400 hover:text-white text-sm transition-colors duration-150"
                     >
                       {label}
                     </Link>
-                  </li>
+                  </AnimateIn>
                 ))}
-              </ul>
+              </div>
             </div>
           ))}
 
           {/* Contact col */}
-          <div className="md:col-span-4">
+          <AnimateIn animation="right" delay={120} threshold={0.05} className="md:col-span-4">
             <h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mb-5">
               Contacto
             </h3>
@@ -173,15 +169,33 @@ export default function Footer() {
               </svg>
               WhatsApp
             </a>
-          </div>
+          </AnimateIn>
         </div>
 
         {/* Bottom bar */}
         <div className="pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-slate-600 text-xs">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
+            {/* ICEF Badge */}
+            <a
+              href="https://www.icef.com/agency/0012000000UPyYyAAL"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="ICEF Trusted Agency #3797 — verificar acreditación"
+              className="shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
+            >
+              <Image
+                src="/images/logos/icef-badge.png"
+                alt="ICEF Accredited Trusted Agency #3797"
+                width={80}
+                height={80}
+                className="w-16 h-16 object-contain"
+              />
+            </a>
+
+            <p className="text-slate-600 text-xs text-center">
               © 2026 Canadian &amp; International Language Centers. Todos los derechos reservados.
             </p>
+
             <div className="flex gap-6 text-xs">
               <Link href="/aviso-de-privacidad" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Aviso de Privacidad</Link>
               <Link href="/terminos-y-condiciones" className="text-slate-600 hover:text-slate-300 transition-colors duration-150">Términos y Condiciones</Link>

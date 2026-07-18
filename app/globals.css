@@ -7,16 +7,21 @@
   --background: #ffffff;
   --foreground: #0f172a;
 
-  /* Brand */
+  /* Brand — basado en logo CILC (azul eléctrico + rojo vibrante) */
   --blue-50:  #eff6ff;
   --blue-100: #dbeafe;
   --blue-400: #60a5fa;
-  --blue-500: #3b82f6;
-  --blue-600: #2563eb;
-  --blue-700: #1d4ed8;
-  --blue-900: #1e3a8a;
+  --blue-500: #2176e8;   /* azul logo */
+  --blue-600: #1B67E8;   /* azul primario logo CILC */
+  --blue-700: #154FCC;
+  --blue-900: #0D3494;
   --indigo:   #6366f1;
   --sky:      #0ea5e9;
+
+  /* Logo red */
+  --red:        #E31E24;   /* rojo swoosh logo CILC */
+  --red-dark:   #B91319;
+  --red-light:  #FECACA;
 
   /* Surfaces */
   --surface:   #ffffff;
@@ -37,9 +42,11 @@
   --shadow-md: 0 4px 20px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.06);
   --shadow-xl: 0 24px 64px rgba(0,0,0,0.13), 0 8px 24px rgba(0,0,0,0.08);
-  --shadow-blue-sm: 0 4px 16px rgba(37,99,235,0.22);
-  --shadow-blue: 0 8px 28px rgba(37,99,235,0.30);
-  --shadow-blue-lg: 0 16px 48px rgba(37,99,235,0.38);
+  --shadow-blue-sm: 0 4px 16px rgba(27,103,232,0.22);
+  --shadow-blue: 0 8px 28px rgba(27,103,232,0.30);
+  --shadow-blue-lg: 0 16px 48px rgba(27,103,232,0.38);
+  --shadow-red-sm: 0 4px 16px rgba(227,30,36,0.22);
+  --shadow-red: 0 8px 28px rgba(227,30,36,0.30);
 
   /* Easing */
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -57,6 +64,10 @@
 /* ═══════════════════════════════════════════════════════
    Base
 ═══════════════════════════════════════════════════════ */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -107,19 +118,25 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 }
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 
-/* Gradient text */
+/* Gradient text — logo palette: azul CILC → rojo swoosh */
 .gradient-text {
-  background: linear-gradient(135deg, #2563eb 0%, #6366f1 55%, #0ea5e9 100%);
+  background: linear-gradient(135deg, #1B67E8 0%, #E31E24 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* Para fondos oscuros — versión luminosa del logo */
 .gradient-text-light {
-  background: linear-gradient(135deg, #93c5fd 0%, #c4b5fd 55%, #7dd3fc 100%);
+  background: linear-gradient(135deg, #93c5fd 0%, #FCA5A5 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Gradiente de marca puro (decorativo) — replica el swoosh del logo */
+.gradient-brand {
+  background: linear-gradient(135deg, #1B67E8 0%, #E31E24 100%);
 }
 
 /* Glass */
@@ -146,16 +163,34 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 
 /* Premium card */
 .premium-card {
+  position: relative;
+  overflow: hidden;
   background: #ffffff;
   border: 1px solid rgba(15, 23, 42, 0.07);
   border-radius: 16px;
   box-shadow: var(--shadow-sm);
   transition: transform 0.3s var(--ease-expo), box-shadow 0.3s var(--ease-expo), border-color 0.3s var(--ease-expo);
 }
+.premium-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1B67E8 0%, #E31E24 100%);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-expo);
+  z-index: 1;
+  pointer-events: none;
+}
 .premium-card:hover {
   transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
-  border-color: rgba(37, 99, 235, 0.15);
+  border-color: rgba(27, 103, 232, 0.20);
+}
+.premium-card:hover::before {
+  opacity: 1;
 }
 
 /* Buttons */
@@ -165,7 +200,7 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   justify-content: center;
   gap: 0.5rem;
   padding: 0.8125rem 1.75rem;
-  background: var(--blue-600);
+  background: linear-gradient(135deg, var(--blue-600) 0%, #1553C4 100%);
   color: #fff;
   font-weight: 700;
   font-size: 0.9375rem;
@@ -173,16 +208,42 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   border: none;
   cursor: pointer;
   transition: all 0.25s var(--ease-expo);
-  box-shadow: 0 2px 8px rgba(37,99,235,0.25), 0 1px 2px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(27,103,232,0.30), 0 1px 2px rgba(0,0,0,0.1);
   white-space: nowrap;
   text-decoration: none;
 }
 .btn-primary:hover {
-  background: var(--blue-700);
+  background: linear-gradient(135deg, #1553C4 0%, #0D3A9A 100%);
   box-shadow: var(--shadow-blue);
   transform: translateY(-1.5px);
 }
 .btn-primary:active { transform: translateY(0); }
+
+/* Botón CTA rojo — para acciones de alta urgencia */
+.btn-red {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8125rem 1.75rem;
+  background: linear-gradient(135deg, var(--red) 0%, var(--red-dark) 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-expo);
+  box-shadow: 0 2px 8px rgba(227,30,36,0.30), 0 1px 2px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn-red:hover {
+  box-shadow: var(--shadow-red);
+  transform: translateY(-1.5px);
+  filter: brightness(1.08);
+}
+.btn-red:active { transform: translateY(0); }
 
 .btn-ghost {
   display: inline-flex;
@@ -238,14 +299,20 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   align-items: center;
   gap: 0.375rem;
   padding: 0.375rem 0.875rem;
-  background: rgba(37, 99, 235, 0.10);
+  background: rgba(27, 103, 232, 0.10);
   color: var(--blue-600);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   border-radius: 99px;
-  border: 1px solid rgba(37, 99, 235, 0.15);
+  border: 1px solid rgba(27, 103, 232, 0.20);
+}
+
+.badge-red {
+  background: rgba(227, 30, 36, 0.10);
+  color: var(--red);
+  border-color: rgba(227, 30, 36, 0.20);
 }
 
 .badge-dark {
@@ -257,7 +324,7 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 /* Divider */
 .section-divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(15,23,42,0.08), transparent);
+  background: linear-gradient(90deg, transparent, rgba(27,103,232,0.25) 30%, rgba(227,30,36,0.25) 70%, transparent);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -309,8 +376,8 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 }
 
 @keyframes pulse-blue {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
-  50%       { box-shadow: 0 0 0 12px rgba(37,99,235,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(27,103,232,0.4); }
+  50%       { box-shadow: 0 0 0 12px rgba(27,103,232,0); }
 }
 
 @keyframes gradient-shift {
@@ -389,6 +456,46 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
 }
 
 /* ═══════════════════════════════════════════════════════
+   Scroll-Reveal System
+═══════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s var(--ease-expo), transform 0.65s var(--ease-expo);
+}
+.reveal-blur {
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(12px);
+  transition: opacity 0.7s var(--ease-expo), filter 0.7s var(--ease-expo), transform 0.7s var(--ease-expo);
+}
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-22px);
+  transition: opacity 0.55s var(--ease-expo), transform 0.55s var(--ease-expo);
+}
+.reveal-right {
+  opacity: 0;
+  transform: translateX(22px);
+  transition: opacity 0.55s var(--ease-expo), transform 0.55s var(--ease-expo);
+}
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.92) translateY(12px);
+  transition: opacity 0.55s var(--ease-expo), transform 0.55s var(--ease-expo);
+}
+
+.reveal.is-visible,
+.reveal-blur.is-visible,
+.reveal-left.is-visible,
+.reveal-right.is-visible,
+.reveal-scale.is-visible {
+  opacity: 1;
+  filter: none;
+  transform: none;
+}
+
+/* ═══════════════════════════════════════════════════════
    Reduced Motion
 ═══════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion: reduce) {
@@ -408,9 +515,16 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   .animate-pulse,
   .animate-ping,
   .animate-spin,
-  .animate-bounce {
+  .animate-bounce,
+  .reveal,
+  .reveal-blur,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
+    transition: none !important;
   }
 }

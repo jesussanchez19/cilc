@@ -1,5 +1,14 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
 import { programs } from '@/lib/data/programs';
 import { countries } from '@/lib/data/countries';
+
+const STATS = [
+  { value: 23,               suffix: '+', label: 'Años de experiencia',   desc: 'Abriendo puertas al mundo desde 2001' },
+  { value: programs.length,  suffix: '',  label: 'Programas disponibles', desc: 'Diseñados para cada etapa de tu vida' },
+  { value: countries.length, suffix: '',  label: 'Destinos en el mundo',  desc: 'Canadá, USA, Inglaterra, Irlanda y más' },
+];
 
 function StarsFill({ value }: { value: number }) {
   return (
@@ -32,24 +41,57 @@ interface StatsSectionProps {
 }
 
 export default function StatsSection({ promedioCalificacion }: StatsSectionProps) {
-  const STATS = [
-    { value: '23+',                  label: 'Años de experiencia',   desc: 'Abriendo puertas al mundo desde 2001' },
-    { value: `${programs.length}`,   label: 'Programas disponibles', desc: 'Diseñados para cada etapa de tu vida' },
-    { value: `${countries.length}`,  label: 'Destinos en el mundo',  desc: 'Canadá, USA, Inglaterra, Irlanda y más' },
-  ];
+  const sectionRef = useRef<HTMLElement>(null);
+  const [counts, setCounts] = useState(STATS.map(() => 0));
+  const [animated, setAnimated] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !animated) {
+          setAnimated(true);
+          observer.disconnect();
+
+          const targets = STATS.map((s) => s.value);
+          const duration = 1600;
+          const startTime = performance.now();
+          let rafId: number;
+
+          function tick(now: number) {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCounts(targets.map((t) => Math.round(eased * t)));
+            if (progress < 1) rafId = requestAnimationFrame(tick);
+          }
+
+          rafId = requestAnimationFrame(tick);
+          return () => cancelAnimationFrame(rafId);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [animated]);
 
   const cols = promedioCalificacion !== undefined
     ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
     : 'grid-cols-1 md:grid-cols-3';
 
   return (
-    <section className="py-20 bg-white">
+    <section ref={sectionRef} className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        <div className={`grid ${cols} gap-px rounded-2xl overflow-hidden`}
-          style={{ background: 'rgba(15,23,42,0.07)' }}>
-
-          {STATS.map(({ value, label, desc }) => (
+        <div
+          className={`grid ${cols} gap-px rounded-2xl overflow-hidden`}
+          style={{ background: 'rgba(15,23,42,0.07)' }}
+        >
+          {STATS.map(({ suffix, label, desc }, i) => (
             <div
               key={label}
               className="bg-white px-10 py-12 text-center relative group hover:bg-blue-50/40 transition-colors duration-300"
@@ -58,12 +100,14 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
                 className="text-6xl font-extrabold mb-2 gradient-text"
                 style={{ letterSpacing: '-0.04em', lineHeight: '1' }}
               >
-                {value}
+                {counts[i]}{suffix}
               </div>
               <p className="text-slate-900 text-base font-bold mb-1">{label}</p>
               <p className="text-slate-400 text-sm">{desc}</p>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 group-hover:w-12 transition-all duration-300 rounded-full"
-                style={{ background: 'linear-gradient(90deg, #2563eb, #6366f1)' }} />
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 group-hover:w-12 transition-all duration-300 rounded-full"
+                style={{ background: 'linear-gradient(90deg, #1B67E8, #E31E24)' }}
+              />
             </div>
           ))}
 
@@ -75,8 +119,10 @@ export default function StatsSection({ promedioCalificacion }: StatsSectionProps
               </div>
               <p className="text-slate-900 text-base font-bold mb-1">Satisfacción de estudiantes</p>
               <p className="text-slate-400 text-sm">Calificación promedio de nuestros egresados</p>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 group-hover:w-12 transition-all duration-300 rounded-full"
-                style={{ background: 'linear-gradient(90deg, #f59e0b, #ef4444)' }} />
+              <div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-0 group-hover:w-12 transition-all duration-300 rounded-full"
+                style={{ background: 'linear-gradient(90deg, #f59e0b, #E31E24)' }}
+              />
             </div>
           )}
         </div>

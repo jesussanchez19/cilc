@@ -74,7 +74,8 @@ export default function Navigation() {
                 >
                   {label}
                   {active && (
-                    <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-linear-to-r from-blue-500 to-indigo-400 rounded-full" />
+                    <span className="absolute bottom-0 left-2 right-2 h-0.5 rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #1B67E8, #E31E24)' }} />
                   )}
                 </Link>
               );
@@ -106,10 +107,11 @@ export default function Navigation() {
                   flex items-center gap-2.5 px-4 py-3 text-[13px] font-medium
                   border-l-2 transition-all duration-150
                   ${active
-                    ? 'border-blue-500 text-white bg-white/6'
+                    ? 'text-white bg-white/6'
                     : 'border-transparent text-slate-400 hover:text-white hover:bg-white/4 hover:border-slate-600'
                   }
                 `}
+                style={active ? { borderLeftColor: '#1B67E8' } : {}}
               >
                 {label}
               </Link>
@@ -121,7 +123,7 @@ export default function Navigation() {
           onClick={() => setMenuOpen((prev) => !prev)}
           aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
           className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
-          style={{ background: '#0f1629', border: '1px solid rgba(255,255,255,0.12)' }}
+          style={{ background: 'linear-gradient(135deg, #1B67E8 0%, #E31E24 100%)', boxShadow: '0 8px 28px rgba(27,103,232,0.50)' }}
         >
           <div className="relative w-5 h-5 flex items-center justify-center">
             <span
