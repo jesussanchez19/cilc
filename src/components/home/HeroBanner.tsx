@@ -12,7 +12,7 @@ const STATS = [
 
 export default function HeroBanner() {
   return (
-    <section className="relative min-h-[94vh] flex items-center overflow-hidden">
+    <section className="relative flex items-center overflow-hidden" style={{ minHeight: '94vh' }}>
 
       {/* Background */}
       <div className="absolute inset-0 z-0">
@@ -48,7 +48,7 @@ export default function HeroBanner() {
             className="badge badge-dark inline-flex mb-7 animate-slide-up"
             style={{ animationDelay: '0ms' }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--red)' }} />
             Canadian &amp; International Language Centers · +23 años
           </div>
 
@@ -96,7 +96,7 @@ export default function HeroBanner() {
               <div key={label} className="flex items-center gap-1">
                 {i > 0 && <div className="w-px h-8 bg-white/10 mx-3" />}
                 <div>
-                  <p className="text-2xl font-extrabold text-white tracking-tight">{value}</p>
+                  <p className="text-2xl font-extrabold tracking-tight gradient-text-light">{value}</p>
                   <p className="text-[11px] text-slate-400 uppercase tracking-wider mt-0.5">{label}</p>
                 </div>
               </div>
@@ -105,12 +105,18 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* Floating accent — bottom right glow */}
+      {/* Floating accent — bottom right glow en rojo logo */}
       <div
         className="absolute bottom-0 right-0 w-125 h-100 pointer-events-none z-1"
         style={{
-          background: 'radial-gradient(ellipse at bottom right, rgba(99,102,241,0.18) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse at bottom right, rgba(227,30,36,0.18) 0%, transparent 65%)',
         }}
+      />
+
+      {/* Accent line — gradiente de marca azul→rojo en el borde inferior */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-0.75 pointer-events-none z-10"
+        style={{ background: 'linear-gradient(90deg, #1B67E8 0%, #E31E24 100%)' }}
       />
     </section>
   );

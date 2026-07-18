@@ -1,1 +1,2 @@
 @AGENTS.md
+@GRAPH_REPORT.md

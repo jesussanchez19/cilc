@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { programs, programColorMap } from '@/lib/data/programs';
+import AnimateIn from '@/components/shared/AnimateIn';
 
 const programImages: Record<string, string> = {
   'idiomas':               '/images/programs/idiomas.png',
@@ -16,7 +17,7 @@ export default function FeaturedPrograms() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
-        <div className="text-center mb-16">
+        <AnimateIn animation="up" className="text-center mb-16">
           <span className="badge mb-5">Programas</span>
           <h2
             className="text-4xl sm:text-5xl font-extrabold text-slate-900 mb-4"
@@ -30,16 +31,17 @@ export default function FeaturedPrograms() {
             No vendemos paquetes. Diseñamos tu experiencia según tu perfil,
             objetivos y presupuesto.
           </p>
-        </div>
+        </AnimateIn>
 
         {/* Cards grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {programs.map((program) => {
+          {programs.map((program, i) => {
             const colors = programColorMap[program.color];
             const imgSrc = programImages[program.slug] ?? '';
 
             return (
-              <Link key={program.id} href={`/${program.slug}`} className="group block h-full">
+              <AnimateIn key={program.id} animation="scale" delay={i * 90} className="h-full">
+              <Link href={`/${program.slug}`} className="group block h-full">
                 <div className="premium-card h-full flex flex-col overflow-hidden">
 
                   {/* Image */}
@@ -77,7 +79,7 @@ export default function FeaturedPrograms() {
                       <span className="text-xs text-slate-400 font-medium">
                         {program.ageRange}
                       </span>
-                      <span className="text-xs font-semibold text-blue-600 flex items-center gap-1 group-hover:gap-2 transition-all duration-200">
+                      <span className="text-xs font-semibold flex items-center gap-1 group-hover:gap-2 transition-all duration-200" style={{ color: 'var(--blue-600)' }}>
                         Ver programa
                         <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
@@ -87,16 +89,17 @@ export default function FeaturedPrograms() {
                   </div>
                 </div>
               </Link>
+              </AnimateIn>
             );
           })}
         </div>
 
         {/* CTA */}
-        <div className="text-center mt-14">
-          <Link href="/contact" className="btn-primary" style={{ background: 'var(--blue-600)' }}>
+        <AnimateIn animation="up" delay={programs.length * 90} className="text-center mt-14">
+          <Link href="/contact" className="btn-primary">
             Agenda tu Diagnóstico Gratuito
           </Link>
-        </div>
+        </AnimateIn>
       </div>
     </section>
   );

@@ -2,9 +2,19 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
 
 export default function Header() {
+  const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <header
       className="sticky top-0 z-50 overflow-hidden"
@@ -46,13 +56,13 @@ export default function Header() {
         <div className="flex items-center h-16 gap-4">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center shrink-0 group">
+          <Link href="/" onClick={handleLogoClick} className="flex items-center shrink-0 group">
             <Image
               src="/logo.png"
               alt="CILC Logo"
               width={120}
               height={40}
-              className="h-10 w-auto object-contain brightness-0 invert transition-opacity duration-200 group-hover:opacity-70"
+              className="h-10 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
 

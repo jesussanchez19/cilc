@@ -2,10 +2,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import HeroBanner from '@/components/home/HeroBanner';
 import FeaturedPrograms from '@/components/home/FeaturedPrograms';
+import FeaturedCountries from '@/components/home/FeaturedCountries';
 import StatsSection from '@/components/home/StatsSection';
 import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
 import LazySection from '@/components/shared/LazySection';
+import AnimateIn from '@/components/shared/AnimateIn';
 import { getLatestArticles } from '@/lib/data/blog';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
@@ -36,7 +38,7 @@ const VALUE_PROPS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
       </svg>
     ),
-    accent: '#3b82f6',
+    accent: '#1B67E8',
   },
   {
     title: 'Diagnóstico personalizado',
@@ -80,7 +82,7 @@ const VALUE_PROPS = [
         <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 3.741-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" />
       </svg>
     ),
-    accent: '#ef4444',
+    accent: '#E31E24',
   },
   {
     title: 'Red global de escuelas',
@@ -100,18 +102,19 @@ export default function Home() {
 
   return (
     <div>
-      {/* Announcement bar */}
-      <div style={{ background: 'var(--dark)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      {/* Announcement bar — brand gradient */}
+      <div style={{ background: 'linear-gradient(90deg, #0D3494 0%, #1B67E8 45%, #C71D22 100%)', borderBottom: '1px solid rgba(255,255,255,0.15)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-center">
-          <p className="text-[13px] text-slate-300 font-medium leading-snug">
-            <span className="text-blue-400 font-semibold">Nuevo</span> · Consulta gratuita — Agenda tu Diagnóstico Internacional Estratégico hoy mismo
+          <p className="text-[13px] text-white font-medium leading-snug">
+            <span style={{ background: 'rgba(255,255,255,0.22)', padding: '2px 9px', borderRadius: '99px', fontWeight: 700, marginRight: '6px' }}>Nuevo</span>
+            Consulta gratuita — Agenda tu Diagnóstico Internacional Estratégico hoy mismo
           </p>
           <a
             href="https://wa.me/525518944494?text=Hola%2C%20quiero%20agendar%20mi%20consulta%20gratuita"
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 px-3.5 py-1.5 rounded-lg text-[12px] font-bold text-white whitespace-nowrap transition-all duration-200 hover:scale-105"
-            style={{ background: 'rgba(59,130,246,0.25)', border: '1px solid rgba(59,130,246,0.4)' }}
+            style={{ background: 'rgba(255,255,255,0.20)', border: '1px solid rgba(255,255,255,0.45)', backdropFilter: 'blur(8px)' }}
           >
             Agendar ahora →
           </a>
@@ -119,7 +122,34 @@ export default function Home() {
       </div>
 
       <HeroBanner />
+
+      {/* ── Proof: logos de socios certificados (social proof justo después del hero) ── */}
+      <section className="py-12 bg-white" style={{ borderBottom: '1px solid rgba(15,23,42,0.06)' }}>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
+            Miembros y socios certificados
+          </p>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
+            {LOGOS.map(({ name, src, href, alt }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
+                aria-label={`Visitar sitio de ${name} (abre en nueva pestaña)`}
+              >
+                <Image src={src} alt={alt} width={120} height={45} className="h-10 w-auto object-contain" />
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <FeaturedPrograms />
+      <div className="section-divider" />
+      <FeaturedCountries />
+      <div className="section-divider" />
       <StatsSection />
 
       {/* ── Por qué elegirnos ── */}
@@ -140,9 +170,9 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {VALUE_PROPS.map(({ icon, title, desc, image, accent }) => (
+              {VALUE_PROPS.map(({ icon, title, desc, image, accent }, i) => (
+                <AnimateIn key={title} animation="blur" delay={i * 80}>
                 <div
-                  key={title}
                   className="relative rounded-2xl overflow-hidden group min-h-52 flex items-end"
                   style={{ border: '1px solid rgba(255,255,255,0.06)' }}
                 >
@@ -167,31 +197,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      </LazySection>
-
-      {/* ── Logos ── */}
-      <LazySection animation="fade">
-        <section className="py-14 bg-white" style={{ borderTop: '1px solid rgba(15,23,42,0.06)' }}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
-              Miembros y socios certificados
-            </p>
-            <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
-              {LOGOS.map(({ name, src, href, alt }) => (
-                <a
-                  key={name}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
-                  aria-label={`Visitar sitio de ${name} (abre en nueva pestaña)`}
-                >
-                  <Image src={src} alt={alt} width={120} height={45} className="h-10 w-auto object-contain" />
-                </a>
+                </AnimateIn>
               ))}
             </div>
           </div>
@@ -238,9 +244,14 @@ export default function Home() {
       {/* ── CTA final ── */}
       <LazySection animation="fade">
         <section className="py-24 relative overflow-hidden" style={{ background: 'var(--dark)' }}>
-          {/* Background glow */}
+          {/* Background glow — logo colors */}
           <div className="absolute inset-0 pointer-events-none"
-            style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(37,99,235,0.18) 0%, transparent 70%)' }} />
+            style={{ background: 'radial-gradient(ellipse 55% 55% at 30% 100%, rgba(27,103,232,0.22) 0%, transparent 65%)' }} />
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 55% 55% at 70% 100%, rgba(227,30,36,0.16) 0%, transparent 65%)' }} />
+          {/* Brand accent top border */}
+          <div className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(27,103,232,0.7) 30%, rgba(227,30,36,0.7) 70%, transparent)' }} />
           <div className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: 'radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px)',

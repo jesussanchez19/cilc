@@ -1,5 +1,6 @@
 import { countries } from '@/lib/data/countries';
 import CountryGrid from '@/components/shared/CountryGrid';
+import DestinosStats from '@/components/destinos/DestinosStats';
 
 export const metadata = {
   title: 'Destinos | CILC',
@@ -8,26 +9,44 @@ export const metadata = {
 
 export default function DestinosPage() {
   return (
-    <div className="py-16 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div>
 
-        {/* Encabezado */}
-        <div className="text-center mb-12">
-          <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-xs font-semibold uppercase tracking-widest rounded-full mb-4">
-            Destinos
-          </span>
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-3">
-            Elige tu próximo destino
+      {/* ── Hero ── */}
+      <section className="relative pt-24 pb-20 overflow-hidden" style={{ background: 'var(--dark)' }}>
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse 80% 50% at 50% 120%, rgba(37,99,235,0.16) 0%, transparent 70%)' }} />
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px)',
+            backgroundSize: '28px 28px',
+          }} />
+
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="badge badge-dark mb-6">Destinos</span>
+          <h1
+            className="text-5xl sm:text-6xl font-extrabold text-white mb-5"
+            style={{ letterSpacing: '-0.04em', lineHeight: '1.04' }}
+          >
+            El mundo es tu{' '}
+            <span className="gradient-text-light">aula</span>
           </h1>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
-            Explora los países donde puedes estudiar con CILC. Filtra por región o idioma para encontrar el que mejor se adapta a ti.
+          <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
+            Explora los países donde puedes estudiar con CILC.
+            Filtra por región o idioma para encontrar el destino perfecto para ti.
           </p>
+
+          {/* Quick stats — count-up on scroll */}
+          <DestinosStats />
         </div>
+      </section>
 
-        {/* Filtro de países */}
-        <CountryGrid countries={countries} columns={3} />
+      {/* ── Grid con filtros ── */}
+      <section className="py-16 min-h-screen" style={{ background: 'var(--surface-2)' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <CountryGrid countries={countries} columns={3} />
+        </div>
+      </section>
 
-      </div>
     </div>
   );
 }
