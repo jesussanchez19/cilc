@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { sileo } from 'sileo';
 
 const PROGRAMAS = [
   'Idiomas',
@@ -11,7 +12,7 @@ const PROGRAMAS = [
   'Idiomas en Línea',
 ];
 
-type Status = 'idle' | 'loading' | 'success' | 'error';
+type Status = 'idle' | 'loading';
 
 interface QuoteModalProps {
   isOpen: boolean;
@@ -26,7 +27,6 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
   const [programa, setPrograma] = useState(programaInicial);
   const [mensaje,  setMensaje]  = useState('');
   const [status,   setStatus]   = useState<Status>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setPrograma(programaInicial); }, [programaInicial]);
@@ -52,7 +52,6 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
-    setErrorMsg('');
 
     try {
       const res = await fetch('/api/contact', {
@@ -67,18 +66,15 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
       });
 
       if (!res.ok) throw new Error('Error del servidor');
-      setStatus('success');
+      setStatus('idle');
+      sileo.success({ title: '¡Solicitud enviada!', description: 'Nos pondremos en contacto contigo muy pronto.', fill: '#1B67E8' });
+      setNombre(''); setEmail(''); setTelefono('');
+      setPrograma(programaInicial); setMensaje('');
+      onClose();
     } catch {
-      setErrorMsg('No se pudo enviar. Verifica tu conexión e intenta de nuevo.');
-      setStatus('error');
+      sileo.error({ title: 'Error al enviar', description: 'No se pudo enviar. Verifica tu conexión e intenta de nuevo.', fill: '#E31E24' });
+      setStatus('idle');
     }
-  };
-
-  const reset = () => {
-    setNombre(''); setEmail(''); setTelefono('');
-    setPrograma(programaInicial); setMensaje('');
-    setStatus('idle'); setErrorMsg('');
-    onClose();
   };
 
   return (
@@ -117,29 +113,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
         </div>
 
         <div className="p-6">
-          {status === 'success' ? (
-            <div className="text-center py-10 animate-scale-in">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5"
-                style={{ background: 'linear-gradient(135deg,#d1fae5,#a7f3d0)' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h3 className="text-xl font-extrabold text-slate-900 mb-2">¡Solicitud enviada!</h3>
-              <p className="text-slate-400 mb-7">Nos pondremos en contacto contigo muy pronto.</p>
-              <button onClick={reset} className="btn-primary" style={{ background: 'var(--blue-600)' }}>
-                Cerrar
-              </button>
-            </div>
-          ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-
-              {status === 'error' && (
-                <div className="p-3.5 rounded-xl text-sm animate-fade-in"
-                  style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>
-                  {errorMsg}
-                </div>
-              )}
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Programa *</label>
@@ -218,7 +192,6 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                 )}
               </button>
             </form>
-          )}
         </div>
       </div>
     </div>

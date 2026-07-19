@@ -1,8 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import Image from 'next/image';
 import { getTestimoniosAprobados } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
+import AnimateIn from '@/components/shared/AnimateIn';
+import LazySection from '@/components/shared/LazySection';
 
 function StarRating({ value = 5 }: { value?: number }) {
   return (
@@ -33,105 +35,123 @@ export default async function TestimoniosPage() {
 
       {/* Hero */}
       <section className="py-20 text-center" style={{ background: 'var(--dark)' }}>
-        <span className="badge badge-dark mb-5 inline-flex">Testimonios</span>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4"
-          style={{ letterSpacing: '-0.03em' }}>
-          Lo que dicen{' '}
-          <span className="gradient-text-light">nuestros estudiantes</span>
-        </h1>
-        <p className="text-slate-400 text-lg max-w-xl mx-auto px-4">
-          Historias reales de quienes estudiaron en el extranjero con CILC.
-        </p>
+        <AnimateIn animation="up" delay={0}>
+          <span className="badge badge-dark mb-5 inline-flex">Testimonios</span>
+        </AnimateIn>
+        <AnimateIn animation="up" delay={80}>
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-white mb-4"
+            style={{ letterSpacing: '-0.03em' }}>
+            Lo que dicen{' '}
+            <span className="gradient-text-light">nuestros estudiantes</span>
+          </h1>
+        </AnimateIn>
+        <AnimateIn animation="up" delay={160}>
+          <p className="text-slate-400 text-lg max-w-xl mx-auto px-4">
+            Historias reales de quienes estudiaron en el extranjero con CILC.
+          </p>
+        </AnimateIn>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         {/* Videos */}
         {conVideo.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
-              Videos
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {conVideo.map((t) => {
-                const videoId = getYouTubeId(t.videoUrl!);
-                return (
-                  <div key={t._id} className="premium-card overflow-hidden">
-                    {videoId && (
-                      <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
-                        <iframe
-                          src={`https://www.youtube.com/embed/${videoId}`}
-                          title={`Testimonio de ${t.nombre}`}
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          className="absolute inset-0 w-full h-full"
-                        />
-                      </div>
-                    )}
-                    <div className="p-5">
-                      <div className="flex items-center gap-3 mb-3">
-                        {t.foto && (
-                          <Image
-                            src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
-                            alt={t.nombre}
-                            width={40} height={40}
-                            className="w-10 h-10 rounded-full object-cover shrink-0"
-                          />
+          <LazySection animation="fade">
+            <div className="mb-16">
+              <AnimateIn animation="up">
+                <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
+                  Videos
+                </h2>
+              </AnimateIn>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {conVideo.map((t, i) => {
+                  const videoId = getYouTubeId(t.videoUrl!);
+                  return (
+                    <AnimateIn key={t._id} animation="blur" delay={i * 100}>
+                      <div className="premium-card overflow-hidden h-full">
+                        {videoId && (
+                          <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+                            <iframe
+                              src={`https://www.youtube.com/embed/${videoId}`}
+                              title={`Testimonio de ${t.nombre}`}
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="absolute inset-0 w-full h-full"
+                            />
+                          </div>
                         )}
-                        <div>
-                          <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
-                          <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
-                          {t.calificacion && <StarRating value={t.calificacion} />}
+                        <div className="p-5">
+                          <div className="flex items-center gap-3 mb-3">
+                            {t.foto && (
+                              <Image
+                                src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
+                                alt={t.nombre}
+                                width={40} height={40}
+                                className="w-10 h-10 rounded-full object-cover shrink-0"
+                              />
+                            )}
+                            <div>
+                              <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
+                              <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                              {t.calificacion && <StarRating value={t.calificacion} />}
+                            </div>
+                          </div>
+                          {t.texto && (
+                            <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
+                          )}
                         </div>
                       </div>
-                      {t.texto && (
-                        <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                    </AnimateIn>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          </LazySection>
         )}
 
         {/* Sin video */}
         {sinVideo.length > 0 && (
-          <div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
-              Experiencias
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sinVideo.map((t) => (
-                <div key={t._id} className="premium-card p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    {t.foto ? (
-                      <Image
-                        src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
-                        alt={t.nombre}
-                        width={48} height={48}
-                        className="w-12 h-12 rounded-full object-cover shrink-0"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                        <span className="text-xl">{t.bandera || '🌍'}</span>
+          <LazySection animation="slide">
+            <div>
+              <AnimateIn animation="up">
+                <h2 className="text-2xl font-bold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
+                  Experiencias
+                </h2>
+              </AnimateIn>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sinVideo.map((t, i) => (
+                  <AnimateIn key={t._id} animation="blur" delay={i * 80}>
+                    <div className="premium-card p-6 h-full">
+                      <div className="flex items-center gap-3 mb-4">
+                        {t.foto ? (
+                          <Image
+                            src={urlFor(t.foto).width(80).height(80).fit('crop').url()}
+                            alt={t.nombre}
+                            width={48} height={48}
+                            className="w-12 h-12 rounded-full object-cover shrink-0"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                            <span className="text-xl">{t.bandera || '🌍'}</span>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
+                          <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                        </div>
                       </div>
-                    )}
-                    <div>
-                      <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
-                      <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                      {t.calificacion && (
+                        <div className="mb-3">
+                          <StarRating value={t.calificacion} />
+                        </div>
+                      )}
+                      <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
                     </div>
-                  </div>
-                  {t.calificacion && (
-                    <div className="mb-3">
-                      <StarRating value={t.calificacion} />
-                    </div>
-                  )}
-                  <p className="text-slate-500 text-sm leading-relaxed italic">&ldquo;{t.texto}&rdquo;</p>
-                </div>
-              ))}
+                  </AnimateIn>
+                ))}
+              </div>
             </div>
-          </div>
+          </LazySection>
         )}
 
         {testimonios.length === 0 && (

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { sileo } from 'sileo';
 import { countries } from '@/lib/data/countries';
 
 const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
@@ -13,7 +14,7 @@ export default function TestimonioForm() {
   const [calificacion, setCalificacion] = useState(0);
   const [hovered, setHovered] = useState(0);
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading'>('idle');
 
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -37,25 +38,19 @@ export default function TestimonioForm() {
       if (foto) fd.append('foto', foto);
 
       const res = await fetch('/api/testimonio', { method: 'POST', body: fd });
-      setStatus(res.ok ? 'success' : 'error');
+      if (res.ok) {
+        sileo.success({ title: '¡Gracias por tu testimonio!', description: 'Lo revisaremos y publicaremos pronto.', fill: '#1B67E8' });
+        setForm({ nombre: '', email: '', programa: '', pais: '', ciudad: '', texto: '' });
+        setFoto(null); setPreview(null); setCalificacion(0);
+      } else {
+        sileo.error({ title: 'Error al enviar', description: 'Ocurrió un error. Intenta de nuevo.', fill: '#E31E24' });
+      }
+      setStatus('idle');
     } catch {
-      setStatus('error');
+      sileo.error({ title: 'Error al enviar', description: 'No se pudo conectar con el servidor.', fill: '#E31E24' });
+      setStatus('idle');
     }
   };
-
-  if (status === 'success') {
-    return (
-      <div className="text-center py-12 animate-scale-in">
-        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 className="text-xl font-bold text-slate-900 mb-2">¡Gracias por compartir tu experiencia!</h3>
-        <p className="text-slate-500 text-sm">Revisaremos tu testimonio y lo publicaremos pronto.</p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -185,9 +180,6 @@ export default function TestimonioForm() {
         </span>
       </label>
 
-      {status === 'error' && (
-        <p className="text-sm text-red-600">Ocurrió un error. Intenta de nuevo.</p>
-      )}
       <button type="submit" disabled={status === 'loading' || !aceptaPrivacidad} className="btn-primary w-full justify-center">
         {status === 'loading' ? 'Enviando...' : 'Enviar testimonio'}
       </button>

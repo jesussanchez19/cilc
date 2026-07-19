@@ -6,16 +6,23 @@ import { writeClient } from './writeClient';
 export interface SanityTestimonial {
   _id: string;
   nombre: string;
-  foto: { asset: { _ref: string } };
+  foto?: { asset: { _ref: string } };
   programa: string;
   pais: string;
   bandera: string;
-  rating: number;
+  calificacion?: number;
   texto: string;
 }
 
-export async function getTestimonials(): Promise<SanityTestimonial[]> {
-  return client.fetch(`*[_type == "testimonial"] | order(_createdAt asc)`);
+export async function getTestimoniosPorPrograma(programa: string): Promise<SanityTestimonial[]> {
+  try {
+    return await client.fetch(
+      `*[_type == "solicitudTestimonio" && estado == "aprobado" && programa == $programa] | order(_createdAt desc)`,
+      { programa },
+    );
+  } catch {
+    return [];
+  }
 }
 
 export interface TestimonialAprobado {
@@ -31,11 +38,91 @@ export interface TestimonialAprobado {
 }
 
 export async function getTestimoniosAprobados(): Promise<TestimonialAprobado[]> {
-  return writeClient.fetch(
-    `*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`,
-    {},
-    { perspective: 'previewDrafts' } as Parameters<typeof writeClient.fetch>[2],
+  try {
+    return await client.fetch(
+      `*[_type == "solicitudTestimonio" && estado == "aprobado"] | order(_createdAt desc)`,
+    );
+  } catch {
+    return [];
+  }
+}
+
+// ── Destinos ──────────────────────────────────────────────────────────────────
+
+export interface SanityDestino {
+  _id: string;
+  countryId: string;
+  nombre?: string;
+  bandera?: string;
+  codigoISO?: string;
+  region?: string;
+  idioma?: string;
+  descripcion?: string;
+  imagen?: { asset: { _ref: string } };
+  universidades?: number;
+  estudiantes?: number;
+  clima?: string;
+  costoVida?: number;
+  costoVidaNota?: string;
+  visa?: string;
+  visaNota?: string;
+  programas: string[];
+}
+
+export async function getDestinoData(countryId: string): Promise<SanityDestino | null> {
+  const results = await client.fetch<SanityDestino[]>(
+    `*[_type == "destino" && countryId.current == $countryId][0...1]`,
+    { countryId },
   );
+  return results[0] ?? null;
+}
+
+export async function getDestinosPorPrograma(programaId: string): Promise<string[]> {
+  const results = await client.fetch<{ countryId: { current: string } }[]>(
+    `*[_type == "destino" && $programaId in programas]{ countryId }`,
+    { programaId },
+  );
+  return results.map((d) => d.countryId.current);
+}
+
+export async function getAllDestinos(): Promise<SanityDestino[]> {
+  return client.fetch<SanityDestino[]>(
+    `*[_type == "destino"] | order(nombre asc)`,
+  );
+}
+
+// ── Configuración del sitio ───────────────────────────────────────────────────
+
+export interface SanityContactInfo {
+  emailAdmin: string;
+  telefonos?: { display: string; wa: string; esPrincipal?: boolean }[];
+  direccion?: string;
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  youtube?: string;
+  tiktok?: string;
+}
+
+const CONTACT_FALLBACK: SanityContactInfo = {
+  emailAdmin: 'info@estudiosenelextranjero.com.mx',
+  telefonos: [
+    { display: '55 1894 4494', wa: '525518944494', esPrincipal: true },
+    { display: '55 7278 5966', wa: '525572785966' },
+    { display: '55 1218 2442', wa: '525512182442' },
+  ],
+  direccion: 'Av. Insurgentes Sur 863, Piso 7\nCol. Nápoles, C.P. 03810\nCDMX, México',
+};
+
+export async function getContactInfo(): Promise<SanityContactInfo> {
+  try {
+    const result = await client.fetch<SanityContactInfo | null>(
+      `*[_type == "configuracion" && _id == "configuracion-singleton"][0]`,
+    );
+    return result ?? CONTACT_FALLBACK;
+  } catch {
+    return CONTACT_FALLBACK;
+  }
 }
 
 // ── Blog posts ────────────────────────────────────────────────────────────────
@@ -55,22 +142,34 @@ export interface SanityPost {
   readingTime?: number;
 }
 
-const PREVIEW = { perspective: 'previewDrafts' } as Parameters<typeof writeClient.fetch>[2];
-
 export async function getPosts(): Promise<SanityPost[]> {
-  return writeClient.fetch(`*[_type == "blogPost" && visible != false] | order(date desc)`, {}, PREVIEW);
+  try {
+    return await client.fetch(`*[_type == "blogPost" && visible != false] | order(date desc)`);
+  } catch {
+    return [];
+  }
 }
 
 export async function getLatestPosts(count: number): Promise<SanityPost[]> {
-  return writeClient.fetch(`*[_type == "blogPost" && visible != false] | order(date desc) [0...$count]`, { count: count - 1 }, PREVIEW);
+  try {
+    return await client.fetch(
+      `*[_type == "blogPost" && visible != false] | order(date desc) [0...$count]`,
+      { count: count - 1 },
+    );
+  } catch {
+    return [];
+  }
 }
 
 export async function getPostBySlug(slug: string): Promise<SanityPost | null> {
-  return writeClient.fetch(
-    `*[_type == "blogPost" && slug.current == $slug && visible != false][0]`,
-    { slug },
-    PREVIEW,
-  );
+  try {
+    return await client.fetch(
+      `*[_type == "blogPost" && slug.current == $slug && visible != false][0]`,
+      { slug },
+    );
+  } catch {
+    return null;
+  }
 }
 
 // ── Socios y Miembros ─────────────────────────────────────────────────────────
@@ -84,7 +183,35 @@ export interface SanityPartner {
 }
 
 export async function getSocios(): Promise<SanityPartner[]> {
-  return client.fetch(`*[_type == "socio"] | order(orden asc)`);
+  try {
+    return await client.fetch(`*[_type == "socio"] | order(orden asc)`);
+  } catch {
+    return [];
+  }
+}
+
+// ── Programas ─────────────────────────────────────────────────────────────────
+
+export interface SanityPrograma {
+  descripcion?: string;
+  duracion?: string;
+  rangoEdad?: string;
+  puntosClave?: string[];
+  queIncluye?: string[];
+  paraQuien?: string;
+}
+
+export async function getProgramaData(programaId: string): Promise<SanityPrograma | null> {
+  try {
+    return await client.fetch(
+      `*[_type == "programa" && programaId == $programaId][0]{
+        descripcion, duracion, rangoEdad, puntosClave, queIncluye, paraQuien
+      }`,
+      { programaId },
+    );
+  } catch {
+    return null;
+  }
 }
 
 // ── Miembros del equipo ───────────────────────────────────────────────────────
@@ -98,5 +225,9 @@ export interface SanityMember {
 }
 
 export async function getTeamMembers(): Promise<SanityMember[]> {
-  return client.fetch(`*[_type == "teamMember"] | order(_createdAt asc)`);
+  try {
+    return await client.fetch(`*[_type == "teamMember"] | order(_createdAt asc)`);
+  } catch {
+    return [];
+  }
 }
