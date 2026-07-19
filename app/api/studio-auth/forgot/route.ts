@@ -23,12 +23,12 @@ export async function POST(req: NextRequest) {
 
   try {
     const config   = await getContactInfo();
-    const adminEmail = config.emailAdmin;
+    const adminEmail = process.env.STUDIO_RECOVERY_EMAIL || config.emailAdmin;
     const token    = generateResetToken();
     const resetUrl = `${origin}/studio/reset?token=${token}`;
 
     await resend.emails.send({
-      from: 'CILC Studio <noreply@cilc.mx>',
+      from: 'CILC Studio <onboarding@resend.dev>',
       to:   adminEmail,
       subject: 'Recuperación de acceso al Studio — CILC',
       html: `

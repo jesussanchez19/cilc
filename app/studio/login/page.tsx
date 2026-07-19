@@ -47,8 +47,15 @@ export default function StudioLoginPage() {
   const handleForgot = async () => {
     setSending(true);
     try {
-      await fetch('/api/studio-auth/forgot', { method: 'POST' });
-      setSentEmail(true);
+      const res = await fetch('/api/studio-auth/forgot', { method: 'POST' });
+      if (res.ok) {
+        setSentEmail(true);
+      } else {
+        const { error } = await res.json().catch(() => ({ error: 'Error al enviar' }));
+        setError(error ?? 'No se pudo enviar el correo. Intenta de nuevo.');
+      }
+    } catch {
+      setError('Error de conexión. Intenta de nuevo.');
     } finally {
       setSending(false);
     }
