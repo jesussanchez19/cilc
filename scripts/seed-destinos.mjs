@@ -2,15 +2,20 @@ import { createClient } from '@sanity/client';
 import { createReadStream } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { config } from 'dotenv';
+config({ path: '.env.local' });
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const token = process.env.SANITY_API_WRITE_TOKEN;
+if (!token) { console.error('❌ Falta SANITY_API_WRITE_TOKEN en .env.local'); process.exit(1); }
+
 const client = createClient({
-  projectId: 'epcoien9',
-  dataset: 'production',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? 'epcoien9',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production',
   apiVersion: '2024-01-01',
   useCdn: false,
-  token: 'skt3vPBsXZxGoCKXCpQizjLQ8r64dqP2hXj7YK6zSihwEwBGrVVT4PxHSCDCjauuOTEYPqLZXGAz6EHpIoqC62W4okjW9TKk8WXNoxrXQnOZYph7w9kLm6F8kiQ3B2EL4c2iQYlfuB877cE03NffKpjpbHzDexydv4uLGo6MckyANqgPPud0',
+  token,
 });
 
 const destinos = [

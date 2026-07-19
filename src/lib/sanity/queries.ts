@@ -102,6 +102,7 @@ export interface SanityContactInfo {
   linkedin?: string;
   youtube?: string;
   tiktok?: string;
+  studioPassword?: string;
 }
 
 const CONTACT_FALLBACK: SanityContactInfo = {

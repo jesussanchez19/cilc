@@ -7,6 +7,7 @@ export const configuracionSchema = defineType({
   groups: [
     { name: 'contacto',  title: 'Contacto',       default: true },
     { name: 'redes',     title: 'Redes sociales' },
+    { name: 'seguridad', title: 'Seguridad'       },
   ],
   fields: [
     defineField({
@@ -105,6 +106,13 @@ export const configuracionSchema = defineType({
       type: 'url',
       group: 'redes',
       description: 'URL completa: https://tiktok.com/@cilc',
+    }),
+    defineField({
+      name: 'studioPassword',
+      title: 'Contraseña del Studio',
+      type: 'string',
+      group: 'seguridad',
+      description: 'Contraseña para acceder a /studio. Si se deja vacío se usa la del servidor.',
     }),
   ],
   preview: {
