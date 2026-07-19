@@ -3,5 +3,8 @@ import { blogPostSchema } from './blogPost';
 import { teamMemberSchema } from './teamMember';
 import { socioSchema } from './socio';
 import { solicitudTestimonioSchema } from './solicitudTestimonio';
+import { programaSchema } from './programa';
+import { destinoSchema } from './destino';
+import { configuracionSchema } from './configuracion';
 
-export const schemas = [testimonialSchema, blogPostSchema, teamMemberSchema, socioSchema, solicitudTestimonioSchema];
+export const schemas = [testimonialSchema, blogPostSchema, teamMemberSchema, socioSchema, solicitudTestimonioSchema, programaSchema, destinoSchema, configuracionSchema];

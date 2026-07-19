@@ -3,10 +3,15 @@
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { Program, programColorMap } from '@/lib/data/programs';
+import { countries } from '@/lib/data/countries';
+import { SanityTestimonial } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
 import QuoteModal from './QuoteModal';
 
 interface ProgramPageProps {
   program: Program;
+  testimoniosSanity?: SanityTestimonial[];
+  destinosSanity?: string[];
 }
 
 function getProgramImages(slug: string) {
@@ -17,66 +22,52 @@ function getProgramImages(slug: string) {
   };
 }
 
-const testimoniosPorPrograma: Record<string, { foto: string; nombre: string; pais: string; texto: string }[]> = {
-  'idiomas': [
-    { foto: '/images/programs/idiomas/testimonio-1.png', nombre: 'Sofía Ramírez', pais: 'Canadá 🇨🇦', texto: 'Aprender inglés en Vancouver cambió mi vida. CILC me guió en cada paso y la experiencia superó mis expectativas.' },
-    { foto: '/images/programs/idiomas/testimonio-2.png', nombre: 'Carlos Mendoza', pais: 'Irlanda 🇮🇪', texto: 'Dublín fue increíble. En 3 meses mejoré mi inglés al nivel que necesitaba para mi trabajo.' },
-    { foto: '/images/programs/idiomas/testimonio-3.png', nombre: 'Ana Torres', pais: 'Reino Unido 🇬🇧', texto: 'El equipo de CILC siempre estuvo disponible. La escuela que eligieron para mí fue perfecta.' },
-  ],
-  'au-pair': [
-    { foto: '/images/programs/au-pair/testimonio-1.png', nombre: 'Valeria Cruz', pais: 'Francia 🇫🇷', texto: 'Vivir con una familia francesa fue una experiencia única. Aprendí el idioma y gané amigos para toda la vida.' },
-    { foto: '/images/programs/au-pair/testimonio-2.png', nombre: 'Paola Soto', pais: 'Alemania 🇩🇪', texto: 'CILC me orientó en todo el proceso. La familia me trató como a un miembro más.' },
-    { foto: '/images/programs/au-pair/testimonio-3.png', nombre: 'Mariana López', pais: 'Italia 🇮🇹', texto: 'Fue la mejor decisión de mi vida. Regresé con otro idioma, cultura y muchísima confianza.' },
-  ],
-  'anos-academicos': [
-    { foto: '/images/programs/anos-academicos/testimonio-1.png', nombre: 'Diego Herrera', pais: 'Canadá 🇨🇦', texto: 'Un año en Toronto me abrió las puertas a una universidad internacional. Fue transformador.' },
-    { foto: '/images/programs/anos-academicos/testimonio-2.png', nombre: 'Fernanda Ruiz', pais: 'Australia 🇦🇺', texto: 'El sistema educativo australiano es increíble. Volví con inglés fluido y una perspectiva global.' },
-    { foto: '/images/programs/anos-academicos/testimonio-3.png', nombre: 'Luis Castillo', pais: 'Reino Unido 🇬🇧', texto: 'CILC gestionó todo: visas, escuela, familia anfitriona. Solo me preocupé por aprender.' },
-  ],
-  'estudia-trabaja': [
-    { foto: '/images/programs/estudia-trabaja/testimonio-1.png', nombre: 'Andrea Flores', pais: 'Canadá 🇨🇦', texto: 'Estudié y trabajé al mismo tiempo. Cubrí mis gastos y acumulé experiencia laboral internacional.' },
-    { foto: '/images/programs/estudia-trabaja/testimonio-2.png', nombre: 'Miguel Ángel', pais: 'Irlanda 🇮🇪', texto: 'Increíble programa. En 6 meses pagué mis estudios con el trabajo y me quedé con experiencia real.' },
-    { foto: '/images/programs/estudia-trabaja/testimonio-3.png', nombre: 'Karla Vázquez', pais: 'Australia 🇦🇺', texto: 'CILC me asesoró perfectamente. El balance entre estudio y trabajo fue ideal para mí.' },
-  ],
-  'formacion-corporativa': [
-    { foto: '/images/programs/formacion-corporativa/testimonio-1.png', nombre: 'Roberto Sánchez', pais: 'EUA 🇺🇸', texto: 'El programa corporativo elevó el nivel de inglés de mi equipo en pocas semanas. Muy recomendado.' },
-    { foto: '/images/programs/formacion-corporativa/testimonio-2.png', nombre: 'Laura Moreno', pais: 'Canadá 🇨🇦', texto: 'CILC diseñó un plan a medida para nuestra empresa. Los resultados fueron inmediatos.' },
-    { foto: '/images/programs/formacion-corporativa/testimonio-3.png', nombre: 'Jorge Peña', pais: 'Reino Unido 🇬🇧', texto: 'Excelente calidad educativa y atención personalizada. Volveré a contratar con CILC.' },
-  ],
-  'idiomas-en-linea': [
-    { foto: '/images/programs/idiomas-en-linea/testimonio-1.png', nombre: 'Claudia Ríos', pais: 'México 🇲🇽', texto: 'Desde casa pude aprender inglés con maestros nativos. La plataforma y el ritmo fueron perfectos.' },
-    { foto: '/images/programs/idiomas-en-linea/testimonio-2.png', nombre: 'Tomás Guerrero', pais: 'México 🇲🇽', texto: 'Sin salir de la oficina mejoré mi inglés de negocios. 100% recomendable.' },
-    { foto: '/images/programs/idiomas-en-linea/testimonio-3.png', nombre: 'Gabriela Nieto', pais: 'México 🇲🇽', texto: 'Horarios flexibles y clases en vivo. CILC en línea es tan bueno como presencial.' },
-  ],
-};
 
 function Carrusel({ images, accentColor }: { images: string[]; accentColor: string }) {
   const [current, setCurrent] = useState(0);
-  const prev = () => setCurrent((c) => (c - 1 + images.length) % images.length);
-  const next = () => setCurrent((c) => (c + 1) % images.length);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startAuto = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrent((c) => (c + 1) % images.length);
+    }, 3500);
+  };
+
+  useEffect(() => {
+    startAuto();
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images.length]);
+
+  const prev = () => { setCurrent((c) => (c - 1 + images.length) % images.length); startAuto(); };
+  const next = () => { setCurrent((c) => (c + 1) % images.length); startAuto(); };
+
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-slate-100" style={{ aspectRatio: '16/9' }}>
-      {images.map((src, i) => (
-        <div key={src} className={`absolute inset-0 transition-opacity duration-500 ${i === current ? 'opacity-100' : 'opacity-0'}`}>
-          <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('${src}')` }} />
-        </div>
-      ))}
-      <button onClick={prev} aria-label="Anterior"
-        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-        style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-      </button>
-      <button onClick={next} aria-label="Siguiente"
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
-        style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
-        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-      </button>
-      <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-        {images.map((_, i) => (
-          <button key={i} onClick={() => setCurrent(i)}
-            className="h-1.5 rounded-full transition-all duration-300"
-            style={{ width: i === current ? '20px' : '6px', background: i === current ? accentColor : 'rgba(255,255,255,0.5)' }} />
+    <div className="max-w-2xl mx-auto">
+      <div className="relative w-full overflow-hidden rounded-2xl bg-slate-100" style={{ aspectRatio: '16/9' }}>
+        {images.map((src, i) => (
+          <div key={src} className={`absolute inset-0 transition-opacity duration-700 ${i === current ? 'opacity-100' : 'opacity-0'}`}>
+            <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('${src}')` }} />
+          </div>
         ))}
+        <button onClick={prev} aria-label="Anterior"
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+          style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+        </button>
+        <button onClick={next} aria-label="Siguiente"
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+          style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+        </button>
+        <div className="absolute bottom-2.5 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {images.map((_, i) => (
+            <button key={i} onClick={() => { setCurrent(i); startAuto(); }}
+              className="h-1 rounded-full transition-all duration-300"
+              style={{ width: i === current ? '18px' : '5px', background: i === current ? accentColor : 'rgba(255,255,255,0.5)' }} />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -103,11 +94,18 @@ function useSection(threshold = 0.15) {
   return { ref, visible };
 }
 
-export default function ProgramPage({ program }: ProgramPageProps) {
+export default function ProgramPage({ program, testimoniosSanity = [], destinosSanity }: ProgramPageProps) {
+  const destinosResolved = destinosSanity
+    ? destinosSanity.map((id) => countries.find((c) => c.id === id)).filter(Boolean)
+    : null;
   const colors = programColorMap[program.color];
   const imgs = getProgramImages(program.slug);
-  const testimonios = testimoniosPorPrograma[program.slug] ?? [];
   const [modalOpen, setModalOpen] = useState(false);
+
+  // Solo muestra galería cuando hay fotos de testimonios del programa
+  const galleryImages = testimoniosSanity
+    .filter((t) => t.foto?.asset?._ref)
+    .map((t) => urlFor(t.foto!).width(760).height(427).fit('crop').url());
 
   const stats  = useSection(0.25);
   const hl     = useSection(0.25);
@@ -166,7 +164,7 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           {[
             { value: program.duration,                  label: 'Duración' },
             { value: program.ageRange,                  label: 'Rango de edad' },
-            { value: `${program.countries.length} destinos`, label: 'Disponibles' },
+            { value: `${destinosResolved ? destinosResolved.length : program.countries.length} destinos`, label: 'Disponibles' },
           ].map(({ value, label }, i) => (
             <div
               key={label}
@@ -224,13 +222,15 @@ export default function ProgramPage({ program }: ProgramPageProps) {
           </div>
         </div>
 
-        {/* Gallery */}
-        <div className="mb-16">
-          <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
-            Galería del programa
-          </h2>
-          <Carrusel images={imgs.gallery} accentColor="#3b82f6" />
-        </div>
+        {/* Gallery — solo si hay fotos de testimonios */}
+        {galleryImages.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
+              Galería del programa
+            </h2>
+            <Carrusel images={galleryImages} accentColor={colors.text.includes('blue') ? '#3b82f6' : '#8b5cf6'} />
+          </div>
+        )}
 
         {/* Destinations — pop in with stagger */}
         <div className="mb-16">
@@ -238,15 +238,27 @@ export default function ProgramPage({ program }: ProgramPageProps) {
             Destinos disponibles
           </h2>
           <div ref={badges.ref} className="flex flex-wrap gap-2">
-            {program.countries.map((c, i) => (
-              <span
-                key={c}
-                className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''}`}
-                style={{ transitionDelay: `${i * 45}ms` }}
-              >
-                {c}
-              </span>
-            ))}
+            {(destinosResolved
+              ? destinosResolved.map((c, i) => (
+                  <Link
+                    key={c!.id}
+                    href={`/destinos/${c!.id}`}
+                    className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''} hover:opacity-80 transition-opacity`}
+                    style={{ transitionDelay: `${i * 45}ms` }}
+                  >
+                    {c!.flag} {c!.name}
+                  </Link>
+                ))
+              : program.countries.map((c, i) => (
+                <span
+                  key={c}
+                  className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 45}ms` }}
+                >
+                  {c}
+                </span>
+              ))
+            )}
           </div>
         </div>
 
@@ -259,29 +271,22 @@ export default function ProgramPage({ program }: ProgramPageProps) {
         </div>
 
         {/* Testimonials — blur in with stagger */}
-        {testimonios.length > 0 && (
+        {testimoniosSanity.length > 0 && (
           <div className="mb-16">
             <h2 className="text-2xl font-extrabold text-slate-900 mb-8 text-center" style={{ letterSpacing: '-0.02em' }}>
               Lo que dicen nuestros estudiantes
             </h2>
             <div ref={test.ref} className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {testimonios.map((t, i) => (
+              {testimoniosSanity.map((t, i) => (
                 <div
-                  key={t.nombre}
-                  className={`premium-card p-6 flex flex-col gap-4 reveal-blur ${test.visible ? 'is-visible' : ''}`}
+                  key={t._id}
+                  className={`premium-card p-6 flex flex-col gap-3 reveal-blur ${test.visible ? 'is-visible' : ''}`}
                   style={{ transitionDelay: `${i * 130}ms` }}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-cover bg-center shrink-0"
-                      style={{ backgroundImage: `url('${t.foto}')`, boxShadow: '0 0 0 2px rgba(59,130,246,0.3), 0 0 0 4px rgba(59,130,246,0.1)' }} />
-                    <div>
-                      <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
-                      <p className={`text-xs font-semibold ${colors.text}`}>{t.pais}</p>
-                    </div>
-                  </div>
+                  <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
                   <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                    {[...Array(5)].map((_, j) => (
+                      <svg key={j} className={`w-4 h-4 ${j < (t.calificacion ?? 5) ? 'text-amber-400' : 'text-slate-200'}`} fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}

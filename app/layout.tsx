@@ -2,14 +2,17 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import 'sileo/styles.css';
 import Header from '@/components/shared/Header';
 import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
+import { Toaster } from 'sileo';
 
 import { GA_ID } from '@/lib/analytics';
 import { organizationSchema } from '@/lib/seo/schemas';
+import { getContactInfo } from '@/lib/sanity/queries';
  
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,9 +36,9 @@ export const metadata: Metadata = {
     template: '%s | CILC',
   },
   description:
-    'Más de 23 años ayudando a estudiantes mexicanos a estudiar en Canadá, Estados Unidos, Inglaterra e Irlanda. Asesoría personalizada en programas de idiomas, Au Pair, años académicos y más.',
+    'Más de 23 años ayudando a estudiantes mexicanos a estudiar en el extranjero. Programas en más de 16 destinos: idiomas, Au Pair, años académicos, estudia y trabaja, y más.',
   keywords:
-    'estudios en el extranjero, programas de idiomas, Au Pair, años académicos, estudia y trabaja, Canadá, Estados Unidos, Inglaterra, Irlanda, CILC',
+    'estudios en el extranjero, programas de idiomas, Au Pair, años académicos, estudia y trabaja, Canadá, Estados Unidos, Reino Unido, Irlanda, Australia, Alemania, Japón, CILC',
   openGraph: {
     type: 'website',
     locale: 'es_MX',
@@ -66,11 +69,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contact = await getContactInfo();
+  const mainPhone = (contact.telefonos?.find((p) => p.esPrincipal) ?? contact.telefonos?.[0])?.wa;
   return (
     <html
       lang="es"
@@ -102,9 +107,22 @@ export default function RootLayout({
         <Navigation />
         <Breadcrumb />
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Footer
+          contactEmail={contact.emailAdmin}
+          phones={contact.telefonos}
+          mainPhone={mainPhone}
+          address={contact.direccion}
+          socialLinks={{
+            facebook:  contact.facebook,
+            instagram: contact.instagram,
+            linkedin:  contact.linkedin,
+            youtube:   contact.youtube,
+            tiktok:    contact.tiktok,
+          }}
+        />
 
         <WhatsAppButton />
+        <Toaster position="bottom-right" theme="system" />
       </body>
     </html>
   );

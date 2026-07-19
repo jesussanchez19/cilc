@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeClient } from '@/lib/sanity/writeClient';
+import { getContactInfo } from '@/lib/sanity/queries';
+import { testimonioAdminHtml } from '@/lib/email/templates';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -56,21 +58,21 @@ export async function POST(req: NextRequest) {
   }
 
   try {
+    const contactInfo = await getContactInfo();
     await resend.emails.send({
       from: 'CILC Web <onboarding@resend.dev>',
-      to: 'jesussanchez19062002@gmail.com',
+      to: contactInfo.emailAdmin,
       subject: `[CILC] Nueva solicitud de testimonio — ${nombre}`,
-      html: `
-        <h2>Nueva solicitud de testimonio</h2>
-        <p><strong>Nombre:</strong> ${nombre}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Programa:</strong> ${programa}</p>
-        <p><strong>País/Ciudad:</strong> ${pais}</p>
-        <p><strong>Foto:</strong> ${fotoFile && fotoFile.size > 0 ? 'Sí (ver en Studio)' : 'No'}</p>
-        <p><strong>Testimonio:</strong></p>
-        <blockquote>${texto}</blockquote>
-        <p>Revisa y aprueba en <a href="http://localhost:3000/studio">Sanity Studio</a>.</p>
-      `,
+      html: testimonioAdminHtml({
+        nombre,
+        email,
+        programa: programa ?? '',
+        pais: pais ?? '',
+        texto,
+        tieneFoto: !!(fotoFile && fotoFile.size > 0),
+        calificacion,
+        studioUrl: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.vercel.app'}/studio`,
+      }),
     });
   } catch (err) {
     console.error('[testimonio] Error al enviar email:', err);

@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import ArticleCard from '@/components/blog/ArticleCard';
 import AnimateIn from '@/components/shared/AnimateIn';

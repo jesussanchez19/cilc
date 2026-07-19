@@ -1,19 +1,21 @@
+export const revalidate = 60;
+
 import type { Metadata } from 'next';
 import ContactForm from '@/components/shared/ContactForm';
 import AnimateIn from '@/components/shared/AnimateIn';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 export const metadata: Metadata = {
   title: 'Contacto | CILC',
   description: 'Más de 23 años ayudando a estudiantes mexicanos a estudiar en el extranjero. Cuéntanos tu caso y te asesoramos sin costo.',
 };
 
-const PHONES = [
-  { display: '55 1894 4494', wa: '525518944494' },
-  { display: '55 7278 5966', wa: '525572785966' },
-  { display: '55 1218 2442', wa: '525512182442' },
-];
-
-export default function ContactPage() {
+export default async function ContactPage() {
+  const contact = await getContactInfo();
+  const phones = contact.telefonos ?? [];
+  const mainPhone = (phones.find((p) => p.esPrincipal) ?? phones[0])?.wa ?? '525518944494';
+  const email = contact.emailAdmin;
+  const addressLines = (contact.direccion ?? '').split('\n').filter(Boolean);
   return (
     <div>
 
@@ -51,7 +53,7 @@ export default function ContactPage() {
             {/* Email */}
             <AnimateIn animation="blur" delay={0}>
               <a
-                href="mailto:info@estudiosenelextranjero.com.mx"
+                href={`mailto:${email}`}
                 className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02]"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
@@ -64,7 +66,7 @@ export default function ContactPage() {
                 <div>
                   <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">Email</p>
                   <p className="text-white font-semibold text-sm break-all group-hover:text-blue-400 transition-colors duration-200">
-                    info@estudiosenelextranjero.com.mx
+                    {email}
                   </p>
                 </div>
               </a>
@@ -73,7 +75,7 @@ export default function ContactPage() {
             {/* WhatsApp */}
             <AnimateIn animation="blur" delay={110}>
               <a
-                href="https://wa.me/525518944494"
+                href={`https://wa.me/${mainPhone}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02]"
@@ -87,9 +89,9 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">WhatsApp</p>
-                  {PHONES.map((p) => (
+                  {phones.map((p) => (
                     <p key={p.wa} className="text-white font-semibold text-sm group-hover:text-green-400 transition-colors duration-200">
-                      +52 {p.display}
+                      +{p.wa.startsWith('52') ? '52 ' : ''}{p.display}
                     </p>
                   ))}
                 </div>
@@ -112,9 +114,9 @@ export default function ContactPage() {
                 <div>
                   <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">Oficina</p>
                   <p className="text-white font-semibold text-sm leading-relaxed">
-                    Av. Insurgentes Sur 863, Piso 7<br />
-                    Col. Nápoles, C.P. 03810<br />
-                    CDMX, México
+                    {addressLines.map((line, i) => (
+                      <span key={i}>{line}{i < addressLines.length - 1 && <br />}</span>
+                    ))}
                   </p>
                 </div>
               </div>
@@ -135,7 +137,7 @@ export default function ContactPage() {
               <p className="text-slate-400 text-sm">Respondemos en minutos. Sin esperas, sin formularios.</p>
             </div>
             <a
-              href="https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero"
+              href={`https://wa.me/${mainPhone}?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero`}
               target="_blank"
               rel="noopener noreferrer"
               className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:scale-105"

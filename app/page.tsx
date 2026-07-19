@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -15,14 +15,6 @@ import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
 
-const LOGOS = [
-  { name: 'ICEF',           src: '/images/logos/icef.png',       href: 'https://www.icef.com',        alt: 'Miembro certificado ICEF — red global de educación internacional' },
-  { name: 'ALTO',           src: '/images/logos/alto.png',       href: 'https://www.altonetwork.com', alt: 'Miembro ALTO — Association of Language Travel Organisations' },
-  { name: 'Pearson',        src: '/images/logos/pearson.png',    href: 'https://www.pearson.com',     alt: 'Partner Pearson — certificaciones internacionales de inglés' },
-  { name: 'Cambridge',      src: '/images/logos/cambridge.png',  href: 'https://www.cambridgeenglish.org', alt: 'Exámenes Cambridge English — evaluaciones oficiales de inglés' },
-  { name: 'IALC',           src: '/images/logos/ialc.png',       href: 'https://www.ialc.org',        alt: 'Miembro IALC — International Association of Language Centres' },
-  { name: 'Immigration CA', src: '/images/logos/ircc.png',       href: 'https://www.canada.ca/immigration', alt: 'Canadá — Immigration, Refugees and Citizenship Canada' },
-];
 
 const VALUE_PROPS = [
   {
@@ -111,7 +103,7 @@ export default async function Home() {
     bandera: t.bandera ?? '',
     programa: t.programa,
     texto: t.texto,
-    foto: t.foto ? urlFor(t.foto).width(200).height(200).fit('crop').url() : '',
+    foto: t.foto ? urlFor(t.foto).width(900).height(506).fit('crop').url() : '',
     videoUrl: t.videoUrl,
     calificacion: t.calificacion,
   }));
@@ -139,28 +131,44 @@ export default async function Home() {
 
       <HeroBanner />
 
-      {/* ── Proof: logos de socios certificados (social proof justo después del hero) ── */}
-      <section className="py-12 bg-white" style={{ borderBottom: '1px solid rgba(15,23,42,0.06)' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-8">
-            Miembros y socios certificados
-          </p>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-6 items-center">
-            {LOGOS.map(({ name, src, href, alt }) => (
-              <a
-                key={name}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center grayscale hover:grayscale-0 opacity-50 hover:opacity-100 transition-all duration-300"
-                aria-label={`Visitar sitio de ${name} (abre en nueva pestaña)`}
-              >
-                <Image src={src} alt={alt} width={120} height={45} className="h-10 w-auto object-contain" />
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* ── Socios y Miembros — solo si el admin agregó contenido en Sanity ── */}
+      {socios.length > 0 && (
+        <LazySection animation="fade">
+          <section className="py-14 bg-white" style={{ borderBottom: '1px solid rgba(15,23,42,0.06)' }}>
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+              <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
+                Miembros y socios certificados
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-start">
+                {socios.map((s) => {
+                  const inner = (
+                    <>
+                      <Image
+                        src={urlFor(s.logo).width(200).height(200).fit('crop').url()}
+                        alt={`${s.nombre} — ${s.cargo}`}
+                        width={80} height={80}
+                        className="w-20 h-20 rounded-full object-cover mx-auto mb-3 grayscale group-hover:grayscale-0 transition-all duration-300"
+                      />
+                      <p className="text-sm font-semibold text-slate-800 text-center leading-tight">{s.nombre}</p>
+                      <p className="text-xs text-slate-400 text-center mt-0.5">{s.cargo}</p>
+                    </>
+                  );
+                  return s.url ? (
+                    <a key={s._id} href={s.url} target="_blank" rel="noopener noreferrer"
+                      className="group flex flex-col items-center hover:opacity-90 transition-opacity duration-200">
+                      {inner}
+                    </a>
+                  ) : (
+                    <div key={s._id} className="group flex flex-col items-center">
+                      {inner}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        </LazySection>
+      )}
 
       <FeaturedPrograms />
       <div className="section-divider" />
@@ -220,44 +228,6 @@ export default async function Home() {
         </section>
       </LazySection>
 
-      {/* ── Socios y Miembros — solo si el admin agregó contenido en Sanity ── */}
-      {socios.length > 0 && (
-        <LazySection animation="fade">
-          <section className="py-14 bg-white" style={{ borderTop: '1px solid rgba(15,23,42,0.06)' }}>
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-              <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
-                Miembros y socios certificados
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-start">
-                {socios.map((s) => {
-                  const inner = (
-                    <>
-                      <Image
-                        src={urlFor(s.logo).width(200).height(200).fit('crop').url()}
-                        alt={`${s.nombre} — ${s.cargo}`}
-                        width={80} height={80}
-                        className="w-20 h-20 rounded-full object-cover mx-auto mb-3 grayscale group-hover:grayscale-0 transition-all duration-300"
-                      />
-                      <p className="text-sm font-semibold text-slate-800 text-center leading-tight">{s.nombre}</p>
-                      <p className="text-xs text-slate-400 text-center mt-0.5">{s.cargo}</p>
-                    </>
-                  );
-                  return s.url ? (
-                    <a key={s._id} href={s.url} target="_blank" rel="noopener noreferrer"
-                      className="group flex flex-col items-center hover:opacity-90 transition-opacity duration-200">
-                      {inner}
-                    </a>
-                  ) : (
-                    <div key={s._id} className="group flex flex-col items-center">
-                      {inner}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-        </LazySection>
-      )}
 
       {/* ── Testimonios — solo si hay aprobados en Sanity ── */}
       {testimonios.length > 0 && (

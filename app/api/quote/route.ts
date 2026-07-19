@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { quoteSchema } from '@/lib/validations/quote';
 import { saveLead } from '@/lib/leads';
 import { quoteAdminHtml, quoteUserHtml } from '@/lib/email/templates';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -45,12 +46,15 @@ export async function POST(req: NextRequest) {
 
   const { name, email, phone, program, message } = result.data;
 
-  await saveLead({ type: 'quote', name, email, phone, program, message: message ?? '' });
+  const [, contactInfo] = await Promise.all([
+    saveLead({ type: 'quote', name, email, phone, program, message: message ?? '' }),
+    getContactInfo(),
+  ]);
 
   const [adminResult, userResult] = await Promise.all([
     resend.emails.send({
       from: 'CILC Web <onboarding@resend.dev>',
-      to: 'jesussanchez19062002@gmail.com',
+      to: contactInfo.emailAdmin,
       replyTo: email,
       subject: `[CILC Cotización] ${program} — ${name}`,
       html: quoteAdminHtml({ name, email, phone, program, message }),
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
       from: 'CILC <onboarding@resend.dev>',
       to: email,
       subject: `Tu solicitud sobre ${program} — CILC`,
-      html: quoteUserHtml(name, program),
+      html: quoteUserHtml(name, program, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
     }),
   ]);
 

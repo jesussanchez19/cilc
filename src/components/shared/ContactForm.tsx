@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { ContactFormData } from '@/lib/validations/contact';
+import { sileo } from 'sileo';
 
 type FieldErrors = Partial<Record<keyof ContactFormData, string[]>>;
-type Status = 'idle' | 'loading' | 'success' | 'error';
+type Status = 'idle' | 'loading';
 
 const INITIAL: ContactFormData = { name: '', email: '', subject: '', message: '' };
 
@@ -21,7 +22,6 @@ export default function ContactForm() {
   const [formData, setFormData]       = useState<ContactFormData>(INITIAL);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [status, setStatus]           = useState<Status>('idle');
-  const [errorMsg, setErrorMsg]       = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -35,7 +35,6 @@ export default function ContactForm() {
     e.preventDefault();
     setStatus('loading');
     setFieldErrors({});
-    setErrorMsg('');
 
     try {
       const res  = await fetch('/api/contact', {
@@ -50,58 +49,23 @@ export default function ContactForm() {
           setFieldErrors(data.fields);
           setStatus('idle');
         } else {
-          setErrorMsg(data.error ?? 'Error al enviar el mensaje.');
-          setStatus('error');
+          sileo.error({ title: 'Error al enviar', description: data.error ?? 'Error al enviar el mensaje.', fill: '#E31E24' });
+          setStatus('idle');
         }
         return;
       }
 
-      setStatus('success');
+      sileo.success({ title: '¡Mensaje enviado!', description: 'Te contactaremos en menos de 24 horas.', fill: '#1B67E8' });
       setFormData(INITIAL);
+      setStatus('idle');
     } catch {
-      setErrorMsg('No se pudo conectar con el servidor. Verifica tu conexión e inténtalo de nuevo.');
-      setStatus('error');
+      sileo.error({ title: 'Error al enviar', description: 'No se pudo conectar con el servidor. Verifica tu conexión.', fill: '#E31E24' });
+      setStatus('idle');
     }
   };
 
-  if (status === 'success') {
-    return (
-      <div className="max-w-2xl mx-auto text-center py-20 animate-scale-in">
-        <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-          style={{ background: 'linear-gradient(135deg, #d1fae5, #a7f3d0)' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
-        <h3 className="text-2xl font-extrabold text-slate-900 mb-2" style={{ letterSpacing: '-0.02em' }}>
-          ¡Mensaje enviado!
-        </h3>
-        <p className="text-slate-500 mb-8">
-          Gracias por contactarnos. Nos pondremos en contacto contigo en menos de 24 horas.
-        </p>
-        <button
-          onClick={() => setStatus('idle')}
-          className="btn-primary"
-          style={{ background: 'var(--blue-600)' }}
-        >
-          Enviar otro mensaje
-        </button>
-      </div>
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
-
-      {status === 'error' && (
-        <div className="mb-6 p-4 rounded-xl flex items-start gap-3 animate-fade-in"
-          style={{ background: '#fef2f2', border: '1px solid #fecaca', color: '#dc2626' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M12 3a9 9 0 100 18A9 9 0 0012 3z" />
-          </svg>
-          <p className="text-sm">{errorMsg}</p>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
         <div>

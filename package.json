@@ -23,6 +23,8 @@
     "remark-frontmatter": "^5.0.0",
     "resend": "^6.12.4",
     "sanity": "^6.4.0",
+    "sileo": "^0.1.5",
+    "styled-components": "^6.4.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {

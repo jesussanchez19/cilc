@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { contactSchema } from '@/lib/validations/contact';
 import { saveLead } from '@/lib/leads';
 import { contactAdminHtml, contactUserHtml } from '@/lib/email/templates';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -45,12 +46,15 @@ export async function POST(req: NextRequest) {
 
   const { name, email, subject, message } = result.data;
 
-  await saveLead({ type: 'contact', name, email, subject, message });
+  const [, contactInfo] = await Promise.all([
+    saveLead({ type: 'contact', name, email, subject, message }),
+    getContactInfo(),
+  ]);
 
   const [adminResult, userResult] = await Promise.all([
     resend.emails.send({
       from: 'CILC Web <onboarding@resend.dev>',
-      to: 'jesussanchez19062002@gmail.com',
+      to: contactInfo.emailAdmin,
       replyTo: email,
       subject: `[CILC Web] ${subject} — ${name}`,
       html: contactAdminHtml({ name, email, subject, message }),
@@ -59,7 +63,7 @@ export async function POST(req: NextRequest) {
       from: 'CILC <onboarding@resend.dev>',
       to: email,
       subject: 'Recibimos tu mensaje — CILC',
-      html: contactUserHtml(name),
+      html: contactUserHtml(name, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
     }),
   ]);
 

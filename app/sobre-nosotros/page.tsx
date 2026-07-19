@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import AnimateIn from '@/components/shared/AnimateIn';
 
+const YEAR = new Date().getFullYear();
+
 export const metadata = {
   title: 'Sobre Nosotros | CILC',
-  description: 'Conoce la historia de CILC desde 2001, nuestra misión, visión, valores y por qué 2026 es el año ideal para estudiar en el extranjero.',
+  description: `Conoce la historia de CILC desde 2001, nuestra misión, visión, valores y por qué ${YEAR} es el año ideal para estudiar en el extranjero.`,
 };
 
 const VALORES = [
@@ -78,12 +80,12 @@ const RAZONES_2026 = [
   {
     num: '02',
     title: 'Cupos limitados en Canadá e Irlanda',
-    desc: 'Los gobiernos de Canadá e Irlanda han implementado nuevas restricciones en visas estudiantiles. Quienes arrancan en 2026 acceden a cupos antes de que las políticas migratorias se endurezcan aún más.',
+    desc: `Los gobiernos de Canadá e Irlanda han implementado nuevas restricciones en visas estudiantiles. Quienes arrancan en ${YEAR} acceden a cupos antes de que las políticas migratorias se endurezcan aún más.`,
   },
   {
     num: '03',
     title: 'Nuevas visas de trabajo disponibles',
-    desc: 'Los programas Estudia y Trabaja en Irlanda y Reino Unido tienen nuevas modalidades para 2026 que permiten cubrir parte de los gastos con el sueldo local — una ventana de oportunidad única.',
+    desc: `Los programas Estudia y Trabaja en Irlanda y Reino Unido tienen nuevas modalidades para ${YEAR} que permiten cubrir parte de los gastos con el sueldo local — una ventana de oportunidad única.`,
   },
   {
     num: '04',
@@ -251,7 +253,7 @@ export default function SobreNosotrosPage() {
               style={{ letterSpacing: '-0.03em', lineHeight: '1.08' }}>
               ¿Por qué estudiar en el extranjero
               <br />
-              <span className="gradient-text-light">en 2026?</span>
+              <span className="gradient-text-light">en {YEAR}?</span>
             </h2>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
               El mundo cambió. Las reglas del mercado laboral cambiaron. Aquí están las razones
@@ -279,7 +281,7 @@ export default function SobreNosotrosPage() {
 
           <AnimateIn animation="up" delay={RAZONES_2026.length * 120 + 80} threshold={0.5} className="text-center mt-12">
             <Link href="/contact" className="btn-primary">
-              Quiero aprovechar 2026
+              Quiero aprovechar {YEAR}
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
               </svg>

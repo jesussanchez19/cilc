@@ -1,92 +1,193 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { sileo } from 'sileo';
 
-const PULSE_INTERVAL_MS = 10000;
-const PULSE_DURATION_MS = 1800;
+const WHATSAPP_ICON = (
+  <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333zm0 24.267a11.022 11.022 0 01-5.614-1.533l-.403-.238-4.047 1.056 1.08-3.94-.264-.416A10.98 10.98 0 015.003 16c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.03-8.237c-.33-.165-1.953-.963-2.256-1.073-.303-.11-.524-.165-.744.165-.22.33-.854 1.073-1.047 1.293-.193.22-.385.248-.716.083-.33-.165-1.394-.514-2.655-1.638-.981-.875-1.643-1.956-1.836-2.286-.193-.33-.021-.508.145-.672.15-.148.33-.385.496-.578.165-.193.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.744-1.793-1.02-2.454-.268-.644-.54-.557-.744-.567l-.633-.012c-.22 0-.578.083-.881.413-.303.33-1.155 1.128-1.155 2.75s1.183 3.19 1.348 3.41c.165.22 2.328 3.555 5.642 4.988.789.34 1.404.544 1.884.696.791.252 1.511.216 2.08.131.635-.094 1.953-.798 2.228-1.569.275-.77.275-1.43.193-1.569-.083-.138-.303-.22-.633-.385z" />
+);
 
 export default function WhatsAppButton() {
-  const [hovered, setHovered] = useState(false);
-  const [tapped, setTapped] = useState(false);
-  const [pulsing, setPulsing] = useState(false);
+  const [open, setOpen]         = useState(false);
+  const [hovered, setHovered]   = useState(false);
+  const [nombre, setNombre]     = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [loading, setLoading]   = useState(false);
+  const [pulsing, setPulsing]   = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const tooltipVisible = hovered || tapped;
-
   useEffect(() => {
     intervalRef.current = setInterval(() => {
-      if (!tooltipVisible) {
+      if (!open) {
         setPulsing(true);
-        pulseTimeoutRef.current = setTimeout(() => setPulsing(false), PULSE_DURATION_MS);
+        pulseTimeoutRef.current = setTimeout(() => setPulsing(false), 1800);
       }
-    }, PULSE_INTERVAL_MS);
-
+    }, 10000);
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
     };
-  }, [tooltipVisible]);
+  }, [open]);
 
   useEffect(() => {
-    if (tooltipVisible && pulsing) {
-      setPulsing(false);
-      if (pulseTimeoutRef.current) clearTimeout(pulseTimeoutRef.current);
-    }
-  }, [tooltipVisible, pulsing]);
+    const handleClickOutside = (e: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    if (open) document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [open]);
 
-  const url = `https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero`;
-  const handleTouchStart = () => setTapped(true);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: nombre,
+          email: 'lead@wa.cilc.mx',
+          subject: 'Contacto rápido vía WhatsApp',
+          message: `WhatsApp / Teléfono: ${telefono}`,
+        }),
+      });
+      sileo.success({
+        title: '¡Listo! Te contactamos pronto',
+        description: 'Un asesor de CILC te escribirá en breve.',
+        fill: '#1B67E8',
+      });
+      setNombre('');
+      setTelefono('');
+      setOpen(false);
+    } catch {
+      sileo.error({ title: 'Error al enviar', description: 'Inténtalo de nuevo.', fill: '#E31E24' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Contactar por WhatsApp"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onTouchStart={handleTouchStart}
-      className="fixed bottom-6 left-6 z-50 flex items-center gap-3 group"
-    >
-      {/* Tooltip */}
-      <span
-        className="text-slate-800 text-sm font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap transition-all duration-200"
-        style={{
-          background: 'rgba(255,255,255,0.95)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(15,23,42,0.08)',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
-          opacity: tooltipVisible ? 1 : 0,
-          transform: tooltipVisible ? 'translateX(0)' : 'translateX(-8px)',
-          pointerEvents: tooltipVisible ? 'auto' : 'none',
-        }}
-      >
-        ¿Tienes dudas?
-      </span>
+    <div ref={wrapperRef} className="fixed bottom-6 left-6 z-50">
 
-      {/* Button */}
-      <div className="relative w-14 h-14 flex items-center justify-center">
-        {/* Pulse ring */}
-        {pulsing && !tooltipVisible && (
-          <span className="absolute inset-0 rounded-full bg-green-400 opacity-35 animate-ping" />
-        )}
-
-        {/* Main button */}
+      {/* Chat popup — aparece encima del botón */}
+      {open && (
         <div
-          className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 group-hover:scale-110"
+          className="absolute bottom-20 left-0 w-80 rounded-2xl overflow-hidden animate-scale-in"
+          style={{ boxShadow: '0 20px 60px rgba(0,0,0,0.22)', transformOrigin: 'bottom left' }}
+        >
+          {/* Header */}
+          <div
+            className="flex items-center gap-3 px-4 py-3"
+            style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}
+          >
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+              style={{ background: 'rgba(255,255,255,0.2)' }}>
+              <svg viewBox="0 0 32 32" className="w-6 h-6" fill="white">{WHATSAPP_ICON}</svg>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-bold text-sm leading-none">CILC</p>
+              <p className="text-green-100 text-xs mt-0.5">● En línea · Responde en minutos</p>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              aria-label="Cerrar"
+              className="text-white/70 hover:text-white transition-colors shrink-0"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Chat body */}
+          <div className="px-4 py-4 space-y-3" style={{ background: '#e5ddd5' }}>
+
+            {/* Burbuja del asesor */}
+            <div
+              className="bg-white rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm max-w-[90%]"
+            >
+              <p className="text-slate-700 text-sm leading-relaxed">
+                👋 ¡Hola! Déjanos tu nombre y número y un asesor te contactará en minutos.
+              </p>
+              <p className="text-slate-400 text-[10px] text-right mt-1.5">CILC · ahora</p>
+            </div>
+
+            {/* Formulario */}
+            <form onSubmit={handleSubmit} className="space-y-2">
+              <input
+                type="text"
+                placeholder="Tu nombre *"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+                autoComplete="name"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
+                style={{ background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
+              />
+              <input
+                type="tel"
+                placeholder="Tu WhatsApp / Teléfono *"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                required
+                autoComplete="tel"
+                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
+                style={{ background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 active:scale-95 disabled:opacity-60"
+                style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}
+              >
+                {loading ? 'Enviando...' : 'Quiero que me contacten →'}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Botón flotante — mismo diseño original */}
+      <div className="flex items-center gap-3">
+        {/* Tooltip hover */}
+        <span
+          className="text-slate-800 text-sm font-semibold px-3.5 py-2 rounded-xl whitespace-nowrap transition-all duration-200"
           style={{
-            background: 'linear-gradient(135deg, #22c55e 0%, #16a34a 100%)',
-            boxShadow: tooltipVisible
-              ? '0 8px 28px rgba(22,163,74,0.45)'
-              : '0 4px 16px rgba(22,163,74,0.30)',
+            background: 'rgba(255,255,255,0.95)',
+            backdropFilter: 'blur(12px)',
+            border: '1px solid rgba(15,23,42,0.08)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.10)',
+            opacity: hovered && !open ? 1 : 0,
+            transform: hovered && !open ? 'translateX(0)' : 'translateX(-8px)',
+            pointerEvents: 'none',
           }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="white" aria-hidden="true">
-            <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333zm0 24.267a11.022 11.022 0 01-5.614-1.533l-.403-.238-4.047 1.056 1.08-3.94-.264-.416A10.98 10.98 0 015.003 16c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.03-8.237c-.33-.165-1.953-.963-2.256-1.073-.303-.11-.524-.165-.744.165-.22.33-.854 1.073-1.047 1.293-.193.22-.385.248-.716.083-.33-.165-1.394-.514-2.655-1.638-.981-.875-1.643-1.956-1.836-2.286-.193-.33-.021-.508.145-.672.15-.148.33-.385.496-.578.165-.193.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.744-1.793-1.02-2.454-.268-.644-.54-.557-.744-.567l-.633-.012c-.22 0-.578.083-.881.413-.303.33-1.155 1.128-1.155 2.75s1.183 3.19 1.348 3.41c.165.22 2.328 3.555 5.642 4.988.789.34 1.404.544 1.884.696.791.252 1.511.216 2.08.131.635-.094 1.953-.798 2.228-1.569.275-.77.275-1.43.193-1.569-.083-.138-.303-.22-.633-.385z" />
-          </svg>
-        </div>
+          ¿Tienes dudas?
+        </span>
+
+        <button
+          onClick={() => setOpen((o) => !o)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          aria-label="Chatear con CILC"
+          className="relative w-14 h-14 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+        style={{
+          background: 'linear-gradient(135deg,#22c55e 0%,#16a34a 100%)',
+          boxShadow: open
+            ? '0 8px 28px rgba(22,163,74,0.45)'
+            : '0 4px 16px rgba(22,163,74,0.30)',
+        }}
+      >
+        {pulsing && !open && (
+          <span className="absolute inset-0 rounded-full bg-green-400 opacity-35 animate-ping pointer-events-none" />
+        )}
+          <svg viewBox="0 0 32 32" className="w-8 h-8" fill="white" aria-hidden="true">{WHATSAPP_ICON}</svg>
+        </button>
       </div>
-    </a>
+    </div>
   );
 }
