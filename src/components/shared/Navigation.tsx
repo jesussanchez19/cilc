@@ -45,8 +45,10 @@ export default function Navigation() {
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
+  const isStudio = pathname.startsWith('/studio');
+
   return (
-    <>
+    <div style={{ display: isStudio ? 'none' : 'contents' }}>
       {/* NAVBAR */}
       <nav
         ref={navRef}
@@ -145,6 +147,6 @@ export default function Navigation() {
           </div>
         </button>
       </div>
-    </>
+    </div>
   );
 }

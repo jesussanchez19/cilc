@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import { sileo } from 'sileo';
 
 const WHATSAPP_ICON = (
@@ -8,6 +9,7 @@ const WHATSAPP_ICON = (
 );
 
 export default function WhatsAppButton() {
+  const pathname = usePathname();
   const [open, setOpen]         = useState(false);
   const [hovered, setHovered]   = useState(false);
   const [nombre, setNombre]     = useState('');
@@ -69,6 +71,8 @@ export default function WhatsAppButton() {
       setLoading(false);
     }
   };
+
+  if (pathname.startsWith('/studio')) return null;
 
   return (
     <div ref={wrapperRef} className="fixed bottom-6 left-6 z-50">

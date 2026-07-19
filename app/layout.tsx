@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Script from 'next/script';
@@ -7,6 +8,7 @@ import Header from '@/components/shared/Header';
 import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
+import StudioExitButton from '@/components/shared/StudioExitButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 import { Toaster } from 'sileo';
 
@@ -104,7 +106,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
         />
         <Header />
-        <Navigation />
+        <Suspense fallback={null}><Navigation /></Suspense>
         <Breadcrumb />
         <main className="flex-1">{children}</main>
         <Footer
@@ -122,6 +124,7 @@ export default async function RootLayout({
         />
 
         <WhatsAppButton />
+        <StudioExitButton />
         <Toaster position="bottom-right" theme="system" />
       </body>
     </html>

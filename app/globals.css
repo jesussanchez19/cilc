@@ -62,19 +62,6 @@
 }
 
 /* ═══════════════════════════════════════════════════════
-   Sanity Studio — ocultar layout CILC en /studio
-═══════════════════════════════════════════════════════ */
-body.studio-page > header,
-body.studio-page > nav,
-body.studio-page > footer {
-  display: none !important;
-}
-body.studio-page > main {
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* ═══════════════════════════════════════════════════════
    Base
 ═══════════════════════════════════════════════════════ */
 html {
