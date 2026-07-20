@@ -9,12 +9,12 @@ import LazySection from '@/components/shared/LazySection';
 export const dynamic = 'force-dynamic';
 
 const PROGRAMA_INFO: Record<string, { label: string; href: string; icon: string; color: string }> = {
-  'idiomas':               { label: 'Idiomas',               href: '/idiomas',               icon: '🗣️', color: '#1B67E8' },
-  'au-pair':               { label: 'Au Pair',               href: '/au-pair',               icon: '👧', color: '#ec4899' },
-  'anos-academicos':       { label: 'Años Académicos',       href: '/anos-academicos',       icon: '🎓', color: '#8b5cf6' },
-  'estudia-trabaja':       { label: 'Estudia y Trabaja',     href: '/estudia-trabaja',       icon: '💼', color: '#10b981' },
-  'formacion-corporativa': { label: 'Formación Corporativa', href: '/formacion-corporativa', icon: '🏢', color: '#f59e0b' },
-  'idiomas-en-linea':      { label: 'Idiomas en Línea',      href: '/idiomas-en-linea',      icon: '💻', color: '#06b6d4' },
+  'idiomas':               { label: 'Idiomas',               href: '/programas/idiomas',               icon: '🗣️', color: '#1B67E8' },
+  'au-pair':               { label: 'Au Pair',               href: '/programas/au-pair',               icon: '👧', color: '#ec4899' },
+  'anos-academicos':       { label: 'Años Académicos',       href: '/programas/anos-academicos',       icon: '🎓', color: '#8b5cf6' },
+  'estudia-trabaja':       { label: 'Estudia y Trabaja',     href: '/programas/estudia-trabaja',       icon: '💼', color: '#10b981' },
+  'formacion-corporativa': { label: 'Formación Corporativa', href: '/programas/formacion-corporativa', icon: '🏢', color: '#f59e0b' },
+  'idiomas-en-linea':      { label: 'Idiomas en Línea',      href: '/programas/idiomas-en-linea',      icon: '💻', color: '#06b6d4' },
 };
 
 const RAZONES = [

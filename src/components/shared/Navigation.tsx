@@ -5,14 +5,14 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 
 const NAV_LINKS = [
-  { href: '/',                      label: 'Inicio' },
-  { href: '/idiomas',               label: 'Idiomas' },
-  { href: '/au-pair',               label: 'Au Pair' },
-  { href: '/anos-academicos',       label: 'Años Académicos' },
-  { href: '/estudia-trabaja',       label: 'Estudia y Trabaja' },
-  { href: '/formacion-corporativa', label: 'Formación Corporativa' },
-  { href: '/idiomas-en-linea',      label: 'Idiomas en Línea' },
-  { href: '/contact',               label: 'Contacto' },
+  { href: '/',                               label: 'Inicio' },
+  { href: '/programas/idiomas',               label: 'Idiomas' },
+  { href: '/programas/au-pair',               label: 'Au Pair' },
+  { href: '/programas/anos-academicos',       label: 'Años Académicos' },
+  { href: '/programas/estudia-trabaja',       label: 'Estudia y Trabaja' },
+  { href: '/programas/formacion-corporativa', label: 'Formación Corporativa' },
+  { href: '/programas/idiomas-en-linea',      label: 'Idiomas en Línea' },
+  { href: '/contact',                         label: 'Contacto' },
 ];
 
 export default function Navigation() {

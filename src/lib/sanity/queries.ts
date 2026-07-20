@@ -194,24 +194,41 @@ export async function getSocios(): Promise<SanityPartner[]> {
 // ── Programas ─────────────────────────────────────────────────────────────────
 
 export interface SanityPrograma {
+  titulo?: string;
+  subtitulo?: string;
+  icono?: string;
+  color?: string;
   descripcion?: string;
   duracion?: string;
   rangoEdad?: string;
   puntosClave?: string[];
   queIncluye?: string[];
   paraQuien?: string;
+  whatsappMessage?: string;
 }
 
-export async function getProgramaData(programaId: string): Promise<SanityPrograma | null> {
+export async function getProgramaData(slug: string): Promise<SanityPrograma | null> {
   try {
     return await client.fetch(
-      `*[_type == "programa" && programaId == $programaId][0]{
-        descripcion, duracion, rangoEdad, puntosClave, queIncluye, paraQuien
+      `*[_type == "programa" && programaId.current == $slug][0]{
+        titulo, subtitulo, icono, color,
+        descripcion, duracion, rangoEdad, puntosClave, queIncluye, paraQuien, whatsappMessage
       }`,
-      { programaId },
+      { slug },
     );
   } catch {
     return null;
+  }
+}
+
+export async function getAllProgramaSlugs(): Promise<string[]> {
+  try {
+    const results = await client.fetch<{ current: string }[]>(
+      `*[_type == "programa" && defined(programaId.current)].programaId`,
+    );
+    return results.map((r) => r.current).filter(Boolean);
+  } catch {
+    return [];
   }
 }
 

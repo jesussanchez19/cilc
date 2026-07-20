@@ -24,12 +24,12 @@ const NAV_COLS = [
   {
     title: 'Programas',
     links: [
-      { href: '/idiomas',               label: 'Idiomas en el Extranjero' },
-      { href: '/au-pair',               label: 'Au Pair' },
-      { href: '/anos-academicos',       label: 'Años Académicos' },
-      { href: '/estudia-trabaja',       label: 'Estudia y Trabaja' },
-      { href: '/formacion-corporativa', label: 'Formación Corporativa' },
-      { href: '/idiomas-en-linea',      label: 'Idiomas en Línea' },
+      { href: '/programas/idiomas',               label: 'Idiomas en el Extranjero' },
+      { href: '/programas/au-pair',               label: 'Au Pair' },
+      { href: '/programas/anos-academicos',       label: 'Años Académicos' },
+      { href: '/programas/estudia-trabaja',       label: 'Estudia y Trabaja' },
+      { href: '/programas/formacion-corporativa', label: 'Formación Corporativa' },
+      { href: '/programas/idiomas-en-linea',      label: 'Idiomas en Línea' },
     ],
   },
   {

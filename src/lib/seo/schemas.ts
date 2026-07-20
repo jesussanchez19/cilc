@@ -76,7 +76,7 @@ export function programSchema(program: {
     '@type': 'Course',
     name: program.title,
     description: program.description,
-    url: `${BASE_URL}/${program.id}`,
+    url: `${BASE_URL}/programas/${program.id}`,
     provider: {
       '@type': 'EducationalOrganization',
       name: ORG_NAME,

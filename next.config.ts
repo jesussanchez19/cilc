@@ -26,16 +26,14 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
-      {
-        source: '/countries',
-        destination: '/destinos',
-        permanent: true,
-      },
-      {
-        source: '/countries/:id',
-        destination: '/destinos/:id',
-        permanent: true,
-      },
+      { source: '/countries',    destination: '/destinos',    permanent: true },
+      { source: '/countries/:id',destination: '/destinos/:id',permanent: true },
+      { source: '/idiomas',               destination: '/programas/idiomas',               permanent: true },
+      { source: '/au-pair',               destination: '/programas/au-pair',               permanent: true },
+      { source: '/anos-academicos',       destination: '/programas/anos-academicos',       permanent: true },
+      { source: '/estudia-trabaja',       destination: '/programas/estudia-trabaja',       permanent: true },
+      { source: '/formacion-corporativa', destination: '/programas/formacion-corporativa', permanent: true },
+      { source: '/idiomas-en-linea',      destination: '/programas/idiomas-en-linea',      permanent: true },
     ];
   },
 };

@@ -17,7 +17,7 @@ const programas = [
   {
     _id: 'programa-idiomas',
     _type: 'programa',
-    programaId: 'idiomas',
+    programaId: { _type: 'slug', current: 'idiomas' },
     descripcion: 'Programas de inglés, francés, alemán, japonés, coreano y mandarín en escuelas internacionalmente acreditadas. Desde 2 semanas, con certificación oficial.',
     duracion: 'Desde 2 semanas',
     rangoEdad: '12–60 años',
@@ -41,7 +41,7 @@ const programas = [
   {
     _id: 'programa-au-pair',
     _type: 'programa',
-    programaId: 'au-pair',
+    programaId: { _type: 'slug', current: 'au-pair' },
     descripcion: 'Experiencia cultural única: vive con una familia, apoya en el cuidado de niños y recibe beneficios económicos y educativos mientras mejoras tu idioma.',
     duracion: '6–12 meses',
     rangoEdad: '18–26 años',
@@ -65,7 +65,7 @@ const programas = [
   {
     _id: 'programa-anos-academicos',
     _type: 'programa',
-    programaId: 'anos-academicos',
+    programaId: { _type: 'slug', current: 'anos-academicos' },
     descripcion: 'Estudia Secundaria, Preparatoria o Universidad en el extranjero con integración total al sistema académico oficial. Una experiencia que transforma tu futuro.',
     duracion: 'Semestre o año completo',
     rangoEdad: '12–25 años',
@@ -89,7 +89,7 @@ const programas = [
   {
     _id: 'programa-estudia-trabaja',
     _type: 'programa',
-    programaId: 'estudia-trabaja',
+    programaId: { _type: 'slug', current: 'estudia-trabaja' },
     descripcion: 'Combina clases de idioma con experiencia laboral real en el extranjero. Cubre parte de tus gastos mientras construyes un perfil profesional internacional.',
     duracion: '24–52 semanas',
     rangoEdad: '18–35 años',
@@ -113,7 +113,7 @@ const programas = [
   {
     _id: 'programa-formacion-corporativa',
     _type: 'programa',
-    programaId: 'formacion-corporativa',
+    programaId: { _type: 'slug', current: 'formacion-corporativa' },
     descripcion: 'Programas de idiomas ejecutivos, inmersión empresarial y formación especializada en destinos clave. Diseñados a la medida de cada empresa.',
     duracion: 'A la medida',
     rangoEdad: 'Profesionales y directivos',
@@ -137,7 +137,7 @@ const programas = [
   {
     _id: 'programa-idiomas-en-linea',
     _type: 'programa',
-    programaId: 'idiomas-en-linea',
+    programaId: { _type: 'slug', current: 'idiomas-en-linea' },
     descripcion: 'Clases en vivo con profesor, grupos reducidos o modalidad individual. Inglés, Francés y Alemán con evaluación de nivel gratuita y horarios flexibles.',
     duracion: 'Flexible',
     rangoEdad: 'Todas las edades',
