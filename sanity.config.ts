@@ -29,14 +29,27 @@ export default defineConfig({
                   .documentId('configuracion-singleton'),
               ),
             S.divider(),
-            // Programas — sin botón "+" (solo editar los 6 existentes)
+            // Programas — lista fija de 6, sin botón "+"
             S.listItem()
               .title('Programas')
               .id('programa')
               .child(
-                S.documentTypeList('programa')
+                S.list()
                   .title('Programas')
-                  .canHandleIntent((name) => name !== 'create'),
+                  .items([
+                    S.listItem().title('🗣️ Idiomas').id('programa-idiomas')
+                      .child(S.document().schemaType('programa').documentId('programa-idiomas')),
+                    S.listItem().title('👨‍👩‍👧‍👦 Au Pair').id('programa-au-pair')
+                      .child(S.document().schemaType('programa').documentId('programa-au-pair')),
+                    S.listItem().title('🎓 Años Académicos').id('programa-anos-academicos')
+                      .child(S.document().schemaType('programa').documentId('programa-anos-academicos')),
+                    S.listItem().title('💼 Estudia y Trabaja').id('programa-estudia-trabaja')
+                      .child(S.document().schemaType('programa').documentId('programa-estudia-trabaja')),
+                    S.listItem().title('🏢 Formación Corporativa').id('programa-formacion-corporativa')
+                      .child(S.document().schemaType('programa').documentId('programa-formacion-corporativa')),
+                    S.listItem().title('💻 Idiomas en Línea').id('programa-idiomas-en-linea')
+                      .child(S.document().schemaType('programa').documentId('programa-idiomas-en-linea')),
+                  ]),
               ),
             ...S.documentTypeListItems().filter(
               (item) =>
