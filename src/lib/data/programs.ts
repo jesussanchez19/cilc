@@ -1,3 +1,9 @@
+export interface ProgramSection {
+  title: string;
+  description?: string;
+  items?: string[];
+}
+
 export interface Program {
   id: string;
   slug: string;
@@ -13,6 +19,7 @@ export interface Program {
   includes: string[];
   idealFor: string;
   whatsappMessage: string;
+  sections?: ProgramSection[];
 }
 
 export const programs: Program[] = [
@@ -46,6 +53,38 @@ export const programs: Program[] = [
     ],
     idealFor: 'Jóvenes y adultos de 12 a 60 años que quieren aprender un idioma con inmersión real en su país de origen, logrando un avance más rápido, pronunciación natural y mayor impacto profesional.',
     whatsappMessage: 'Hola, me interesa el programa de Idiomas en el extranjero. ¿Me pueden orientar sobre destinos, duración y costos?',
+    sections: [
+      {
+        title: 'Inglés en los Mejores Destinos del Mundo',
+        description: 'Canadá · Inglaterra · Dubái · Estados Unidos · Australia · Irlanda · Nueva Zelanda',
+        items: [
+          'Escuelas acreditadas internacionalmente',
+          'Programas desde 2 semanas en adelante',
+          'Opciones para jóvenes y adultos',
+          'Certificación oficial al finalizar',
+          'Posibilidad de combinar estudio y experiencia cultural',
+        ],
+      },
+      {
+        title: 'Francés en Países Francófonos',
+        description: 'Canadá (Quebec) · Francia',
+        items: [
+          'Francés general',
+          'Francés académico',
+          'Preparación para exámenes oficiales',
+          'Programas de inmersión cultural',
+        ],
+      },
+      {
+        title: 'Idiomas Asiáticos y Europeos',
+        items: [
+          'Japonés en Japón: programas intensivos, opciones académicas y culturales, inmersión completa',
+          'Coreano en Corea: cursos por niveles, experiencia cultural auténtica, ambiente universitario internacional',
+          'Mandarín en China: programas académicos certificados, inmersión lingüística real, enriquecimiento cultural',
+          'Alemán en Alemania: cursos intensivos, preparación para certificación oficial, ambiente académico de alto nivel',
+        ],
+      },
+    ],
   },
   {
     id: 'au-pair',
@@ -60,11 +99,11 @@ export const programs: Program[] = [
     duration: '6–12 meses',
     ageRange: '18–26 años',
     highlights: [
-      'USA: residencia legal, apoyo económico semanal, seguro médico — 12 meses extensible',
-      'Alemania: colocación con familia, curso de idioma incluido, apoyo mensual — 6 a 12 meses',
       'Vivir con familias locales y comprender su sistema educativo',
       'Desarrollar responsabilidad, madurez e independencia financiera',
       'Aprendizaje acelerado del idioma en contexto real',
+      'Residencia legal en el país durante el programa',
+      'Seguro médico incluido en ambos destinos',
       'Requisitos actualizados 2026',
     ],
     includes: [
@@ -77,6 +116,40 @@ export const programs: Program[] = [
     ],
     idealFor: 'Jóvenes de 18 a 26 años con experiencia verificable en cuidado de niños, habilidades básicas o intermedias del idioma, disponibilidad mínima de 6 a 12 meses, responsabilidad y compromiso.',
     whatsappMessage: 'Hola, me interesa el programa Au Pair. Tengo experiencia con niños y quisiera conocer los requisitos y destinos disponibles.',
+    sections: [
+      {
+        title: 'Au Pair en USA',
+        description: 'Duración: 12 meses (extensible) · Edad: 18–25 años',
+        items: [
+          'Residencia legal con familia anfitriona',
+          'Apoyo económico semanal (stipend)',
+          'Inscripción en cursos académicos durante la estancia',
+          'Mejora del idioma inglés en contexto real',
+          'Beneficios incluidos: housing, meals, seguro médico, apoyo para cursos, guía de la agencia',
+        ],
+      },
+      {
+        title: 'Au Pair en Alemania',
+        description: 'Duración: 6–12 meses',
+        items: [
+          'Colocación con familia anfitriona alemana',
+          'Curso de idioma incluido',
+          'Apoyo económico mensual (Taschengeld)',
+          'Seguro médico incluido',
+          'Experiencia cultural europea completa',
+        ],
+      },
+      {
+        title: 'Perfil Ideal del Candidato',
+        items: [
+          '18–26 años',
+          'Experiencia verificable en cuidado de niños',
+          'Habilidades básicas o intermedias del idioma',
+          'Disponibilidad mínima de 6 a 12 meses',
+          'Persona responsable y comprometida',
+        ],
+      },
+    ],
   },
   {
     id: 'anos-academicos',
@@ -93,10 +166,10 @@ export const programs: Program[] = [
     highlights: [
       'Secundaria, Preparatoria y Universidad en el extranjero',
       'Integración al sistema académico oficial del país',
-      'Estrategia académica personalizada según perfil y objetivos',
+      'Estrategia académica personalizada según tu perfil y objetivos',
       'Alojamiento seguro con familia anfitriona o residencia',
       'Certificado académico reconocido',
-      'Orientación para maestrías y especializaciones (Posgrados)',
+      'Orientación para Posgrados: maestrías y especializaciones',
     ],
     includes: [
       'Inscripción en institución acreditada',
@@ -108,6 +181,38 @@ export const programs: Program[] = [
     ],
     idealFor: 'Estudiantes que buscan fortalecer su perfil internacional, dominar el idioma o ampliar su visión global, y familias que quieren una experiencia segura y estratégica para sus hijos.',
     whatsappMessage: 'Hola, me interesa el programa de Años Académicos. ¿Pueden orientarme sobre opciones para estudiar un semestre o año completo en el extranjero?',
+    sections: [
+      {
+        title: 'Niveles Disponibles',
+        items: [
+          'Secundaria: integración a escuelas reconocidas en destinos de habla inglesa',
+          'Preparatoria: semestre o año completo con certificado académico oficial',
+          'Universidad: intercambio semestral o anual con validación de créditos',
+        ],
+      },
+      {
+        title: 'Posgrados — Eleva tu perfil profesional a nivel internacional',
+        description: 'Orientación para maestrías y especializaciones en Canadá, USA, Inglaterra, Irlanda, Australia, Japón y Corea.',
+        items: [
+          'Negocios / MBA',
+          'Tecnología e Inteligencia Artificial',
+          'Marketing y Finanzas Internacionales',
+          'Ingeniería y Logística',
+          'Relaciones Internacionales',
+          'Ciencias de la Salud',
+        ],
+      },
+      {
+        title: 'Nuestra Estrategia Académica Personalizada',
+        description: 'Diseñamos tu ruta según:',
+        items: [
+          'Edad y nivel académico actual',
+          'Objetivos profesionales a futuro',
+          'Nivel de idioma',
+          'Presupuesto familiar',
+        ],
+      },
+    ],
   },
   {
     id: 'estudia-trabaja',
@@ -122,23 +227,85 @@ export const programs: Program[] = [
     duration: '24–52 semanas',
     ageRange: '18 años en adelante',
     highlights: [
-      'Irlanda: inglés intensivo 33 semanas, permiso de trabajo parcial',
-      'Australia: programas vocacionales 24, 32, 48 y 52 semanas con trabajo parcial',
-      'Nueva Zelanda: cursos acreditados 24, 32, 48 y 52 semanas, entorno tranquilo',
-      'Malta: inglés en entorno europeo, 24, 32, 48 y 52 semanas',
-      'Dubái: programa de un año con Diplomado de Negocios Internacionales',
-      'Canadá: diplomas de College, certificaciones profesionales e inglés + pathway',
+      'El estudiante trabaja legalmente según la regulación migratoria vigente',
+      'Cubre parte de sus gastos mientras gana experiencia internacional',
+      'Mejora el idioma en contexto profesional real',
+      'Vive una experiencia multicultural auténtica',
+      'Desarrolla madurez, autonomía y ventaja competitiva global',
+      'Proceso estratégico personalizado desde el inicio',
     ],
     includes: [
       'Evaluación de perfil académico y financiero',
+      'Definición de viabilidad como candidato',
       'Selección del programa y destino adecuado',
       'Diseño de estrategia de visa',
       'Preparación previa al viaje',
-      'Seguimiento durante la estancia',
-      'Acompañamiento continuo paso a paso',
+      'Acompañamiento continuo durante la estancia',
     ],
-    idealFor: 'Jóvenes mayores de 18 años, profesionistas que buscan experiencia internacional, estudiantes que desean mejorar su idioma y personas que buscan independencia financiera mientras fortalecen su CV internacional.',
+    idealFor: 'Jóvenes mayores de 18 años, profesionistas que buscan experiencia internacional, estudiantes que desean mejorar su idioma y personas que buscan independencia financiera mientras fortalecen su CV.',
     whatsappMessage: 'Hola, me interesa el programa Estudia y Trabaja. ¿Cómo funciona el permiso de trabajo y cuáles son los destinos disponibles?',
+    sections: [
+      {
+        title: 'Estudia y Trabaja en Irlanda — Programas de 33 semanas',
+        description: 'Uno de los destinos más buscados por estudiantes mexicanos.',
+        items: [
+          'Curso de inglés intensivo',
+          'Permiso de trabajo parcial',
+          'Ambiente multicultural',
+          'Posibilidad de renovar programa',
+        ],
+      },
+      {
+        title: 'Estudia y Trabaja en Australia',
+        description: 'Sistema educativo moderno y flexible. Programas de 24, 32, 48 y 52 semanas.',
+        items: [
+          'Programas vocacionales y de idiomas',
+          'Permiso de trabajo parcial',
+          'Alta calidad de vida',
+          'Diversidad cultural',
+        ],
+      },
+      {
+        title: 'Estudia y Trabaja en Nueva Zelanda',
+        description: 'Destino seguro, organizado y con excelente calidad educativa. Programas de 24, 32, 48 y 52 semanas.',
+        items: [
+          'Cursos acreditados',
+          'Opciones de trabajo según programa y visa',
+          'Entorno natural y multicultural',
+        ],
+      },
+      {
+        title: 'Estudia y Trabaja en Malta',
+        description: 'País europeo con clima agradable y ambiente joven. Programas de 24, 32, 48 y 52 semanas.',
+        items: [
+          'Inglés en entorno europeo',
+          'Posibilidad de empleo según normativa vigente',
+          'Experiencia multicultural accesible',
+        ],
+      },
+      {
+        title: 'Estudia y Trabaja en Dubái',
+        description: 'Centro internacional de negocios y modernidad. Programa de un año.',
+        items: [
+          'Inglés internacional',
+          'Diplomado de Negocios Internacionales',
+          'Entorno profesional global',
+          'Experiencia multicultural',
+          'Oportunidades en sectores dinámicos',
+        ],
+      },
+      {
+        title: 'Estudia y Trabaja en Canadá',
+        description: 'Uno de los destinos más sólidos y seguros para estudiantes internacionales. Sistema educativo de alto nivel, ambiente multicultural y oportunidades laborales reales.',
+        items: [
+          'Programas vocacionales (College / Diploma): negocios, marketing, logística, tecnología, administración',
+          'Certificaciones profesionales en áreas estratégicas',
+          'Inglés + Pathway a College para fortalecer el idioma antes del programa académico',
+          'Trabajo legal durante estudios según normativa vigente',
+          'Experiencia laboral canadiense y red internacional de contactos',
+        ],
+      },
+    ],
   },
   {
     id: 'formacion-corporativa',
@@ -153,23 +320,69 @@ export const programs: Program[] = [
     duration: 'A la medida',
     ageRange: 'Profesionales y directivos',
     highlights: [
-      'Idiomas ejecutivos: inglés, inglés técnico por industria, francés, alemán, japonés, mandarín',
-      'Programas especializados: comercio internacional, logística global, IA, marketing digital, finanzas',
-      'Inmersión empresarial: visitas corporativas, networking internacional, conferencias sectoriales',
-      'Liderazgo y management para directivos',
-      'No vendemos paquetes estándar: diagnóstico + diseño a la medida',
+      'Equipos bilingües con mayor eficiencia operativa',
+      'Mejora en negociación internacional',
+      'Cultura empresarial global',
+      'Aumento en competitividad',
+      'Retención de talento',
       'La formación internacional no es un gasto. Es una inversión estratégica.',
     ],
     includes: [
       'Diagnóstico de necesidades corporativas',
       'Diseño de programa personalizado',
-      'Selección estratégica de destino e institución',
+      'Propuesta académica internacional',
+      'Planeación logística completa',
       'Coordinación de visitas corporativas',
-      'Logística completa y gestión de visas',
       'Acompañamiento ejecutivo y evaluación de resultados',
     ],
     idealFor: 'Empresas con expansión internacional, corporativos con clientes extranjeros, startups tecnológicas, empresas exportadoras y directivos que buscan equipos bilingües con cultura empresarial global.',
     whatsappMessage: 'Hola, me interesa el programa de Formación Corporativa para mi empresa. ¿Pueden enviarme información sobre opciones, destinos y costos?',
+    sections: [
+      {
+        title: 'Cursos de Idiomas Ejecutivos',
+        description: 'Ideal para empresas con expansión internacional.',
+        items: [
+          'Inglés para negocios',
+          'Inglés técnico por industria',
+          'Francés, Alemán, Japonés o Mandarín',
+          'Programas intensivos para directivos',
+        ],
+      },
+      {
+        title: 'Programas Especializados',
+        description: 'Diseñamos el programa según el perfil del equipo.',
+        items: [
+          'Comercio internacional',
+          'Logística global',
+          'Tecnología e innovación',
+          'Inteligencia Artificial',
+          'Marketing digital internacional',
+          'Finanzas internacionales',
+          'Liderazgo y management',
+        ],
+      },
+      {
+        title: 'Inmersión Empresarial',
+        description: 'Perfecto para empresas exportadoras o en expansión.',
+        items: [
+          'Formación académica en destino',
+          'Visitas corporativas',
+          'Networking internacional',
+          'Conferencias sectoriales',
+        ],
+      },
+      {
+        title: 'Nuestro Proceso de Trabajo',
+        items: [
+          'Diagnóstico de necesidades reales',
+          'Diseño de programa personalizado',
+          'Propuesta académica internacional',
+          'Planeación logística',
+          'Implementación',
+          'Evaluación de resultados',
+        ],
+      },
+    ],
   },
   {
     id: 'idiomas-en-linea',
@@ -184,10 +397,10 @@ export const programs: Program[] = [
     duration: 'Flexible',
     ageRange: 'Todas las edades',
     highlights: [
-      'Clases en vivo con profesor, grupos reducidos o modalidad individual',
-      'Inglés: general, académico, para negocios y preparación para exámenes',
-      'Francés: general, conversación y preparación DELF/DALF',
-      'Alemán: general, conversación y preparación para certificación',
+      'Clases en vivo con profesor',
+      'Grupos reducidos o modalidad individual',
+      'Enfoque conversacional y práctico',
+      'Material digital incluido',
       'Evaluación de nivel inicial sin costo',
       'No son clases improvisadas. Es formación lingüística estratégica.',
     ],
@@ -201,6 +414,45 @@ export const programs: Program[] = [
     ],
     idealFor: 'Estudiantes que buscan educación internacional, profesionistas que necesitan el idioma en el trabajo, jóvenes que mejoran su fluidez y personas que planean aplicar a una visa estudiantil.',
     whatsappMessage: 'Hola, me interesa tomar clases de Idiomas en Línea con CILC. ¿Cómo funciona la evaluación de nivel gratuita y cuáles son los horarios disponibles?',
+    sections: [
+      {
+        title: 'Inglés en Línea — Prepara tu futuro internacional',
+        description: 'El inglés es la base de la internacionalización.',
+        items: [
+          'Inglés general',
+          'Inglés académico',
+          'Inglés para negocios',
+          'Preparación para exámenes (IELTS, TOEFL, Cambridge)',
+        ],
+      },
+      {
+        title: 'Francés en Línea — Abre oportunidades en Europa y Canadá',
+        description: 'El francés es uno de los idiomas estratégicos más valorados globalmente.',
+        items: [
+          'Francés general',
+          'Conversación',
+          'Preparación DELF / DALF',
+        ],
+      },
+      {
+        title: 'Alemán en Línea — Fortalece tu perfil profesional en Europa',
+        description: 'El alemán es clave en sectores industriales y tecnológicos.',
+        items: [
+          'Alemán general',
+          'Conversación',
+          'Preparación para certificaciones (Goethe)',
+        ],
+      },
+      {
+        title: 'Te asesoramos según tu objetivo',
+        items: [
+          'Estudiar en el extranjero',
+          'Aplicar a universidad internacional',
+          'Migración académica',
+          'Crecimiento profesional',
+        ],
+      },
+    ],
   },
 ];
 

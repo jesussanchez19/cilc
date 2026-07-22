@@ -65,6 +65,7 @@ export default async function ProgramaPage({ params }: Props) {
     includes:        sanity?.queIncluye       ?? base?.includes        ?? [],
     idealFor:        sanity?.paraQuien        ?? base?.idealFor        ?? '',
     whatsappMessage: sanity?.whatsappMessage  ?? base?.whatsappMessage ?? '',
+    sections:        base?.sections,
   };
 
   return (

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { Program, programColorMap } from '@/lib/data/programs';
+import { Program, ProgramSection, programColorMap } from '@/lib/data/programs';
 import { countries } from '@/lib/data/countries';
 import { SanityTestimonial } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
@@ -111,6 +111,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
   const hl     = useSection(0.25);
   const incl   = useSection(0.25);
   const badges = useSection(0.2);
+  const sect   = useSection(0.15);
   const test   = useSection(0.2);
 
   const programaNombre: Record<string, string> = {
@@ -269,6 +270,41 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           </h2>
           <p className="text-slate-600 text-[15px] leading-relaxed">{program.idealFor}</p>
         </div>
+
+        {/* Extra sections — per-program rich content */}
+        {program.sections && program.sections.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
+              Modalidades y Destinos
+            </h2>
+            <div ref={sect.ref} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {program.sections.map((s: ProgramSection, i: number) => (
+                <div
+                  key={s.title}
+                  className={`premium-card p-6 reveal-scale ${sect.visible ? 'is-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                >
+                  <h3 className={`text-base font-extrabold ${colors.text} mb-1`} style={{ letterSpacing: '-0.01em' }}>
+                    {s.title}
+                  </h3>
+                  {s.description && (
+                    <p className="text-slate-500 text-sm mb-3">{s.description}</p>
+                  )}
+                  {s.items && s.items.length > 0 && (
+                    <ul className="space-y-1.5">
+                      {s.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-slate-600 text-sm">
+                          <span className={`shrink-0 mt-1 w-1.5 h-1.5 rounded-full ${colors.bg}`} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Testimonials — blur in with stagger */}
         {testimoniosSanity.length > 0 && (
