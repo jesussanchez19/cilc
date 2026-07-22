@@ -405,6 +405,11 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   72%       { transform: translate(14px, -16px) scale(1.04); }
 }
 
+@keyframes tooltipIn {
+  from { opacity: 0; transform: translateY(6px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
 /* ═══════════════════════════════════════════════════════
    Animation Classes
 ═══════════════════════════════════════════════════════ */

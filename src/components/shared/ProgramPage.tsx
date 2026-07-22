@@ -107,38 +107,54 @@ function Tip({ children, text }: { children: React.ReactNode; text?: string }) {
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
     >
-      <span style={{ textDecoration: 'underline', textDecorationStyle: 'dotted', textDecorationColor: '#94a3b8' }}>
+      {/* trigger — dotted underline + subtle info dot */}
+      <span style={{ textDecoration: 'underline', textDecorationStyle: 'dotted', textDecorationColor: '#cbd5e1' }}>
         {children}
       </span>
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: '13px', height: '13px', borderRadius: '50%',
+        background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)',
+        fontSize: '8px', fontWeight: 700, color: '#3b82f6',
+        marginLeft: '4px', verticalAlign: 'middle', lineHeight: 1,
+      }}>i</span>
+
       {show && (
         <span
           style={{
             position: 'absolute',
-            bottom: 'calc(100% + 10px)',
-            left: 0,
-            width: '260px',
-            background: '#0f172a',
-            border: '1px solid rgba(255,255,255,0.10)',
-            borderRadius: '12px',
-            padding: '10px 14px',
+            bottom: 'calc(100% + 12px)',
+            left: '-8px',
+            width: '272px',
+            background: 'linear-gradient(145deg, #1e293b 0%, #0f172a 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderTop: '2px solid rgba(59,130,246,0.5)',
+            borderRadius: '14px',
+            padding: '12px 16px',
             fontSize: '13px',
-            lineHeight: '1.5',
-            color: '#fff',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+            lineHeight: '1.55',
+            color: '#cbd5e1',
+            boxShadow: '0 20px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.2)',
             pointerEvents: 'none',
             zIndex: 50,
+            animation: 'tooltipIn 0.18s cubic-bezier(0.16,1,0.3,1) both',
           }}
         >
-          {text}
+          {/* top accent shimmer */}
           <span style={{
-            position: 'absolute',
-            top: '100%',
-            left: '18px',
-            width: 0,
-            height: 0,
-            borderLeft: '6px solid transparent',
-            borderRight: '6px solid transparent',
-            borderTop: '6px solid #0f172a',
+            position: 'absolute', top: '-2px', left: '20px', right: '20px', height: '2px',
+            background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.8), rgba(227,30,36,0.6), transparent)',
+            borderRadius: '2px',
+          }} />
+          {text}
+          {/* arrow */}
+          <span style={{
+            position: 'absolute', top: '100%', left: '22px',
+            width: 0, height: 0,
+            borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent',
+            borderTop: '7px solid #1e293b',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
           }} />
         </span>
       )}
