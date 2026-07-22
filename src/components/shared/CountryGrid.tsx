@@ -139,10 +139,11 @@ export default function CountryGrid({ countries, columns = 3 }: CountryGridProps
                   {country.language}
                 </span>
                 <span
-                  className="px-2 py-1 rounded-full text-base leading-none"
+                  className="px-1.5 py-1 rounded-full overflow-hidden flex items-center"
                   style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}
                 >
-                  {country.flag}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={28} height={20} className="h-5 w-auto rounded-sm" />
                 </span>
               </div>
 

@@ -92,7 +92,13 @@ export default async function TestimoniosPage() {
                             )}
                             <div>
                               <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
-                              <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                              <p className="text-xs text-blue-600 flex items-center gap-1">
+                                {t.bandera && (
+                                  // eslint-disable-next-line @next/next/no-img-element
+                                  <img src={`https://flagcdn.com/w20/${t.bandera}.png`} alt={t.pais} width={14} height={10} className="h-3 w-auto rounded-sm inline-block" />
+                                )}
+                                {t.pais} · {t.programa}
+                              </p>
                               {t.calificacion && <StarRating value={t.calificacion} />}
                             </div>
                           </div>
@@ -132,12 +138,23 @@ export default async function TestimoniosPage() {
                           />
                         ) : (
                           <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
-                            <span className="text-xl">{t.bandera || '🌍'}</span>
+                            {t.bandera ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={`https://flagcdn.com/w40/${t.bandera}.png`} alt={t.pais} width={28} height={20} className="h-5 w-auto rounded-sm" />
+                            ) : (
+                              <span className="text-xl">🌍</span>
+                            )}
                           </div>
                         )}
                         <div>
                           <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
-                          <p className="text-xs text-blue-600">{t.bandera} {t.pais} · {t.programa}</p>
+                          <p className="text-xs text-blue-600 flex items-center gap-1">
+                            {t.bandera && (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={`https://flagcdn.com/w20/${t.bandera}.png`} alt={t.pais} width={14} height={10} className="h-3 w-auto rounded-sm inline-block" />
+                            )}
+                            {t.pais} · {t.programa}
+                          </p>
                         </div>
                       </div>
                       {t.calificacion && (

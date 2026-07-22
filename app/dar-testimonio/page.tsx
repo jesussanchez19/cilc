@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import TestimonioForm from '@/components/shared/TestimonioForm';
+import { getAllDestinos, verificarToken } from '@/lib/sanity/queries';
 
 interface Props {
   searchParams: Promise<{ acceso?: string }>;
@@ -7,11 +8,41 @@ interface Props {
 
 export const metadata = { robots: 'noindex, nofollow' };
 
+const PROGRAMA_LABEL: Record<string, string> = {
+  'idiomas':               'Idiomas',
+  'au-pair':               'Au Pair',
+  'anos-academicos':       'Años Académicos',
+  'estudia-trabaja':       'Estudia y Trabaja',
+  'formacion-corporativa': 'Formación Corporativa',
+  'idiomas-en-linea':      'Idiomas en Línea',
+};
+
 export default async function DarTestimonioPage({ searchParams }: Props) {
   const { acceso } = await searchParams;
 
-  if (!acceso || acceso !== process.env.TESTIMONIAL_ACCESS_TOKEN) {
-    notFound();
+  if (!acceso) notFound();
+
+  const esMasterToken = acceso === process.env.TESTIMONIAL_ACCESS_TOKEN;
+
+  if (!esMasterToken) {
+    const tokenDoc = await verificarToken(acceso);
+    if (!tokenDoc || tokenDoc.usado) notFound();
+  }
+
+  const destinos = await getAllDestinos();
+
+  // Construir mapa: nombre del programa → lista de países
+  const paisesPorPrograma: Record<string, string[]> = {};
+  for (const destino of destinos) {
+    for (const programaId of (destino.programas ?? [])) {
+      const label = PROGRAMA_LABEL[programaId];
+      if (!label) continue;
+      if (!paisesPorPrograma[label]) paisesPorPrograma[label] = [];
+      const nombre = destino.nombre ?? destino.countryId;
+      if (nombre && !paisesPorPrograma[label].includes(nombre)) {
+        paisesPorPrograma[label].push(nombre);
+      }
+    }
   }
 
   return (
@@ -28,7 +59,10 @@ export default async function DarTestimonioPage({ searchParams }: Props) {
           </p>
         </div>
         <div className="premium-card p-8">
-          <TestimonioForm />
+          <TestimonioForm
+            paisesPorPrograma={paisesPorPrograma}
+            tokenUsoUnico={esMasterToken ? undefined : acceso}
+          />
         </div>
       </div>
     </main>

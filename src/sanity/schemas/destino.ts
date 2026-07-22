@@ -69,14 +69,6 @@ export const destinoSchema = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
-      name: 'bandera',
-      title: 'Bandera (emoji)',
-      type: 'string',
-      group: 'basico',
-      description: 'Ej: 🇨🇦 🇮🇪 🇬🇧 🇦🇺 🇺🇸',
-      validation: (r) => r.required(),
-    }),
-    defineField({
       name: 'codigoISO',
       title: 'Código ISO (2 letras)',
       type: 'string',

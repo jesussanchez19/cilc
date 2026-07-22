@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ContactFormData } from '@/lib/validations/contact';
+import { contactSchema, ContactFormData } from '@/lib/validations/contact';
 import { sileo } from 'sileo';
 
 type FieldErrors = Partial<Record<keyof ContactFormData, string[]>>;
@@ -27,12 +27,24 @@ export default function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    const updated = { ...formData, [name]: value };
+    setFormData(updated);
+    if (Object.values(fieldErrors).some(Boolean)) {
+      const r = contactSchema.safeParse(updated);
+      setFieldErrors(r.success ? {} : r.error.flatten().fieldErrors as FieldErrors);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const parsed = contactSchema.safeParse(formData);
+    if (!parsed.success) {
+      const flat = parsed.error.flatten().fieldErrors;
+      setFieldErrors(flat as FieldErrors);
+      return;
+    }
+
     setStatus('loading');
     setFieldErrors({});
 

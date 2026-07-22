@@ -50,7 +50,7 @@ export function searchAll(query: string): SearchResult[] {
     if (haystack.includes(q)) {
       results.push({
         type: 'destino',
-        title: `${c.flag} ${c.name}`,
+        title: c.name,
         description: c.description,
         href: `/destinos/${c.id}`,
         image: c.image,

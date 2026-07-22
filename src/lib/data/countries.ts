@@ -1,11 +1,12 @@
 import { Country } from '@/lib/types';
+import { isoToFlag } from '@/lib/utils';
 
-export const countries: Country[] = [
+const raw: Omit<Country, 'flag'>[] = [
+  // flag se genera automáticamente desde code usando isoToFlag
   {
     id: 'usa',
     name: 'Estados Unidos',
     code: 'US',
-    flag: '🇺🇸',
     description: 'Líder mundial en educación superior con universidades de clase mundial.',
     image: '/images/usa.jpg',
     region: 'América del Norte',
@@ -22,7 +23,7 @@ export const countries: Country[] = [
     id: 'canada',
     name: 'Canadá',
     code: 'CA',
-    flag: '🇨🇦',
+
     description: 'Educación de calidad con costo más accesible que EE.UU. y proceso migratorio favorable.',
     image: '/images/canada.jpg',
     region: 'América del Norte',
@@ -39,7 +40,6 @@ export const countries: Country[] = [
     id: 'uk',
     name: 'Reino Unido',
     code: 'GB',
-    flag: '🇬🇧',
     description: 'Universidades históricas con programas intensivos de 1-2 años.',
     image: '/images/uk.jpg',
     region: 'Europa',
@@ -56,7 +56,6 @@ export const countries: Country[] = [
     id: 'australia',
     name: 'Australia',
     code: 'AU',
-    flag: '🇦🇺',
     description: 'Destino popular para estudiantes con visas favorables y alta calidad de vida.',
     image: '/images/australia.jpg',
     region: 'Oceanía',
@@ -73,7 +72,6 @@ export const countries: Country[] = [
     id: 'germany',
     name: 'Alemania',
     code: 'DE',
-    flag: '🇩🇪',
     description: 'Educación de calidad con aranceles bajos o gratuitos en universidades públicas.',
     image: '/images/germany.jpg',
     region: 'Europa',
@@ -90,7 +88,6 @@ export const countries: Country[] = [
     id: 'netherlands',
     name: 'Países Bajos',
     code: 'NL',
-    flag: '🇳🇱',
     description: 'Muchos programas en inglés, excelente calidad de vida y hub empresarial europeo.',
     image: '/images/netherlands.jpg',
     region: 'Europa',
@@ -107,7 +104,6 @@ export const countries: Country[] = [
     id: 'france',
     name: 'Francia',
     code: 'FR',
-    flag: '🇫🇷',
     description: 'Educación superior con historia, aranceles bajos y excelente calidad académica.',
     image: '/images/france.jpg',
     region: 'Europa',
@@ -124,7 +120,6 @@ export const countries: Country[] = [
     id: 'spain',
     name: 'España',
     code: 'ES',
-    flag: '🇪🇸',
     description: 'Opción ideal para latinoamericanos con idioma compartido y sin barreras culturales.',
     image: '/images/spain.jpg',
     region: 'Europa',
@@ -141,7 +136,6 @@ export const countries: Country[] = [
     id: 'newzealand',
     name: 'Nueva Zelanda',
     code: 'NZ',
-    flag: '🇳🇿',
     description: 'Educación de calidad con paisajes naturales excepcionales y alta seguridad.',
     image: '/images/newzealand.jpg',
     region: 'Oceanía',
@@ -158,7 +152,6 @@ export const countries: Country[] = [
     id: 'singapore',
     name: 'Singapur',
     code: 'SG',
-    flag: '🇸🇬',
     description: 'Centro educativo asiático con universidades de renombre mundial y cero corrupción.',
     image: '/images/singapore.jpg',
     region: 'Asia',
@@ -175,7 +168,6 @@ export const countries: Country[] = [
     id: 'japan',
     name: 'Japón',
     code: 'JP',
-    flag: '🇯🇵',
     description: 'Tecnología de vanguardia y cultura única con programas de becas muy competitivos.',
     image: '/images/japan.jpg',
     region: 'Asia',
@@ -192,7 +184,6 @@ export const countries: Country[] = [
     id: 'italy',
     name: 'Italia',
     code: 'IT',
-    flag: '🇮🇹',
     description: 'Hogar de algunas de las universidades más antiguas del mundo con bajo costo.',
     image: '/images/italy.jpg',
     region: 'Europa',
@@ -209,7 +200,6 @@ export const countries: Country[] = [
     id: 'sweden',
     name: 'Suecia',
     code: 'SE',
-    flag: '🇸🇪',
     description: 'Innovación y sostenibilidad en un ambiente académico de primer nivel europeo.',
     image: '/images/sweden.jpg',
     region: 'Europa',
@@ -226,7 +216,6 @@ export const countries: Country[] = [
     id: 'ireland',
     name: 'Irlanda',
     code: 'IE',
-    flag: '🇮🇪',
     description: 'Hub tecnológico europeo con sede de Google, Meta y Apple, e inglés nativo.',
     image: '/images/ireland.jpg',
     region: 'Europa',
@@ -243,7 +232,6 @@ export const countries: Country[] = [
     id: 'switzerland',
     name: 'Suiza',
     code: 'CH',
-    flag: '🇨🇭',
     description: 'Excelencia académica con universidades entre las mejores del mundo y alta calidad de vida.',
     image: '/images/switzerland.jpg',
     region: 'Europa',
@@ -260,7 +248,6 @@ export const countries: Country[] = [
     id: 'southkorea',
     name: 'Corea del Sur',
     code: 'KR',
-    flag: '🇰🇷',
     description: 'Potencia educativa asiática con alta inversión en I+D, tecnología y cultura K-pop.',
     image: '/images/southkorea.jpg',
     region: 'Asia',
@@ -274,3 +261,5 @@ export const countries: Country[] = [
     visaNote: 'Mexicanos requieren visa D-2 (universidad) o D-4 (idiomas). Se tramita en la embajada coreana. Tiempo estimado: 3–5 semanas.',
   },
 ];
+
+export const countries: Country[] = raw.map((c) => ({ ...c, flag: isoToFlag(c.code) }));

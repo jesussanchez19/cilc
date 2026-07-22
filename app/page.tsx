@@ -139,7 +139,7 @@ export default async function Home() {
               <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-10">
                 Miembros y socios certificados
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 items-start">
+              <div className="flex flex-wrap justify-center gap-8 items-start">
                 {socios.map((s) => {
                   const inner = (
                     <>

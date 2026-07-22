@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { countries } from '@/lib/data/countries';
 import { getDestinoData } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
+function isoToFlag(code: string) {
+  return code.toUpperCase().split('').map((c) => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('');
+}
 import AnimateIn from '@/components/shared/AnimateIn';
 import LazySection from '@/components/shared/LazySection';
 
@@ -54,12 +57,12 @@ export default async function CountryPage({ params }: PageProps) {
   if (!hardcoded && !sanity) notFound();
 
   const nombre        = sanity?.nombre        ?? hardcoded?.name             ?? '';
-  const bandera       = sanity?.bandera       ?? hardcoded?.flag             ?? '';
+  const codigoISO     = sanity?.codigoISO     ?? hardcoded?.code             ?? '';
+  const bandera       = isoToFlag(codigoISO) || sanity?.bandera || hardcoded?.flag || '';
   const descripcion   = sanity?.descripcion   ?? hardcoded?.description      ?? '';
   const region        = sanity?.region        ?? hardcoded?.region           ?? '';
   const idioma        = sanity?.idioma        ?? hardcoded?.language         ?? '';
   const clima         = sanity?.clima         ?? hardcoded?.climate          ?? '';
-  const codigoISO     = sanity?.codigoISO     ?? hardcoded?.code             ?? '';
   const visa          = sanity?.visa          ?? hardcoded?.visa             ?? '';
   const visaNota      = sanity?.visaNota      ?? hardcoded?.visaNote         ?? '';
   const costoVida     = sanity?.costoVida     ?? hardcoded?.costOfLiving     ?? 0;
@@ -120,7 +123,15 @@ export default async function CountryPage({ params }: PageProps) {
           </AnimateIn>
           <AnimateIn animation="up" delay={80}>
             <div className="flex items-center gap-5 mb-5">
-              <span className="text-7xl drop-shadow-lg">{bandera}</span>
+              {codigoISO && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={`https://flagcdn.com/w80/${codigoISO.toLowerCase()}.png`}
+                  alt={nombre}
+                  width={80}
+                  className="h-14 w-auto drop-shadow-lg rounded-sm object-cover"
+                />
+              )}
               <h1
                 className="text-5xl sm:text-6xl font-extrabold text-white leading-none"
                 style={{ letterSpacing: '-0.04em' }}

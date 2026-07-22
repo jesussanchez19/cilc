@@ -82,7 +82,8 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 pt-32 w-full">
           <div className="flex items-center gap-4 mb-3">
-            <span className="text-6xl">{country.flag}</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`https://flagcdn.com/w80/${country.code.toLowerCase()}.png`} alt={country.name} width={80} className="h-14 w-auto rounded-sm drop-shadow-lg" />
             <h1 className="text-5xl font-bold text-white">{country.name}</h1>
           </div>
           <p className="text-xl text-white/85 max-w-2xl mb-8">{country.description}</p>

@@ -91,6 +91,29 @@ export async function getAllDestinos(): Promise<SanityDestino[]> {
   );
 }
 
+// ── Tokens de uso único ───────────────────────────────────────────────────────
+
+export async function verificarToken(token: string): Promise<{ _id: string; usado: boolean } | null> {
+  const results = await client.fetch<{ _id: string; usado: boolean }[]>(
+    `*[_type == "tokenTestimonio" && token == $token][0...1]{ _id, usado }`,
+    { token },
+  );
+  return results[0] ?? null;
+}
+
+export async function marcarTokenUsado(token: string): Promise<void> {
+  const doc = await writeClient.fetch<{ _id: string } | null>(
+    `*[_type == "tokenTestimonio" && token == $token][0]{ _id }`,
+    { token },
+  );
+  if (doc) {
+    await writeClient
+      .patch(doc._id)
+      .set({ usado: true, usadoEn: new Date().toISOString() })
+      .commit();
+  }
+}
+
 // ── Configuración del sitio ───────────────────────────────────────────────────
 
 export interface SanityContactInfo {

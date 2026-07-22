@@ -16,6 +16,7 @@ export default function WhatsAppButton() {
   const [telefono, setTelefono] = useState('');
   const [loading, setLoading]   = useState(false);
   const [pulsing, setPulsing]   = useState(false);
+  const [errors, setErrors]     = useState<{ nombre?: string; telefono?: string }>({});
   const wrapperRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,6 +46,11 @@ export default function WhatsAppButton() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const errs: { nombre?: string; telefono?: string } = {};
+    if (nombre.trim().length < 2) errs.nombre = 'Mínimo 2 caracteres';
+    if (telefono.replace(/\D/g, '').length < 8) errs.telefono = 'Ingresa un teléfono válido';
+    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    setErrors({});
     setLoading(true);
     try {
       await fetch('/api/contact', {
@@ -122,26 +128,42 @@ export default function WhatsAppButton() {
 
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="space-y-2">
-              <input
-                type="text"
-                placeholder="Tu nombre *"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-                autoComplete="name"
-                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
-                style={{ background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
-              />
-              <input
-                type="tel"
-                placeholder="Tu WhatsApp / Teléfono *"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                required
-                autoComplete="tel"
-                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
-                style={{ background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,0.10)' }}
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Tu nombre *"
+                  value={nombre}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNombre(val);
+                    if (errors.nombre !== undefined) {
+                      setErrors((p) => ({ ...p, nombre: val.trim().length >= 2 ? undefined : 'Mínimo 2 caracteres' }));
+                    }
+                  }}
+                  autoComplete="name"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
+                  style={{ background: '#fff', boxShadow: errors.nombre ? '0 0 0 1.5px #f87171' : '0 1px 4px rgba(0,0,0,0.10)' }}
+                />
+                {errors.nombre && <p className="mt-1 text-[11px] text-red-500 px-1">{errors.nombre}</p>}
+              </div>
+              <div>
+                <input
+                  type="tel"
+                  placeholder="Tu WhatsApp / Teléfono *"
+                  value={telefono}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setTelefono(val);
+                    if (errors.telefono !== undefined) {
+                      setErrors((p) => ({ ...p, telefono: val.replace(/\D/g, '').length >= 8 ? undefined : 'Ingresa un teléfono válido' }));
+                    }
+                  }}
+                  autoComplete="tel"
+                  className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
+                  style={{ background: '#fff', boxShadow: errors.telefono ? '0 0 0 1.5px #f87171' : '0 1px 4px rgba(0,0,0,0.10)' }}
+                />
+                {errors.telefono && <p className="mt-1 text-[11px] text-red-500 px-1">{errors.telefono}</p>}
+              </div>
               <button
                 type="submit"
                 disabled={loading}

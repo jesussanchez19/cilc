@@ -6,5 +6,6 @@ import { solicitudTestimonioSchema } from './solicitudTestimonio';
 import { programaSchema } from './programa';
 import { destinoSchema } from './destino';
 import { configuracionSchema } from './configuracion';
+import { tokenTestimonioSchema } from './tokenTestimonio';
 
-export const schemas = [testimonialSchema, blogPostSchema, teamMemberSchema, socioSchema, solicitudTestimonioSchema, programaSchema, destinoSchema, configuracionSchema];
+export const schemas = [testimonialSchema, blogPostSchema, teamMemberSchema, socioSchema, solicitudTestimonioSchema, programaSchema, destinoSchema, configuracionSchema, tokenTestimonioSchema];

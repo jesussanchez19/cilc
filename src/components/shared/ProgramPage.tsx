@@ -338,11 +338,11 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               Modalidades disponibles
             </h2>
-            <div ref={sect.ref} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div ref={sect.ref} className="flex flex-wrap justify-center gap-5">
               {program.sections.map((s: ProgramSection, i: number) => (
                 <div
                   key={s.title}
-                  className={`rounded-2xl p-6 reveal-scale ${sect.visible ? 'is-visible' : ''}`}
+                  className={`rounded-2xl p-6 reveal-scale ${sect.visible ? 'is-visible' : ''} w-full sm:w-[calc(50%-10px)] xl:w-[calc(33.333%-14px)]`}
                   style={{
                     transitionDelay: `${i * 70}ms`,
                     background: 'var(--surface-2)',
@@ -375,7 +375,9 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
         )}
 
         {/* Highlights + Includes — slide from left / right */}
+        {(program.highlights.length > 0 || program.includes.length > 0) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+          {program.highlights.length > 0 && (
           <div ref={hl.ref}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               Puntos clave
@@ -393,11 +395,13 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-slate-600 text-[15px]"><Tip text={program.highlightTooltips?.[h] ?? TOOLTIPS[h]}>{h}</Tip></span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.highlightTooltips ? (program.highlightTooltips[h] || undefined) : TOOLTIPS[h]}>{h}</Tip></span>
                 </li>
               ))}
             </ul>
           </div>
+          )}
+          {program.includes.length > 0 && (
           <div ref={incl.ref}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               ¿Qué incluye?
@@ -412,12 +416,14 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-                  <span className="text-slate-600 text-[15px]"><Tip text={program.includeTooltips?.[item] ?? TOOLTIPS[item]}>{item}</Tip></span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.includeTooltips ? (program.includeTooltips[item] || undefined) : TOOLTIPS[item]}>{item}</Tip></span>
                 </li>
               ))}
             </ul>
           </div>
+          )}
         </div>
+        )}
 
         {/* Gallery — solo si hay fotos de testimonios */}
         {galleryImages.length > 0 && (
@@ -443,7 +449,9 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                     className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''} hover:opacity-80 transition-opacity`}
                     style={{ transitionDelay: `${i * 45}ms` }}
                   >
-                    {c!.flag} {c!.name}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`https://flagcdn.com/w40/${c!.code.toLowerCase()}.png`} alt="" width={20} className="inline h-4 w-auto rounded-sm mr-1.5 align-middle" />
+                    {c!.name}
                   </Link>
                 ))
               : program.countries.map((c, i) => (
