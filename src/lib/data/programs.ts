@@ -21,6 +21,8 @@ export interface Program {
   whatsappMessage: string;
   sections?: ProgramSection[];
   heroImageUrl?: string;
+  highlightTooltips?: Record<string, string>;
+  includeTooltips?: Record<string, string>;
 }
 
 export const programs: Program[] = [

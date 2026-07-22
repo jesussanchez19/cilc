@@ -393,7 +393,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-slate-600 text-[15px]"><Tip text={TOOLTIPS[h]}>{h}</Tip></span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.highlightTooltips?.[h] ?? TOOLTIPS[h]}>{h}</Tip></span>
                 </li>
               ))}
             </ul>
@@ -412,7 +412,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-                  <span className="text-slate-600 text-[15px]"><Tip text={TOOLTIPS[item]}>{item}</Tip></span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.includeTooltips?.[item] ?? TOOLTIPS[item]}>{item}</Tip></span>
                 </li>
               ))}
             </ul>

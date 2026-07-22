@@ -90,14 +90,36 @@ export const programaSchema = defineType({
       title: 'Puntos clave',
       type: 'array',
       group: 'contenido',
-      of: [{ type: 'string' }],
+      of: [{
+        type: 'object',
+        name: 'puntoClave',
+        fields: [
+          defineField({ name: 'texto',   title: 'Punto',               type: 'string' }),
+          defineField({ name: 'tooltip', title: 'Descripción (tooltip)', type: 'text', rows: 2 }),
+        ],
+        preview: {
+          select: { title: 'texto' },
+          prepare({ title }: { title: string }) { return { title: title ?? 'Sin texto' }; },
+        },
+      }],
     }),
     defineField({
       name: 'queIncluye',
       title: '¿Qué incluye?',
       type: 'array',
       group: 'contenido',
-      of: [{ type: 'string' }],
+      of: [{
+        type: 'object',
+        name: 'queIncluyeItem',
+        fields: [
+          defineField({ name: 'texto',   title: 'Ítem',                type: 'string' }),
+          defineField({ name: 'tooltip', title: 'Descripción (tooltip)', type: 'text', rows: 2 }),
+        ],
+        preview: {
+          select: { title: 'texto' },
+          prepare({ title }: { title: string }) { return { title: title ?? 'Sin texto' }; },
+        },
+      }],
     }),
     defineField({
       name: 'paraQuien',

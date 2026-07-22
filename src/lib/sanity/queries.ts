@@ -199,6 +199,11 @@ export interface SanitySeccion {
   items?: string[];
 }
 
+export interface SanityPuntoClave {
+  texto: string;
+  tooltip?: string;
+}
+
 export interface SanityPrograma {
   titulo?: string;
   subtitulo?: string;
@@ -207,8 +212,8 @@ export interface SanityPrograma {
   descripcion?: string;
   duracion?: string;
   rangoEdad?: string;
-  puntosClave?: string[];
-  queIncluye?: string[];
+  puntosClave?: SanityPuntoClave[];
+  queIncluye?: SanityPuntoClave[];
   paraQuien?: string;
   whatsappMessage?: string;
   imagenHero?: { asset: { _ref: string } };
@@ -220,7 +225,9 @@ export async function getProgramaData(slug: string): Promise<SanityPrograma | nu
     return await client.fetch(
       `*[_type == "programa" && programaId.current == $slug][0]{
         titulo, subtitulo, icono, color,
-        descripcion, duracion, rangoEdad, puntosClave, queIncluye, paraQuien, whatsappMessage,
+        descripcion, duracion, rangoEdad, paraQuien, whatsappMessage,
+        puntosClave[] { texto, tooltip },
+        queIncluye[]  { texto, tooltip },
         imagenHero { asset { _ref } },
         secciones[] { titulo, descripcion, items }
       }`,
