@@ -2,11 +2,165 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { Program, programColorMap } from '@/lib/data/programs';
+import { Program, ProgramSection, programColorMap } from '@/lib/data/programs';
 import { countries } from '@/lib/data/countries';
 import { SanityTestimonial } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import QuoteModal from './QuoteModal';
+
+const TOOLTIPS: Record<string, string> = {
+  // includes
+  'Selección de país y escuela': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Selección del país y escuela ideal': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Inscripción oficial en la escuela': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Inscripción oficial': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Gestión de visa de estudiante': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Trámite de visa': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Seguro médico internacional': 'Cobertura médica completa durante toda tu estancia en el extranjero, requerida por la mayoría de los destinos.',
+  'Orientación previa al viaje': 'Sesión donde revisamos contigo: trámites pendientes, llegada al aeropuerto, alojamiento, transporte local y vida cotidiana en el destino.',
+  'Acompañamiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Seguimiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Acompañamiento integral': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  // highlights — Idiomas
+  'Escuelas internacionalmente acreditadas': 'Trabajamos con instituciones reconocidas por organismos internacionales de acreditación educativa en cada país destino.',
+  'Escuelas acreditadas internacionalmente': 'Trabajamos con instituciones reconocidas por organismos internacionales de acreditación educativa en cada país destino.',
+  'Certificación oficial al completar': 'Al finalizar recibes un certificado emitido por la escuela que puedes incluir en tu CV o presentar en procesos de selección.',
+  'Certificación oficial al finalizar': 'Al finalizar recibes un certificado emitido por la escuela que puedes incluir en tu CV o presentar en procesos de selección.',
+  'Grupos reducidos con profesores nativos': 'Grupos pequeños que permiten mayor atención personalizada, con profesores hablantes nativos del idioma que enseñan.',
+  'Inglés, Francés, Alemán, Japonés, Coreano y Mandarín': 'Cada idioma se estudia en su país de origen para una inmersión auténtica: inglés en países anglófonos, francés en Francia o Canadá, y así sucesivamente.',
+  'Múltiples destinos disponibles': 'Contamos con destinos en Europa, América, Oceanía y Asia para que elijas el que mejor se adapte a tu idioma y presupuesto.',
+  // highlights — Au Pair
+  'Estipendio semanal garantizado': 'Recibes un pago semanal directamente de la familia anfitriona, establecido por el programa y la regulación migratoria del país.',
+  'Seguro médico incluido': 'Cobertura médica durante toda tu estancia, como parte de los beneficios del programa Au Pair.',
+  'Alojamiento con familia anfitriona': 'Habitación privada y comidas incluidas en el hogar de tu familia anfitriona durante toda tu estancia.',
+  'Clases de idioma incluidas': 'Acceso a clases del idioma local como parte de los beneficios del programa.',
+  'Residencia legal en el país': 'El programa incluye los trámites para que cuentes con estatus migratorio legal durante toda tu estancia.',
+  // highlights — Años Académicos
+  'Integración al sistema académico oficial': 'Estudias en una escuela o universidad local junto con estudiantes del país, dentro del plan de estudios oficial.',
+  'Secundaria, Preparatoria o Universidad': 'Opciones para distintos niveles educativos: desde educación media hasta licenciatura en el extranjero.',
+  'Alojamiento con familia anfitriona o residencia': 'Alojamiento supervisado: familia anfitriona o residencia estudiantil, según el destino y tu preferencia.',
+  'Certificado académico reconocido': 'El periodo cursado en el extranjero queda registrado en un certificado emitido por la institución.',
+  'Experiencia multicultural transformadora': 'Convivir con estudiantes de distintos países en un entorno académico real es una experiencia que transforma tu perspectiva.',
+  // highlights — Estudia y Trabaja
+  'Permiso legal para trabajar': 'El programa incluye la autorización migratoria para trabajar durante tu estancia, conforme a la regulación del país destino.',
+  'Experiencia laboral internacional': 'Trabajas en empresas reales del país destino, construyendo un perfil profesional con experiencia internacional.',
+  'Cobertura parcial de gastos': 'Los ingresos del trabajo pueden cubrir parte de tus gastos durante la estancia.',
+  'Ventaja competitiva en tu CV': 'Combinar estudios con experiencia laboral en el extranjero es un diferenciador valorado por empleadores y programas de posgrado.',
+  // highlights — Formación Corporativa
+  'Idiomas ejecutivos: inglés, francés, alemán, japonés, mandarín': 'Programas de idioma diseñados para entornos de negocios: negociación, presentaciones y comunicación ejecutiva.',
+  'Visitas corporativas y networking internacional': 'Visitas a empresas y espacios de networking en el país destino para ampliar la red de contactos internacionales.',
+  'Formación en comercio internacional y tecnología': 'Programas especializados en áreas de alto impacto para la expansión internacional de tu empresa.',
+  'Programas intensivos para directivos': 'Formatos diseñados para aprovechar al máximo el tiempo de ejecutivos con agenda apretada.',
+  'Diagnóstico personalizado para cada empresa': 'Antes de diseñar el programa analizamos las necesidades y objetivos específicos de tu organización.',
+  // highlights — Idiomas en Línea
+  'Clases en vivo con profesor calificado': 'Cada sesión es en tiempo real con un profesor certificado, con interacción y retroalimentación directa.',
+  'Grupos reducidos o clases individuales': 'Elige entre grupos pequeños para practicar con compañeros, o clases individuales para un aprendizaje más personalizado.',
+  'Inglés, Francés y Alemán': 'Los tres idiomas disponibles en modalidad en línea, para todos los niveles y con enfoque en comunicación real.',
+  'Evaluación de nivel inicial gratuita': 'Realizamos una evaluación sin costo para ubicarte en el nivel correcto antes de iniciar.',
+  'Horarios flexibles adaptados a ti': 'Distintos horarios disponibles para que puedas estudiar sin interrumpir tu vida diaria.',
+  // includes
+  'Selección de país y escuela': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Selección del país y escuela ideal': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Inscripción oficial en la escuela': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Inscripción oficial': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Gestión de visa de estudiante': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Trámite de visa': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Seguro médico internacional': 'Cobertura médica completa durante toda tu estancia en el extranjero, requerida por la mayoría de los destinos.',
+  'Orientación previa al viaje': 'Sesión donde revisamos contigo: trámites pendientes, llegada al aeropuerto, alojamiento, transporte local y vida cotidiana en el destino.',
+  'Acompañamiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Seguimiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Acompañamiento integral': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Evaluación de perfil': 'Analizamos tu experiencia, nivel de idioma y expectativas para encontrar el programa y destino ideal para ti.',
+  'Documentación y solicitudes': 'Te acompañamos en la preparación de todos los documentos requeridos: cartas de referencia, antecedentes penales, fotografías y formularios.',
+  'Preparación para entrevista con familia': 'Te entrenamos para presentarte de manera exitosa ante las familias candidatas y destacar tu perfil.',
+  'Gestión de visa J-1 (USA) o Au Pair (Alemania)': 'Coordinamos tu proceso migratorio completo según el país elegido: visa J-1 para USA o permiso Au Pair para Alemania.',
+  'Evaluación de perfil y viabilidad': 'Revisamos tu perfil académico, financiero y migratorio para identificar el programa y destino más viable para ti.',
+  'Selección de programa y destino': 'Analizamos contigo las opciones de destino, esquema de visa y tipo de trabajo disponible para elegir la combinación ideal.',
+  'Diseño de estrategia de visa': 'Diseñamos la ruta migratoria óptima según tu perfil y el país elegido para maximizar tus posibilidades de aprobación.',
+  'Preparación previa al viaje': 'Sesión donde revisamos contigo: trámites pendientes, llegada al aeropuerto, alojamiento, transporte local y vida cotidiana en el destino.',
+  'Apoyo en búsqueda de empleo inicial': 'Te orientamos con recursos, plataformas y estrategias para encontrar trabajo una vez que llegues a tu destino.',
+  'Diagnóstico de necesidades corporativas': 'Realizamos un análisis detallado de las áreas de mejora del equipo para diseñar un programa alineado con los objetivos de la empresa.',
+  'Selección estratégica de destino': 'Identificamos el país y ciudad que ofrecen el entorno más favorable para los objetivos específicos de tu empresa.',
+  'Diseño de programa a la medida': 'Estructuramos el contenido, duración y formato del programa según las necesidades reales de tu equipo directivo.',
+  'Coordinación de visitas corporativas': 'Organizamos encuentros con empresas locales, cámaras de comercio y eventos de networking en el país destino.',
+  'Gestión de visas y logística': 'Nos encargamos de todos los trámites migratorios y la logística operativa del grupo: vuelos, alojamiento y traslados.',
+  'Acompañamiento ejecutivo': 'Un consultor dedicado acompaña al grupo durante todo el programa para garantizar el logro de objetivos.',
+  'Evaluación de nivel gratuita': 'Realizamos una evaluación sin costo antes de iniciar para ubicarte en el nivel correcto y recomendarte el programa más adecuado.',
+  'Recomendación personalizada de programa': 'Según tu nivel, objetivos y disponibilidad, te recomendamos la modalidad y horario que mejor se adapten a ti.',
+  'Material digital incluido': 'Recibes acceso completo al material didáctico digital: libros de texto, ejercicios, audios y recursos de práctica adicionales.',
+  'Seguimiento de progreso por niveles': 'Evaluamos tu avance al término de cada nivel para confirmar que estás progresando y ajustar el plan si es necesario.',
+  'Clases de conversación práctica': 'Sesiones dedicadas exclusivamente a la práctica oral con temas reales para ganar fluidez y confianza al hablar.',
+  'Preparación para exámenes internacionales': 'Preparación específica para IELTS, TOEFL, Cambridge (inglés), DELF/DALF (francés) o Goethe-Zertifikat (alemán).',
+  'Inscripción en institución acreditada': 'Gestionamos tu registro en la escuela o universidad seleccionada y te enviamos la carta de aceptación oficial.',
+  'Integración al sistema académico local': 'Te acompañamos en el proceso de adaptación al calendario, materias y metodología de enseñanza del país destino.',
+  'Alojamiento seguro (familia o residencia)': 'Alojamiento supervisado: familia anfitriona seleccionada o residencia estudiantil certificada, según tu preferencia y destino.',
+  'Asesoría en trámites y visa': 'Te guiamos paso a paso en todos los trámites migratorios y documentación requerida para tu ingreso al país.',
+};
+
+function Tip({ children, text }: { children: React.ReactNode; text?: string }) {
+  const [show, setShow] = useState(false);
+  if (!text) return <>{children}</>;
+  return (
+    <span
+      className="relative"
+      style={{ display: 'inline', cursor: 'help' }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      {/* trigger — dotted underline + subtle info dot */}
+      <span style={{ textDecoration: 'underline', textDecorationStyle: 'dotted', textDecorationColor: '#cbd5e1' }}>
+        {children}
+      </span>
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: '13px', height: '13px', borderRadius: '50%',
+        background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.25)',
+        fontSize: '8px', fontWeight: 700, color: '#3b82f6',
+        marginLeft: '4px', verticalAlign: 'middle', lineHeight: 1,
+      }}>i</span>
+
+      {show && (
+        <span
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 12px)',
+            left: '-8px',
+            width: '272px',
+            background: 'linear-gradient(145deg, #1e293b 0%, #0f172a 100%)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderTop: '2px solid rgba(59,130,246,0.5)',
+            borderRadius: '14px',
+            padding: '12px 16px',
+            fontSize: '13px',
+            lineHeight: '1.55',
+            color: '#cbd5e1',
+            boxShadow: '0 20px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(0,0,0,0.2)',
+            pointerEvents: 'none',
+            zIndex: 50,
+            animation: 'tooltipIn 0.18s cubic-bezier(0.16,1,0.3,1) both',
+          }}
+        >
+          {/* top accent shimmer */}
+          <span style={{
+            position: 'absolute', top: '-2px', left: '20px', right: '20px', height: '2px',
+            background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.8), rgba(227,30,36,0.6), transparent)',
+            borderRadius: '2px',
+          }} />
+          {text}
+          {/* arrow */}
+          <span style={{
+            position: 'absolute', top: '100%', left: '22px',
+            width: 0, height: 0,
+            borderLeft: '7px solid transparent',
+            borderRight: '7px solid transparent',
+            borderTop: '7px solid #1e293b',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))',
+          }} />
+        </span>
+      )}
+    </span>
+  );
+}
 
 interface ProgramPageProps {
   program: Program;
@@ -111,6 +265,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
   const hl     = useSection(0.25);
   const incl   = useSection(0.25);
   const badges = useSection(0.2);
+  const sect   = useSection(0.15);
   const test   = useSection(0.2);
 
   const programaNombre: Record<string, string> = {
@@ -123,7 +278,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
     <div>
       {/* HERO */}
       <div className="relative min-h-160 flex items-end overflow-hidden">
-        <div className={`absolute inset-0 bg-cover ${program.slug === 'anos-academicos' ? 'bg-top' : 'bg-center'}`} style={{ backgroundImage: `url('${imgs.hero}')` }} />
+        <div className={`absolute inset-0 bg-cover ${program.slug === 'anos-academicos' ? 'bg-top' : 'bg-center'}`} style={{ backgroundImage: `url('${program.heroImageUrl ?? imgs.hero}')` }} />
         <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/95 via-[#0f172a]/55 to-[#0f172a]/20" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-48 w-full">
@@ -177,6 +332,48 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           ))}
         </div>
 
+        {/* Extra sections — per-program rich content */}
+        {program.sections && program.sections.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
+              Modalidades disponibles
+            </h2>
+            <div ref={sect.ref} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {program.sections.map((s: ProgramSection, i: number) => (
+                <div
+                  key={s.title}
+                  className={`rounded-2xl p-6 reveal-scale ${sect.visible ? 'is-visible' : ''}`}
+                  style={{
+                    transitionDelay: `${i * 70}ms`,
+                    background: 'var(--surface-2)',
+                    border: '1px solid rgba(15,23,42,0.07)',
+                  }}
+                >
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-bold mb-3 ${colors.light} ${colors.text}`}>
+                    {i + 1 < 10 ? `0${i + 1}` : i + 1}
+                  </div>
+                  <h3 className="text-[15px] font-extrabold text-slate-900 mb-1 leading-snug">
+                    {s.title}
+                  </h3>
+                  {s.description && (
+                    <p className="text-slate-500 text-xs mb-3 leading-relaxed">{s.description}</p>
+                  )}
+                  {s.items && s.items.length > 0 && (
+                    <ul className="space-y-1.5 mt-2">
+                      {s.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-slate-600 text-sm leading-snug">
+                          <span className={`shrink-0 mt-1.5 w-1 h-1 rounded-full ${colors.bg}`} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Highlights + Includes — slide from left / right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div ref={hl.ref}>
@@ -196,7 +393,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-slate-600 text-[15px]">{h}</span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.highlightTooltips?.[h] ?? TOOLTIPS[h]}>{h}</Tip></span>
                 </li>
               ))}
             </ul>
@@ -215,7 +412,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-                  <span className="text-slate-600 text-[15px]">{item}</span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={program.includeTooltips?.[item] ?? TOOLTIPS[item]}>{item}</Tip></span>
                 </li>
               ))}
             </ul>

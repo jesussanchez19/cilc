@@ -193,6 +193,17 @@ export async function getSocios(): Promise<SanityPartner[]> {
 
 // ── Programas ─────────────────────────────────────────────────────────────────
 
+export interface SanitySeccion {
+  titulo: string;
+  descripcion?: string;
+  items?: string[];
+}
+
+export interface SanityPuntoClave {
+  texto: string;
+  tooltip?: string;
+}
+
 export interface SanityPrograma {
   titulo?: string;
   subtitulo?: string;
@@ -201,10 +212,12 @@ export interface SanityPrograma {
   descripcion?: string;
   duracion?: string;
   rangoEdad?: string;
-  puntosClave?: string[];
-  queIncluye?: string[];
+  puntosClave?: SanityPuntoClave[];
+  queIncluye?: SanityPuntoClave[];
   paraQuien?: string;
   whatsappMessage?: string;
+  imagenHero?: { asset: { _ref: string } };
+  secciones?: SanitySeccion[];
 }
 
 export async function getProgramaData(slug: string): Promise<SanityPrograma | null> {
@@ -212,23 +225,16 @@ export async function getProgramaData(slug: string): Promise<SanityPrograma | nu
     return await client.fetch(
       `*[_type == "programa" && programaId.current == $slug][0]{
         titulo, subtitulo, icono, color,
-        descripcion, duracion, rangoEdad, puntosClave, queIncluye, paraQuien, whatsappMessage
+        descripcion, duracion, rangoEdad, paraQuien, whatsappMessage,
+        puntosClave[] { texto, tooltip },
+        queIncluye[]  { texto, tooltip },
+        imagenHero { asset { _ref } },
+        secciones[] { titulo, descripcion, items }
       }`,
       { slug },
     );
   } catch {
     return null;
-  }
-}
-
-export async function getAllProgramaSlugs(): Promise<string[]> {
-  try {
-    const results = await client.fetch<{ current: string }[]>(
-      `*[_type == "programa" && defined(programaId.current)].programaId`,
-    );
-    return results.map((r) => r.current).filter(Boolean);
-  } catch {
-    return [];
   }
 }
 

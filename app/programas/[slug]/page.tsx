@@ -1,4 +1,5 @@
 export const revalidate = 60;
+export const dynamicParams = false;
 
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -7,20 +8,17 @@ import { programs } from '@/lib/data/programs';
 import { programSchema, breadcrumbSchema } from '@/lib/seo/schemas';
 import {
   getProgramaData,
-  getAllProgramaSlugs,
   getTestimoniosPorPrograma,
   getDestinosPorPrograma,
 } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const staticSlugs = programs.map((p) => p.slug);
-  const sanitySlugs = await getAllProgramaSlugs();
-  const all = new Set([...staticSlugs, ...sanitySlugs]);
-  return Array.from(all).map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return programs.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -61,10 +59,22 @@ export default async function ProgramaPage({ params }: Props) {
     countries:       base?.countries          ?? [],
     duration:        sanity?.duracion         ?? base?.duration        ?? '',
     ageRange:        sanity?.rangoEdad        ?? base?.ageRange        ?? '',
-    highlights:      sanity?.puntosClave      ?? base?.highlights      ?? [],
-    includes:        sanity?.queIncluye       ?? base?.includes        ?? [],
+    highlights:      sanity?.puntosClave ? sanity.puntosClave.map((p) => p.texto) : (base?.highlights ?? []),
+    includes:        sanity?.queIncluye  ? sanity.queIncluye.map((p)  => p.texto) : (base?.includes  ?? []),
+    highlightTooltips: sanity?.puntosClave
+      ? Object.fromEntries(sanity.puntosClave.filter((p) => p.tooltip).map((p) => [p.texto, p.tooltip!]))
+      : undefined,
+    includeTooltips: sanity?.queIncluye
+      ? Object.fromEntries(sanity.queIncluye.filter((p) => p.tooltip).map((p) => [p.texto, p.tooltip!]))
+      : undefined,
     idealFor:        sanity?.paraQuien        ?? base?.idealFor        ?? '',
     whatsappMessage: sanity?.whatsappMessage  ?? base?.whatsappMessage ?? '',
+    heroImageUrl:    sanity?.imagenHero?.asset?._ref
+                       ? urlFor(sanity.imagenHero).width(1920).quality(85).url()
+                       : undefined,
+    sections:        sanity?.secciones
+                       ? sanity.secciones.map((s) => ({ title: s.titulo, description: s.descripcion, items: s.items }))
+                       : base?.sections,
   };
 
   return (
