@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const SESSION_COOKIE = '__studio_sess';
-const IDLE_SECONDS   = 30 * 60; // 30 minutos sin actividad
+const IDLE_SECONDS   = 10 * 60; // 10 minutos sin actividad
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

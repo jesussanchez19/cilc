@@ -12,7 +12,9 @@ export async function POST(req: NextRequest) {
   const { label } = await req.json().catch(() => ({ label: '' }));
 
   const token   = crypto.randomUUID();
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.vercel.app';
+  const host    = req.headers.get('host') ?? 'localhost:3000';
+  const proto   = host.startsWith('localhost') ? 'http' : 'https';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? `${proto}://${host}`;
   const url     = `${siteUrl}/dar-testimonio?acceso=${token}`;
 
   await writeClient.create({

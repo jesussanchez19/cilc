@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { TokenGeneratorInput } from '../components/TokenGeneratorInput';
 
 export const tokenTestimonioSchema = defineType({
   name: 'tokenTestimonio',
@@ -7,9 +8,10 @@ export const tokenTestimonioSchema = defineType({
   fields: [
     defineField({
       name: 'label',
-      title: 'Para quién es',
+      title: 'Nombre del alumno',
       type: 'string',
-      description: 'Ej: "María García — Au Pair Alemania 2024"',
+      description: 'Escribe el nombre y presiona "Generar token" — los demás campos se llenan solos.',
+      components: { input: TokenGeneratorInput },
     }),
     defineField({
       name: 'token',

@@ -1,20 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { sileo } from 'sileo';
 
 const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
-export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string }) {
+export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void }) {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [calificacion, setCalificacion] = useState(0);
   const [hovered, setHovered] = useState(0);
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [nombreEnviado, setNombreEnviado] = useState('');
 
   const set = (k: string, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
@@ -72,18 +74,57 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico }: { p
 
       const res = await fetch('/api/testimonio', { method: 'POST', body: fd });
       if (res.ok) {
-        sileo.success({ title: '¡Gracias por tu testimonio!', description: 'Lo revisaremos y publicaremos pronto.', fill: '#1B67E8' });
-        setForm({ nombre: '', email: '', programa: '', pais: '', texto: '' });
-        setFoto(null); setPreview(null); setCalificacion(0); setAceptaPrivacidad(false);
+        setNombreEnviado(form.nombre);
+        setStatus('success');
+        onSuccess?.();
       } else {
         sileo.error({ title: 'Error al enviar', description: 'Ocurrió un error. Intenta de nuevo.', fill: '#E31E24' });
+        setStatus('idle');
       }
-      setStatus('idle');
     } catch {
       sileo.error({ title: 'Error al enviar', description: 'No se pudo conectar con el servidor.', fill: '#E31E24' });
       setStatus('idle');
     }
+
   };
+
+  if (status === 'success') {
+    return (
+      <div className="flex flex-col items-center text-center py-6 space-y-5">
+        {/* Ícono animado */}
+        <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center">
+          <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-2" style={{ letterSpacing: '-0.02em' }}>
+            ¡Gracias, {nombreEnviado.split(' ')[0]}!
+          </h2>
+          <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto">
+            Tu testimonio fue enviado correctamente. Lo revisaremos y lo publicaremos pronto en el sitio de CILC.
+          </p>
+        </div>
+
+        <div className="w-full pt-2 border-t border-slate-100">
+          <p className="text-xs text-slate-400 mb-3">¿Conoces a alguien más que quiera compartir su experiencia?</p>
+          <a
+            href="https://wa.me/525518944494"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
+            style={{ background: '#25D366' }}
+          >
+            <svg viewBox="0 0 32 32" className="w-4 h-4" fill="currentColor">
+              <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333z" />
+            </svg>
+            Contactar a CILC
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -253,8 +294,34 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico }: { p
       </div>
 
       <button type="submit" disabled={status === 'loading'} className="btn-primary w-full justify-center">
-        {status === 'loading' ? 'Enviando...' : 'Enviar testimonio'}
+        Enviar testimonio
       </button>
+
+      {/* Overlay de carga — montado en document.body para evitar conflictos con transform/filter */}
+      {status === 'loading' && typeof window !== 'undefined' && createPortal(
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24,
+            background: 'rgba(15, 23, 42, 0.72)',
+          }}
+        >
+          <div
+            style={{
+              width: 64, height: 64, borderRadius: '50%',
+              border: '5px solid rgba(255,255,255,0.2)',
+              borderTopColor: '#fff',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ color: '#fff', fontWeight: 600, fontSize: 18, margin: 0 }}>Enviando tu testimonio…</p>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, marginTop: 6 }}>Solo tomará un momento</p>
+          </div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>,
+        document.body,
+      )}
     </form>
   );
 }

@@ -70,7 +70,7 @@ export default defineConfig({
       ];
       if (SINGLETONS.includes(ctx.schemaType)) return base;
       if (ctx.schemaType === 'programa') return base;
-      return [...base, EliminarAction];
+return [...base, EliminarAction];
     },
   },
 });

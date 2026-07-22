@@ -17,13 +17,17 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 overflow-hidden"
+      className="sticky top-0 z-50"
       style={{
         background: '#060d1a',
         borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}
     >
       {/* Orbe azul — lado izquierdo, detrás del logo */}
+      <div
+        className="absolute pointer-events-none overflow-hidden inset-0 z-0"
+        style={{ pointerEvents: 'none' }}
+      >
       <div
         className="absolute pointer-events-none"
         style={{
@@ -51,8 +55,10 @@ export default function Header() {
         }}
       />
 
+      </div>
+
       {/* Contenido */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex items-center h-16 gap-4">
 
           {/* Logo */}

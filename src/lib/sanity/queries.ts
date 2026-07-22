@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client, cdnClient } from './client';
 import { writeClient } from './writeClient';
 
 // ── Testimonios ───────────────────────────────────────────────────────────────
@@ -94,9 +94,10 @@ export async function getAllDestinos(): Promise<SanityDestino[]> {
 // ── Tokens de uso único ───────────────────────────────────────────────────────
 
 export async function verificarToken(token: string): Promise<{ _id: string; usado: boolean } | null> {
-  const results = await client.fetch<{ _id: string; usado: boolean }[]>(
+  const results = await cdnClient.fetch<{ _id: string; usado: boolean }[]>(
     `*[_type == "tokenTestimonio" && token == $token][0...1]{ _id, usado }`,
     { token },
+    { next: { revalidate: 0 } },
   );
   return results[0] ?? null;
 }
