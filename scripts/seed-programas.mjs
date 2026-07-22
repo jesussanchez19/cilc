@@ -18,6 +18,10 @@ const programas = [
     _id: 'programa-idiomas',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'idiomas' },
+    titulo: 'Idiomas',
+    subtitulo: 'Aprende un idioma en su país de origen',
+    icono: '🗣️',
+    color: 'blue',
     descripcion: 'Programas de inglés, francés, alemán, japonés, coreano y mandarín en escuelas internacionalmente acreditadas. Desde 2 semanas, con certificación oficial.',
     duracion: 'Desde 2 semanas',
     rangoEdad: '12–60 años',
@@ -37,11 +41,16 @@ const programas = [
       'Acompañamiento durante tu estancia',
     ],
     paraQuien: 'Estudiantes y profesionales que quieren dominar un idioma en su ambiente natural.',
+    whatsappMessage: 'Hola, me interesa el programa de Idiomas en el extranjero. ¿Me pueden orientar sobre destinos, duración y costos?',
   },
   {
     _id: 'programa-au-pair',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'au-pair' },
+    titulo: 'Au Pair',
+    subtitulo: 'Vive con una familia anfitriona en el extranjero',
+    icono: '👨‍👩‍👧‍👦',
+    color: 'pink',
     descripcion: 'Experiencia cultural única: vive con una familia, apoya en el cuidado de niños y recibe beneficios económicos y educativos mientras mejoras tu idioma.',
     duracion: '6–12 meses',
     rangoEdad: '18–26 años',
@@ -61,11 +70,16 @@ const programas = [
       'Seguimiento durante tu estancia',
     ],
     paraQuien: 'Jóvenes de 18–26 años con experiencia en cuidado de niños que desean una inmersión cultural completa.',
+    whatsappMessage: 'Hola, me interesa el programa Au Pair. Tengo experiencia con niños y quisiera conocer los requisitos y destinos disponibles.',
   },
   {
     _id: 'programa-anos-academicos',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'anos-academicos' },
+    titulo: 'Años Académicos',
+    subtitulo: 'Cursa un semestre o año escolar en el extranjero',
+    icono: '🎓',
+    color: 'purple',
     descripcion: 'Estudia Secundaria, Preparatoria o Universidad en el extranjero con integración total al sistema académico oficial. Una experiencia que transforma tu futuro.',
     duracion: 'Semestre o año completo',
     rangoEdad: '12–25 años',
@@ -85,11 +99,16 @@ const programas = [
       'Acompañamiento integral',
     ],
     paraQuien: 'Estudiantes de 12 a 25 años que quieren cursar parte de su educación formal en el extranjero.',
+    whatsappMessage: 'Hola, me interesa el programa de Años Académicos. ¿Pueden orientarme sobre opciones para estudiar un semestre o año completo en el extranjero?',
   },
   {
     _id: 'programa-estudia-trabaja',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'estudia-trabaja' },
+    titulo: 'Estudia y Trabaja',
+    subtitulo: 'Estudia y gana experiencia laboral internacional',
+    icono: '💼',
+    color: 'green',
     descripcion: 'Combina clases de idioma con experiencia laboral real en el extranjero. Cubre parte de tus gastos mientras construyes un perfil profesional internacional.',
     duracion: '24–52 semanas',
     rangoEdad: '18–35 años',
@@ -109,11 +128,16 @@ const programas = [
       'Apoyo en búsqueda de empleo inicial',
     ],
     paraQuien: 'Jóvenes profesionales que quieren experiencia laboral internacional y mejorar su idioma mientras generan ingresos.',
+    whatsappMessage: 'Hola, me interesa el programa Estudia y Trabaja. ¿Cómo funciona el permiso de trabajo y cuáles son los destinos disponibles?',
   },
   {
     _id: 'programa-formacion-corporativa',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'formacion-corporativa' },
+    titulo: 'Formación Corporativa',
+    subtitulo: 'Capacitación internacional para empresas y directivos',
+    icono: '🏢',
+    color: 'orange',
     descripcion: 'Programas de idiomas ejecutivos, inmersión empresarial y formación especializada en destinos clave. Diseñados a la medida de cada empresa.',
     duracion: 'A la medida',
     rangoEdad: 'Profesionales y directivos',
@@ -133,11 +157,16 @@ const programas = [
       'Acompañamiento ejecutivo',
     ],
     paraQuien: 'Corporativos con expansión internacional, startups tecnológicas, empresas exportadoras y directivos que requieren actualización global.',
+    whatsappMessage: 'Hola, me interesa el programa de Formación Corporativa para mi empresa. ¿Pueden enviarme información sobre opciones, destinos y costos?',
   },
   {
     _id: 'programa-idiomas-en-linea',
     _type: 'programa',
     programaId: { _type: 'slug', current: 'idiomas-en-linea' },
+    titulo: 'Idiomas en Línea',
+    subtitulo: 'Aprende desde donde estés con profesores en vivo',
+    icono: '💻',
+    color: 'teal',
     descripcion: 'Clases en vivo con profesor, grupos reducidos o modalidad individual. Inglés, Francés y Alemán con evaluación de nivel gratuita y horarios flexibles.',
     duracion: 'Flexible',
     rangoEdad: 'Todas las edades',
@@ -157,6 +186,7 @@ const programas = [
       'Preparación para exámenes internacionales',
     ],
     paraQuien: 'Estudiantes y profesionales que quieren aprender o mejorar un idioma sin salir de México.',
+    whatsappMessage: 'Hola, me interesa tomar clases de Idiomas en Línea con CILC. ¿Cómo funciona la evaluación de nivel gratuita y cuáles son los horarios disponibles?',
   },
 ];
 
@@ -164,16 +194,16 @@ async function seed() {
   console.log('Cargando programas en Sanity...\n');
 
   for (const programa of programas) {
-    const label = programa.programaId;
+    const label = programa.titulo;
     try {
       await client.createOrReplace(programa);
-      console.log(`✅ ${label}`);
+      console.log(`✅ ${programa.icono} ${label}`);
     } catch (err) {
       console.error(`❌ ${label}: ${err.message}`);
     }
   }
 
-  console.log('\nListo. Edítalos en Studio → Programas.');
+  console.log('\nListo. Recarga el Studio para ver los cambios.');
 }
 
 seed().catch((err) => {
