@@ -29,8 +29,20 @@ export default defineConfig({
                   .documentId('configuracion-singleton'),
               ),
             S.divider(),
+            // Programas — sin botón "+" (solo editar los 6 existentes)
+            S.listItem()
+              .title('Programas')
+              .id('programa')
+              .child(
+                S.documentTypeList('programa')
+                  .title('Programas')
+                  .canHandleIntent((name) => name !== 'create'),
+              ),
             ...S.documentTypeListItems().filter(
-              (item) => !SINGLETONS.includes(item.getId() ?? '') && !HIDDEN.includes(item.getId() ?? ''),
+              (item) =>
+                !SINGLETONS.includes(item.getId() ?? '') &&
+                !HIDDEN.includes(item.getId() ?? '') &&
+                item.getId() !== 'programa',
             ),
           ]),
     }),
@@ -44,6 +56,7 @@ export default defineConfig({
         ...prev.filter((a) => a.action !== 'delete'),
       ];
       if (SINGLETONS.includes(ctx.schemaType)) return base;
+      if (ctx.schemaType === 'programa') return base;
       return [...base, EliminarAction];
     },
   },
