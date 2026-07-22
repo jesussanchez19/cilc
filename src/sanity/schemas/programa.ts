@@ -13,6 +13,8 @@ export const programaSchema = defineType({
   name: 'programa',
   title: 'Programas',
   type: 'document',
+  // Solo permite editar y publicar — no crear ni eliminar desde el Studio
+  __experimental_actions: ['update', 'publish'],
   groups: [
     { name: 'identidad', title: 'Identidad' },
     { name: 'contenido', title: 'Contenido' },
