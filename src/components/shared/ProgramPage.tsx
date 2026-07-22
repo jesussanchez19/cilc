@@ -8,6 +8,106 @@ import { SanityTestimonial } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import QuoteModal from './QuoteModal';
 
+const TOOLTIPS: Record<string, string> = {
+  // --- includes comunes ---
+  'Selección de país y escuela':
+    'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Selección del país y escuela ideal':
+    'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Inscripción oficial en la escuela':
+    'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Inscripción oficial':
+    'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Gestión de visa de estudiante':
+    'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Trámite de visa':
+    'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Seguro médico internacional':
+    'Cobertura médica completa durante toda tu estancia en el extranjero, requerida por la mayoría de los destinos.',
+  'Orientación previa al viaje':
+    'Sesión donde revisamos contigo trámites pendientes, llegada al aeropuerto, alojamiento, transporte local y vida cotidiana en el destino.',
+  'Acompañamiento durante tu estancia':
+    'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Seguimiento durante tu estancia':
+    'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Acompañamiento integral':
+    'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  // --- highlights comunes ---
+  'Escuelas internacionalmente acreditadas':
+    'Trabajamos solo con instituciones reconocidas por organismos como British Council, ACELS, Languages Canada, EL Gazette y similares.',
+  'Escuelas acreditadas internacionalmente':
+    'Trabajamos solo con instituciones reconocidas por organismos como British Council, ACELS, Languages Canada, EL Gazette y similares.',
+  'Certificación oficial al completar':
+    'Al finalizar recibes un certificado emitido por la escuela que puedes incluir en tu CV o presentar en procesos de selección.',
+  'Certificación oficial al finalizar':
+    'Al finalizar recibes un certificado emitido por la escuela que puedes incluir en tu CV o presentar en procesos de selección.',
+  'Grupos reducidos con profesores nativos':
+    'Máximo 12–15 alumnos por grupo, todos con profesores hablantes nativos del idioma que enseñan.',
+  // --- Au Pair ---
+  'Estipendio semanal garantizado':
+    'Recibes un pago semanal (stipend) directamente de la familia anfitriona, establecido por el programa y la regulación migratoria.',
+  'Alojamiento con familia anfitriona':
+    'Tienes habitación privada y comidas incluidas en el hogar de tu familia anfitriona durante toda tu estancia.',
+  'Residencia legal en el país':
+    'El programa incluye los trámites de visa y estatus migratorio legal durante toda tu estancia en el país destino.',
+  'Evaluación de perfil':
+    'Analizamos tu experiencia con niños, nivel de idioma y expectativas para encontrar el programa y la familia ideal para ti.',
+  'Documentación y solicitudes':
+    'Te acompañamos en la preparación de todos los documentos requeridos: cartas de referencia, antecedentes penales, fotografías y formularios.',
+  'Preparación para entrevista con familia':
+    'Te entrenamos para presentarte de manera exitosa ante las familias candidatas y destacar tu perfil.',
+  'Gestión de visa J-1 (USA) o Au Pair (Alemania)':
+    'Coordinamos tu proceso migratorio completo según el país elegido: visa J-1 para USA o permiso Au Pair para Alemania.',
+  'Seguimiento durante tu estancia':
+    'Te acompañamos durante todo el programa para resolver dudas y apoyarte ante cualquier situación con la familia.',
+  // --- Años Académicos ---
+  'Integración al sistema académico oficial':
+    'Estudias en una escuela o universidad local junto con estudiantes del país, cursando el mismo plan de estudios oficial.',
+  'Alojamiento seguro (familia anfitriona o residencia)':
+    'Tienes la opción de vivir con una familia anfitriona seleccionada o en residencia estudiantil, ambas opciones supervisadas.',
+  'Alojamiento seguro (familia o residencia)':
+    'Tienes la opción de vivir con una familia anfitriona seleccionada o en residencia estudiantil, ambas opciones supervisadas.',
+  // --- Estudia y Trabaja ---
+  'Permiso legal para trabajar':
+    'El programa incluye la autorización migratoria para trabajar parcialmente durante tu estancia, conforme a la regulación vigente de cada país.',
+  'Evaluación de perfil y viabilidad':
+    'Revisamos tu perfil académico, financiero y migratorio para identificar el programa y destino más viable para ti.',
+  'Diseño de estrategia de visa':
+    'Diseñamos la ruta migratoria óptima según tu perfil y el país elegido para maximizar tus posibilidades de aprobación.',
+  'Apoyo en búsqueda de empleo inicial':
+    'Te orientamos con recursos, plataformas y estrategias para encontrar trabajo una vez que llegues a tu destino.',
+  // --- Formación Corporativa ---
+  'Diagnóstico de necesidades corporativas':
+    'Realizamos un análisis detallado de las áreas de mejora del equipo para diseñar un programa alineado con los objetivos de la empresa.',
+  'Coordinación de visitas corporativas':
+    'Organizamos encuentros con empresas locales, cámaras de comercio y redes de negocios en el país destino.',
+  'Acompañamiento ejecutivo':
+    'Un consultor dedicado acompaña al grupo durante todo el programa para garantizar el logro de objetivos.',
+  // --- Idiomas en Línea ---
+  'Evaluación de nivel gratuita':
+    'Realizamos una evaluación sin costo antes de iniciar para ubicarte en el nivel correcto y recomendarte el programa más adecuado.',
+  'Recomendación personalizada de programa':
+    'Según tu nivel, objetivos y disponibilidad, te recomendamos la modalidad y horario que mejor se adapten a ti.',
+  'Preparación para exámenes internacionales':
+    'Preparación específica para IELTS, TOEFL, Cambridge (inglés), DELF/DALF (francés) o Goethe (alemán).',
+};
+
+function Tip({ children, text }: { children: React.ReactNode; text?: string }) {
+  if (!text) return <>{children}</>;
+  return (
+    <span className="relative group/tip cursor-help">
+      <span className="underline decoration-dotted decoration-slate-300">{children}</span>
+      <span
+        className="absolute bottom-full left-0 mb-2.5 z-30 w-64 rounded-xl px-3.5 py-3 text-[13px] leading-relaxed text-white shadow-2xl opacity-0 pointer-events-none group-hover/tip:opacity-100 transition-opacity duration-150"
+        style={{ background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)' }}
+      >
+        {text}
+        <span className="absolute top-full left-5 border-[5px] border-transparent" style={{ borderTopColor: '#0f172a' }} />
+      </span>
+    </span>
+  );
+}
+
 interface ProgramPageProps {
   program: Program;
   testimoniosSanity?: SanityTestimonial[];
@@ -239,7 +339,9 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-slate-600 text-[15px]">{h}</span>
+                  <span className="text-slate-600 text-[15px]">
+                    <Tip text={TOOLTIPS[h]}>{h}</Tip>
+                  </span>
                 </li>
               ))}
             </ul>
@@ -258,7 +360,9 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-                  <span className="text-slate-600 text-[15px]">{item}</span>
+                  <span className="text-slate-600 text-[15px]">
+                    <Tip text={TOOLTIPS[item]}>{item}</Tip>
+                  </span>
                 </li>
               ))}
             </ul>
