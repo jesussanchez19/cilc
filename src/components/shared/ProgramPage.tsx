@@ -8,6 +8,96 @@ import { SanityTestimonial } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import QuoteModal from './QuoteModal';
 
+const TOOLTIPS: Record<string, string> = {
+  // includes
+  'Selección de país y escuela': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Selección del país y escuela ideal': 'Te asesoramos para elegir el destino y la escuela que mejor se adaptan a tu objetivo, nivel de idioma y presupuesto.',
+  'Inscripción oficial en la escuela': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Inscripción oficial': 'Gestionamos tu registro directamente con la institución y te enviamos la carta de aceptación oficial.',
+  'Gestión de visa de estudiante': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Trámite de visa': 'Coordinamos todos los trámites migratorios y te preparamos para la entrevista consular si aplica.',
+  'Seguro médico internacional': 'Cobertura médica completa durante toda tu estancia en el extranjero, requerida por la mayoría de los destinos.',
+  'Orientación previa al viaje': 'Sesión donde revisamos contigo: trámites pendientes, llegada al aeropuerto, alojamiento, transporte local y vida cotidiana en el destino.',
+  'Acompañamiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Seguimiento durante tu estancia': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  'Acompañamiento integral': 'Seguimiento personalizado de principio a fin. Estamos disponibles para apoyarte ante cualquier situación durante tu programa.',
+  // highlights
+  'Escuelas internacionalmente acreditadas': 'Trabajamos solo con instituciones reconocidas por organismos como British Council, ACELS, Languages Canada y EL Gazette.',
+  'Escuelas acreditadas internacionalmente': 'Trabajamos solo con instituciones reconocidas por organismos como British Council, ACELS, Languages Canada y EL Gazette.',
+  'Certificación oficial al completar': 'Al finalizar recibes un certificado emitido por la escuela, reconocido internacionalmente, que puedes incluir en tu CV.',
+  'Certificación oficial al finalizar': 'Al finalizar recibes un certificado emitido por la escuela, reconocido internacionalmente, que puedes incluir en tu CV.',
+  'Grupos reducidos con profesores nativos': 'Máximo 12–15 alumnos por grupo, todos con profesores hablantes nativos del idioma que enseñan.',
+  // Au Pair
+  'Estipendio semanal garantizado': 'Recibes un pago semanal (stipend) directamente de la familia anfitriona, establecido por el programa y la regulación migratoria.',
+  'Alojamiento con familia anfitriona': 'Tienes habitación privada y comidas incluidas en el hogar de tu familia anfitriona durante toda tu estancia.',
+  'Residencia legal en el país': 'El programa incluye los trámites de visa y estatus migratorio legal durante toda tu estancia en el país destino.',
+  'Evaluación de perfil': 'Analizamos tu experiencia con niños, nivel de idioma y expectativas para encontrar el programa y la familia ideal para ti.',
+  'Documentación y solicitudes': 'Te acompañamos en la preparación de todos los documentos requeridos: cartas de referencia, antecedentes penales, fotografías y formularios.',
+  'Preparación para entrevista con familia': 'Te entrenamos para presentarte de manera exitosa ante las familias candidatas y destacar tu perfil.',
+  'Gestión de visa J-1 (USA) o Au Pair (Alemania)': 'Coordinamos tu proceso migratorio completo según el país elegido: visa J-1 para USA o permiso Au Pair para Alemania.',
+  // Estudia y Trabaja
+  'Permiso legal para trabajar': 'El programa incluye la autorización migratoria para trabajar parcialmente durante tu estancia, conforme a la regulación vigente de cada país.',
+  'Evaluación de perfil y viabilidad': 'Revisamos tu perfil académico, financiero y migratorio para identificar el programa y destino más viable para ti.',
+  'Diseño de estrategia de visa': 'Diseñamos la ruta migratoria óptima según tu perfil y el país elegido para maximizar tus posibilidades de aprobación.',
+  'Apoyo en búsqueda de empleo inicial': 'Te orientamos con recursos, plataformas y estrategias para encontrar trabajo una vez que llegues a tu destino.',
+  // Formación Corporativa
+  'Diagnóstico de necesidades corporativas': 'Realizamos un análisis detallado de las áreas de mejora del equipo para diseñar un programa alineado con los objetivos de la empresa.',
+  'Coordinación de visitas corporativas': 'Organizamos encuentros con empresas locales, cámaras de comercio y redes de negocios en el país destino.',
+  'Acompañamiento ejecutivo': 'Un consultor dedicado acompaña al grupo durante todo el programa para garantizar el logro de objetivos.',
+  // Idiomas en Línea
+  'Evaluación de nivel gratuita': 'Realizamos una evaluación sin costo antes de iniciar para ubicarte en el nivel correcto y recomendarte el programa más adecuado.',
+  'Recomendación personalizada de programa': 'Según tu nivel, objetivos y disponibilidad, te recomendamos la modalidad y horario que mejor se adapten a ti.',
+  'Preparación para exámenes internacionales': 'Preparación específica para IELTS, TOEFL, Cambridge (inglés), DELF/DALF (francés) o Goethe (alemán).',
+};
+
+function Tip({ children, text }: { children: React.ReactNode; text?: string }) {
+  const [show, setShow] = useState(false);
+  if (!text) return <>{children}</>;
+  return (
+    <span
+      className="relative"
+      style={{ display: 'inline', cursor: 'help' }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span style={{ textDecoration: 'underline', textDecorationStyle: 'dotted', textDecorationColor: '#94a3b8' }}>
+        {children}
+      </span>
+      {show && (
+        <span
+          style={{
+            position: 'absolute',
+            bottom: 'calc(100% + 10px)',
+            left: 0,
+            width: '260px',
+            background: '#0f172a',
+            border: '1px solid rgba(255,255,255,0.10)',
+            borderRadius: '12px',
+            padding: '10px 14px',
+            fontSize: '13px',
+            lineHeight: '1.5',
+            color: '#fff',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.35)',
+            pointerEvents: 'none',
+            zIndex: 50,
+          }}
+        >
+          {text}
+          <span style={{
+            position: 'absolute',
+            top: '100%',
+            left: '18px',
+            width: 0,
+            height: 0,
+            borderLeft: '6px solid transparent',
+            borderRight: '6px solid transparent',
+            borderTop: '6px solid #0f172a',
+          }} />
+        </span>
+      )}
+    </span>
+  );
+}
 
 interface ProgramPageProps {
   program: Program;
@@ -240,7 +330,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </span>
-                  <span className="text-slate-600 text-[15px]">{h}</span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={TOOLTIPS[h]}>{h}</Tip></span>
                 </li>
               ))}
             </ul>
@@ -259,7 +349,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                   </svg>
-                  <span className="text-slate-600 text-[15px]">{item}</span>
+                  <span className="text-slate-600 text-[15px]"><Tip text={TOOLTIPS[item]}>{item}</Tip></span>
                 </li>
               ))}
             </ul>
