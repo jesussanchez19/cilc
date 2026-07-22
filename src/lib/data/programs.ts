@@ -20,6 +20,7 @@ export interface Program {
   idealFor: string;
   whatsappMessage: string;
   sections?: ProgramSection[];
+  heroImageUrl?: string;
 }
 
 export const programs: Program[] = [

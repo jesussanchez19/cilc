@@ -278,7 +278,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
     <div>
       {/* HERO */}
       <div className="relative min-h-160 flex items-end overflow-hidden">
-        <div className={`absolute inset-0 bg-cover ${program.slug === 'anos-academicos' ? 'bg-top' : 'bg-center'}`} style={{ backgroundImage: `url('${imgs.hero}')` }} />
+        <div className={`absolute inset-0 bg-cover ${program.slug === 'anos-academicos' ? 'bg-top' : 'bg-center'}`} style={{ backgroundImage: `url('${program.heroImageUrl ?? imgs.hero}')` }} />
         <div className="absolute inset-0 bg-linear-to-t from-[#0f172a]/95 via-[#0f172a]/55 to-[#0f172a]/20" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-48 w-full">

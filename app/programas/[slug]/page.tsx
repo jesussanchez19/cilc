@@ -11,6 +11,7 @@ import {
   getTestimoniosPorPrograma,
   getDestinosPorPrograma,
 } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -62,7 +63,12 @@ export default async function ProgramaPage({ params }: Props) {
     includes:        sanity?.queIncluye       ?? base?.includes        ?? [],
     idealFor:        sanity?.paraQuien        ?? base?.idealFor        ?? '',
     whatsappMessage: sanity?.whatsappMessage  ?? base?.whatsappMessage ?? '',
-    sections:        base?.sections,
+    heroImageUrl:    sanity?.imagenHero?.asset?._ref
+                       ? urlFor(sanity.imagenHero).width(1920).quality(85).url()
+                       : undefined,
+    sections:        sanity?.secciones
+                       ? sanity.secciones.map((s) => ({ title: s.titulo, description: s.descripcion, items: s.items }))
+                       : base?.sections,
   };
 
   return (

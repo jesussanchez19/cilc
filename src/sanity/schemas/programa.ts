@@ -15,6 +15,7 @@ export const programaSchema = defineType({
   type: 'document',
   groups: [
     { name: 'identidad', title: 'Identidad' },
+    { name: 'media',     title: 'Imagen'    },
     { name: 'contenido', title: 'Contenido' },
   ],
   fields: [
@@ -54,6 +55,14 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'identidad',
       options: { list: COLORES },
+    }),
+    defineField({
+      name: 'imagenHero',
+      title: 'Imagen principal (Hero)',
+      type: 'image',
+      group: 'media',
+      description: 'Imagen de fondo del encabezado de la página del programa.',
+      options: { hotspot: true },
     }),
     defineField({
       name: 'descripcion',
@@ -104,6 +113,29 @@ export const programaSchema = defineType({
       group: 'contenido',
       rows: 2,
       placeholder: 'Hola, me interesa el programa de...',
+    }),
+    defineField({
+      name: 'secciones',
+      title: 'Modalidades / Secciones',
+      type: 'array',
+      group: 'contenido',
+      description: 'Tarjetas de modalidades que aparecen en la página (ej: Inglés en UK, Au Pair en USA, etc.)',
+      of: [
+        {
+          type: 'object',
+          name: 'seccion',
+          title: 'Sección',
+          fields: [
+            defineField({ name: 'titulo',      title: 'Título',       type: 'string' }),
+            defineField({ name: 'descripcion', title: 'Descripción',  type: 'text', rows: 2 }),
+            defineField({ name: 'items',       title: 'Puntos',       type: 'array', of: [{ type: 'string' }] }),
+          ],
+          preview: {
+            select: { title: 'titulo' },
+            prepare({ title }: { title: string }) { return { title: title ?? 'Sin título' }; },
+          },
+        },
+      ],
     }),
   ],
   preview: {
