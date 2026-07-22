@@ -178,6 +178,48 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           ))}
         </div>
 
+        {/* Extra sections — per-program rich content */}
+        {program.sections && program.sections.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
+              Modalidades disponibles
+            </h2>
+            <div ref={sect.ref} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {program.sections.map((s: ProgramSection, i: number) => (
+                <div
+                  key={s.title}
+                  className={`rounded-2xl p-6 reveal-scale ${sect.visible ? 'is-visible' : ''}`}
+                  style={{
+                    transitionDelay: `${i * 70}ms`,
+                    background: 'var(--surface-2)',
+                    border: '1px solid rgba(15,23,42,0.07)',
+                  }}
+                >
+                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg text-xs font-bold mb-3 ${colors.light} ${colors.text}`}>
+                    {i + 1 < 10 ? `0${i + 1}` : i + 1}
+                  </div>
+                  <h3 className="text-[15px] font-extrabold text-slate-900 mb-1 leading-snug">
+                    {s.title}
+                  </h3>
+                  {s.description && (
+                    <p className="text-slate-500 text-xs mb-3 leading-relaxed">{s.description}</p>
+                  )}
+                  {s.items && s.items.length > 0 && (
+                    <ul className="space-y-1.5 mt-2">
+                      {s.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-slate-600 text-sm leading-snug">
+                          <span className={`shrink-0 mt-1.5 w-1 h-1 rounded-full ${colors.bg}`} />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Highlights + Includes — slide from left / right */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           <div ref={hl.ref}>
@@ -270,41 +312,6 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           </h2>
           <p className="text-slate-600 text-[15px] leading-relaxed">{program.idealFor}</p>
         </div>
-
-        {/* Extra sections — per-program rich content */}
-        {program.sections && program.sections.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-2xl font-extrabold text-slate-900 mb-8" style={{ letterSpacing: '-0.02em' }}>
-              Modalidades y Destinos
-            </h2>
-            <div ref={sect.ref} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {program.sections.map((s: ProgramSection, i: number) => (
-                <div
-                  key={s.title}
-                  className={`premium-card p-6 reveal-scale ${sect.visible ? 'is-visible' : ''}`}
-                  style={{ transitionDelay: `${i * 80}ms` }}
-                >
-                  <h3 className={`text-base font-extrabold ${colors.text} mb-1`} style={{ letterSpacing: '-0.01em' }}>
-                    {s.title}
-                  </h3>
-                  {s.description && (
-                    <p className="text-slate-500 text-sm mb-3">{s.description}</p>
-                  )}
-                  {s.items && s.items.length > 0 && (
-                    <ul className="space-y-1.5">
-                      {s.items.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-slate-600 text-sm">
-                          <span className={`shrink-0 mt-1 w-1.5 h-1.5 rounded-full ${colors.bg}`} />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Testimonials — blur in with stagger */}
         {testimoniosSanity.length > 0 && (
