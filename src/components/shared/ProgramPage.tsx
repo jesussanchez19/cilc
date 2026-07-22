@@ -365,7 +365,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               Puntos clave
             </h2>
             <ul className="space-y-3">
-              {program.highlights.map((h, i) => (
+              {program.highlights.filter((h) => TOOLTIPS[h]).map((h, i) => (
                 <li
                   key={h}
                   className={`flex items-start gap-3 reveal-left ${hl.visible ? 'is-visible' : ''}`}
@@ -387,7 +387,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               ¿Qué incluye?
             </h2>
             <ul className="space-y-3">
-              {program.includes.map((item, i) => (
+              {program.includes.filter((item) => TOOLTIPS[item]).map((item, i) => (
                 <li
                   key={item}
                   className={`flex items-start gap-3 reveal-right ${incl.visible ? 'is-visible' : ''}`}
