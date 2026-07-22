@@ -221,17 +221,6 @@ export async function getProgramaData(slug: string): Promise<SanityPrograma | nu
   }
 }
 
-export async function getAllProgramaSlugs(): Promise<string[]> {
-  try {
-    const results = await client.fetch<{ current: string }[]>(
-      `*[_type == "programa" && defined(programaId.current)].programaId`,
-    );
-    return results.map((r) => r.current).filter(Boolean);
-  } catch {
-    return [];
-  }
-}
-
 // ── Miembros del equipo ───────────────────────────────────────────────────────
 
 export interface SanityMember {

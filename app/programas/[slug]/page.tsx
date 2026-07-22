@@ -1,4 +1,5 @@
 export const revalidate = 60;
+export const dynamicParams = false;
 
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -7,7 +8,6 @@ import { programs } from '@/lib/data/programs';
 import { programSchema, breadcrumbSchema } from '@/lib/seo/schemas';
 import {
   getProgramaData,
-  getAllProgramaSlugs,
   getTestimoniosPorPrograma,
   getDestinosPorPrograma,
 } from '@/lib/sanity/queries';
@@ -16,11 +16,8 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  const staticSlugs = programs.map((p) => p.slug);
-  const sanitySlugs = await getAllProgramaSlugs();
-  const all = new Set([...staticSlugs, ...sanitySlugs]);
-  return Array.from(all).map((slug) => ({ slug }));
+export function generateStaticParams() {
+  return programs.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
