@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import PasswordInput from '@/components/shared/PasswordInput';
 
-export default function StudioResetPage() {
-  const searchParams           = useSearchParams();
-  const token                  = searchParams.get('token') ?? '';
+export default function ResetForm({ token }: { token: string }) {
   const router                 = useRouter();
   const [password, setPassword]   = useState('');
   const [confirm,  setConfirm]    = useState('');
@@ -17,13 +16,26 @@ export default function StudioResetPage() {
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
+  const tooShort = password.length < 10;
+  const mismatch = password !== confirm;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password !== confirm) {
+
+    // Mismo mínimo que exige el servidor en /api/studio-auth/reset. Se valida
+    // aquí para dar respuesta inmediata, no como sustituto: el servidor
+    // vuelve a comprobarlo porque el cliente es manipulable.
+    if (tooShort) {
+      setStatus('error');
+      setMessage('La contraseña debe tener al menos 10 caracteres.');
+      return;
+    }
+    if (mismatch) {
       setStatus('error');
       setMessage('Las contraseñas no coinciden.');
       return;
     }
+
     setLoading(true);
     setStatus('idle');
 
@@ -45,14 +57,8 @@ export default function StudioResetPage() {
     setLoading(false);
   };
 
-  if (!token) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--dark)' }}>
-        <p className="text-slate-400 text-sm">Enlace inválido.</p>
-      </div>
-    );
-  }
-
+  // La validez del token ya la comprobó el server component de page.tsx: si
+  // llegamos aquí, el enlace es bueno.
   return (
     <div className="min-h-screen flex items-center justify-center px-4" style={{ background: 'var(--dark)' }}>
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -85,32 +91,45 @@ export default function StudioResetPage() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3">
-              <input
+              <PasswordInput
                 ref={inputRef}
-                type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(v) => { setPassword(v); if (status === 'error') setStatus('idle'); }}
                 placeholder="Nueva contraseña"
-                required
-                minLength={6}
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-slate-500 outline-none"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
+                autoComplete="new-password"
+                invalid={status === 'error' && tooShort}
+                disabled={loading}
               />
-              <input
-                type="password"
+              <PasswordInput
                 value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
+                onChange={(v) => { setConfirm(v); if (status === 'error') setStatus('idle'); }}
                 placeholder="Confirmar contraseña"
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-slate-500 outline-none"
-                style={{ background: 'rgba(255,255,255,0.06)', border: status === 'error' ? '1px solid rgba(227,30,36,0.6)' : '1px solid rgba(255,255,255,0.10)' }}
+                autoComplete="new-password"
+                invalid={status === 'error' && !tooShort}
+                disabled={loading}
               />
+
+              {/* Requisitos visibles mientras escribe, en vez de descubrirlos
+                  al enviar. El servidor exige 10 caracteres. */}
+              {password.length > 0 && (
+                <ul className="text-[11px] space-y-1 px-1">
+                  <li style={{ color: tooShort ? '#94a3b8' : '#4ade80' }}>
+                    {tooShort ? '○' : '✓'} Al menos 10 caracteres
+                  </li>
+                  {confirm.length > 0 && (
+                    <li style={{ color: mismatch ? '#94a3b8' : '#4ade80' }}>
+                      {mismatch ? '○' : '✓'} Las dos coinciden
+                    </li>
+                  )}
+                </ul>
+              )}
+
               {status === 'error' && (
                 <p className="text-xs" style={{ color: '#E31E24' }}>{message}</p>
               )}
               <button
                 type="submit"
-                disabled={loading || !password || !confirm}
+                disabled={loading || tooShort || mismatch}
                 className="w-full py-3 rounded-xl text-sm font-semibold text-white transition-all duration-200 disabled:opacity-50 mt-1"
                 style={{ background: '#1B67E8', boxShadow: '0 4px 16px rgba(27,103,232,0.3)' }}
               >
