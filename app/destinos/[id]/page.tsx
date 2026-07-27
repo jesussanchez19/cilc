@@ -56,31 +56,55 @@ export default async function CountryPage({ params }: PageProps) {
 
   if (!hardcoded && !sanity) notFound();
 
-  const nombre        = sanity?.nombre        ?? hardcoded?.name             ?? '';
-  const codigoISO     = sanity?.codigoISO     ?? hardcoded?.code             ?? '';
-  const bandera       = isoToFlag(codigoISO) || sanity?.bandera || hardcoded?.flag || '';
-  const descripcion   = sanity?.descripcion   ?? hardcoded?.description      ?? '';
-  const region        = sanity?.region        ?? hardcoded?.region           ?? '';
-  const idioma        = sanity?.idioma        ?? hardcoded?.language         ?? '';
-  const clima         = sanity?.clima         ?? hardcoded?.climate          ?? '';
-  const visa          = sanity?.visa          ?? hardcoded?.visa             ?? '';
-  const visaNota      = sanity?.visaNota      ?? hardcoded?.visaNote         ?? '';
-  const costoVida     = sanity?.costoVida     ?? hardcoded?.costOfLiving     ?? 0;
-  const costoVidaNota = sanity?.costoVidaNota ?? hardcoded?.costOfLivingNote ?? '';
-  const universidades = sanity?.universidades ?? hardcoded?.universities     ?? 0;
-  const estudiantes   = sanity?.estudiantes   ?? hardcoded?.students         ?? 0;
+  /**
+   * Cuando el destino existe en Sanity, Sanity manda en TODOS sus campos.
+   *
+   * Antes cada campo caía por separado al dato estático de countries.ts
+   * (`sanity?.clima ?? hardcoded?.climate`). Como los 16 destinos están en las
+   * dos fuentes, vaciar un campo en el Studio no tenía ningún efecto visible:
+   * la página seguía pintando el valor viejo del archivo. El respaldo estático
+   * se conserva solo para un destino que aún no esté migrado al CMS.
+   */
+  const usarSanity = Boolean(sanity);
+
+  const nombre        = (usarSanity ? sanity?.nombre        : hardcoded?.name)             ?? '';
+  const codigoISO     = (usarSanity ? sanity?.codigoISO     : hardcoded?.code)             ?? '';
+  const descripcion   = (usarSanity ? sanity?.descripcion   : hardcoded?.description)      ?? '';
+  const region        = (usarSanity ? sanity?.region        : hardcoded?.region)            ?? '';
+  const idioma        = (usarSanity ? sanity?.idioma        : hardcoded?.language)          ?? '';
+  const clima         = (usarSanity ? sanity?.clima         : hardcoded?.climate)           ?? '';
+  const visa          = (usarSanity ? sanity?.visa          : hardcoded?.visa)              ?? '';
+  const visaNota      = (usarSanity ? sanity?.visaNota      : hardcoded?.visaNote)          ?? '';
+  const costoVida     = (usarSanity ? sanity?.costoVida     : hardcoded?.costOfLiving)      ?? 0;
+  const costoVidaNota = (usarSanity ? sanity?.costoVidaNota : hardcoded?.costOfLivingNote)  ?? '';
+  const universidades = (usarSanity ? sanity?.universidades : hardcoded?.universities)      ?? 0;
+  const estudiantes   = (usarSanity ? sanity?.estudiantes   : hardcoded?.students)          ?? 0;
   const programasDisponibles = sanity?.programas ?? [];
 
-  const imagenUrl = sanity?.imagen
-    ? urlFor(sanity.imagen).width(1600).height(640).fit('crop').url()
+  const bandera = isoToFlag(codigoISO) || (usarSanity ? sanity?.bandera : hardcoded?.flag) || '';
+
+  const imagenUrl = usarSanity
+    ? (sanity?.imagen ? urlFor(sanity.imagen).width(1600).height(640).fit('crop').url() : null)
     : hardcoded?.image ?? null;
 
+  // Solo entran las que tienen dato: una tarjeta con "—" no informa de nada y
+  // hace parecer incompleta la ficha del destino.
   const stats = [
-    { label: 'Universidades',    value: universidades ? universidades.toLocaleString() : '—',                          icon: '🎓', accent: '#1B67E8' },
-    { label: 'Costo / mes',      value: costoVida ? `$${costoVida.toLocaleString()} USD` : '—',                        icon: '💰', accent: '#10b981' },
-    { label: 'Est. internac.',   value: estudiantes ? `${(estudiantes / 1000).toFixed(0)}K+` : '—',                   icon: '🌍', accent: '#8b5cf6' },
-    { label: 'Idioma principal', value: idioma || '—',                                                                  icon: '💬', accent: '#f59e0b' },
-  ];
+    universidades ? { label: 'Universidades',    value: universidades.toLocaleString(),            icon: '🎓', accent: '#1B67E8' } : null,
+    costoVida     ? { label: 'Costo / mes',      value: `$${costoVida.toLocaleString()} USD`,      icon: '💰', accent: '#10b981' } : null,
+    estudiantes   ? { label: 'Est. internac.',   value: `${(estudiantes / 1000).toFixed(0)}K+`,    icon: '🌍', accent: '#8b5cf6' } : null,
+    idioma        ? { label: 'Idioma principal', value: idioma,                                    icon: '💬', accent: '#f59e0b' } : null,
+  ].filter((s): s is NonNullable<typeof s> => s !== null);
+
+  // Filas de "Información General". Se calculan aquí para poder ocultar la
+  // tarjeta completa cuando no queda ninguna, en vez de dejar el encabezado
+  // solo sobre un recuadro vacío.
+  const infoGeneral = [
+    { label: 'Región', value: region,    icon: '📍' },
+    { label: 'Clima',  value: clima,     icon: '🌤️' },
+    { label: 'Idioma', value: idioma,    icon: '💬' },
+    { label: 'Código', value: codigoISO, icon: '🏳️' },
+  ].filter((r) => r.value);
 
   return (
     <div style={{ background: 'var(--surface-2)' }}>
@@ -111,16 +135,18 @@ export default async function CountryPage({ params }: PageProps) {
               Todos los destinos
             </Link>
           </AnimateIn>
-          <AnimateIn animation="up" delay={0}>
-            <div className="flex items-center gap-3 mb-4">
-              <span
-                className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full"
-                style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}
-              >
-                {region}
-              </span>
-            </div>
-          </AnimateIn>
+          {region && (
+            <AnimateIn animation="up" delay={0}>
+              <div className="flex items-center gap-3 mb-4">
+                <span
+                  className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full"
+                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', color: 'rgba(255,255,255,0.7)' }}
+                >
+                  {region}
+                </span>
+              </div>
+            </AnimateIn>
+          )}
           <AnimateIn animation="up" delay={80}>
             <div className="flex items-center gap-5 mb-5">
               {codigoISO && (
@@ -140,9 +166,11 @@ export default async function CountryPage({ params }: PageProps) {
               </h1>
             </div>
           </AnimateIn>
-          <AnimateIn animation="up" delay={160}>
-            <p className="text-lg text-white/75 max-w-2xl mb-10 leading-relaxed">{descripcion}</p>
-          </AnimateIn>
+          {descripcion && (
+            <AnimateIn animation="up" delay={160}>
+              <p className="text-lg text-white/75 max-w-2xl mb-10 leading-relaxed">{descripcion}</p>
+            </AnimateIn>
+          )}
           <AnimateIn animation="up" delay={220}>
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
@@ -168,7 +196,9 @@ export default async function CountryPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* ── Stats ── */}
+      {/* ── Stats ── Sin ninguna estadística no se pinta la franja: dejaría
+           una banda de márgenes vacía flotando sobre el hero. */}
+      {stats.length > 0 && (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10 mb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {stats.map(({ label, value, icon, accent }, i) => (
@@ -185,6 +215,7 @@ export default async function CountryPage({ params }: PageProps) {
           ))}
         </div>
       </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
 
@@ -236,6 +267,7 @@ export default async function CountryPage({ params }: PageProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
 
             {/* Info general */}
+            {infoGeneral.length > 0 && (
             <AnimateIn animation="left">
               <div className="premium-card p-8 h-full">
                 <div className="flex items-center gap-3 mb-6">
@@ -243,12 +275,7 @@ export default async function CountryPage({ params }: PageProps) {
                   <h2 className="text-xl font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>Información General</h2>
                 </div>
                 <div className="space-y-3">
-                  {[
-                    { label: 'Región', value: region, icon: '📍' },
-                    { label: 'Clima',  value: clima,  icon: '🌤️' },
-                    { label: 'Idioma', value: idioma, icon: '💬' },
-                    { label: 'Código', value: codigoISO, icon: '🏳️' },
-                  ].filter((r) => r.value).map(({ label, value, icon }) => (
+                  {infoGeneral.map(({ label, value, icon }) => (
                     <div key={label} className="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
                       <span className="flex items-center gap-2 text-slate-500 text-sm font-semibold">
                         <span>{icon}</span>{label}
@@ -259,6 +286,7 @@ export default async function CountryPage({ params }: PageProps) {
                 </div>
               </div>
             </AnimateIn>
+            )}
 
             {/* Visa */}
             {visa && (

@@ -9,6 +9,15 @@ const COLORES = [
   { title: 'Teal',     value: 'teal'   },
 ];
 
+/**
+ * Los límites de longitud están puestos según lo que soporta el diseño de la
+ * página de programa: un título de 200 caracteres no rompe nada, pero desborda
+ * el hero y se ve mal. Es más barato avisar aquí que descubrirlo en producción.
+ *
+ * `imagenHero` se queda opcional a propósito: ninguno de los programas
+ * publicados la tiene, así que exigirla marcaría los seis como inválidos.
+ * Lleva un aviso no bloqueante para que se note que falta.
+ */
 export const programaSchema = defineType({
   name: 'programa',
   title: 'Programas',
@@ -26,7 +35,7 @@ export const programaSchema = defineType({
       group: 'identidad',
       description: 'Identificador único para la URL. Ej: "idiomas", "nuevo-programa"',
       options: { source: 'titulo', maxLength: 60 },
-      validation: (R) => R.required(),
+      validation: (R) => R.required().error('Sin slug la página del programa no existe'),
     }),
     defineField({
       name: 'titulo',
@@ -34,6 +43,7 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'identidad',
       placeholder: 'Ej: Idiomas en el Extranjero',
+      validation: (R) => R.required().max(80),
     }),
     defineField({
       name: 'subtitulo',
@@ -41,6 +51,7 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'identidad',
       placeholder: 'Ej: Aprende un idioma en su país de origen',
+      validation: (R) => R.max(160),
     }),
     defineField({
       name: 'icono',
@@ -48,6 +59,9 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'identidad',
       placeholder: 'Ej: 🗣️',
+      // Un emoji puede ocupar varios caracteres (piel, banderas, ZWJ), de ahí
+      // el margen de 8 en vez de 1 o 2.
+      validation: (R) => R.max(8).warning('Se espera un solo emoji'),
     }),
     defineField({
       name: 'color',
@@ -55,6 +69,7 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'identidad',
       options: { list: COLORES },
+      validation: (R) => R.required(),
     }),
     defineField({
       name: 'imagenHero',
@@ -63,6 +78,7 @@ export const programaSchema = defineType({
       group: 'media',
       description: 'Imagen de fondo del encabezado de la página del programa.',
       options: { hotspot: true },
+      validation: (R) => R.warning('Sin imagen, el encabezado se ve plano'),
     }),
     defineField({
       name: 'descripcion',
@@ -70,6 +86,7 @@ export const programaSchema = defineType({
       type: 'text',
       group: 'contenido',
       rows: 3,
+      validation: (R) => R.required().max(500),
     }),
     defineField({
       name: 'duracion',
@@ -77,6 +94,7 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'contenido',
       placeholder: 'Ej: Desde 2 semanas',
+      validation: (R) => R.max(60),
     }),
     defineField({
       name: 'rangoEdad',
@@ -84,6 +102,7 @@ export const programaSchema = defineType({
       type: 'string',
       group: 'contenido',
       placeholder: 'Ej: 12–60 años',
+      validation: (R) => R.max(40),
     }),
     defineField({
       name: 'puntosClave',
@@ -94,8 +113,20 @@ export const programaSchema = defineType({
         type: 'object',
         name: 'puntoClave',
         fields: [
-          defineField({ name: 'texto',   title: 'Punto',               type: 'string' }),
-          defineField({ name: 'tooltip', title: 'Descripción (tooltip)', type: 'text', rows: 2 }),
+          defineField({
+            name: 'texto',
+            title: 'Punto',
+            type: 'string',
+            // Sin texto la lista pinta una viñeta vacía en la página.
+            validation: (R) => R.required().max(120),
+          }),
+          defineField({
+            name: 'tooltip',
+            title: 'Descripción (tooltip)',
+            type: 'text',
+            rows: 2,
+            validation: (R) => R.max(300),
+          }),
         ],
         preview: {
           select: { title: 'texto' },
@@ -112,8 +143,19 @@ export const programaSchema = defineType({
         type: 'object',
         name: 'queIncluyeItem',
         fields: [
-          defineField({ name: 'texto',   title: 'Ítem',                type: 'string' }),
-          defineField({ name: 'tooltip', title: 'Descripción (tooltip)', type: 'text', rows: 2 }),
+          defineField({
+            name: 'texto',
+            title: 'Ítem',
+            type: 'string',
+            validation: (R) => R.required().max(120),
+          }),
+          defineField({
+            name: 'tooltip',
+            title: 'Descripción (tooltip)',
+            type: 'text',
+            rows: 2,
+            validation: (R) => R.max(300),
+          }),
         ],
         preview: {
           select: { title: 'texto' },
@@ -127,6 +169,7 @@ export const programaSchema = defineType({
       type: 'text',
       group: 'contenido',
       rows: 2,
+      validation: (R) => R.max(500),
     }),
     defineField({
       name: 'whatsappMessage',
@@ -135,6 +178,8 @@ export const programaSchema = defineType({
       group: 'contenido',
       rows: 2,
       placeholder: 'Hola, me interesa el programa de...',
+      // Va en la URL de wa.me, y los mensajes muy largos se truncan al abrir.
+      validation: (R) => R.max(300),
     }),
     defineField({
       name: 'secciones',
@@ -148,9 +193,25 @@ export const programaSchema = defineType({
           name: 'seccion',
           title: 'Sección',
           fields: [
-            defineField({ name: 'titulo',      title: 'Título',       type: 'string' }),
-            defineField({ name: 'descripcion', title: 'Descripción',  type: 'text', rows: 2 }),
-            defineField({ name: 'items',       title: 'Puntos',       type: 'array', of: [{ type: 'string' }] }),
+            defineField({
+              name: 'titulo',
+              title: 'Título',
+              type: 'string',
+              validation: (R) => R.required().max(100),
+            }),
+            defineField({
+              name: 'descripcion',
+              title: 'Descripción',
+              type: 'text',
+              rows: 2,
+              validation: (R) => R.max(400),
+            }),
+            defineField({
+              name: 'items',
+              title: 'Puntos',
+              type: 'array',
+              of: [{ type: 'string', validation: (R) => R.max(150) }],
+            }),
           ],
           preview: {
             select: { title: 'titulo' },

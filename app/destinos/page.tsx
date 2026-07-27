@@ -1,5 +1,6 @@
 import { countries } from '@/lib/data/countries';
-import CountryGrid from '@/components/shared/CountryGrid';
+import { getDestinosListado } from '@/lib/sanity/queries';
+import CountryGrid, { type CountryCard } from '@/components/shared/CountryGrid';
 import DestinosStats from '@/components/destinos/DestinosStats';
 import AnimateIn from '@/components/shared/AnimateIn';
 
@@ -8,7 +9,45 @@ export const metadata = {
   description: 'Explora los países destino para estudiar en el extranjero con CILC.',
 };
 
-export default function DestinosPage() {
+// El listado depende de Sanity, así que no puede quedarse cacheado estático.
+export const revalidate = 60;
+
+/** Se usa si un destino no tiene imagen ni en Sanity ni en el archivo. */
+const IMAGEN_POR_DEFECTO = '/images/canada.jpg';
+
+/**
+ * Sanity es la LISTA de destinos, no solo la fuente de sus campos.
+ *
+ * Antes esto recorría `countries.ts` y buscaba el equivalente en Sanity. El
+ * efecto era que un destino creado en el Studio tenía su página en
+ * /destinos/[id] pero no aparecía en el listado: nadie podía llegar a él
+ * navegando. Ahora se recorre lo que devuelve Sanity, y el archivo estático
+ * solo aporta valores de respaldo campo a campo para los que existen en ambos.
+ *
+ * Si Sanity no responde se cae al listado estático completo, para no dejar la
+ * página vacía por una incidencia del CMS.
+ */
+export default async function DestinosPage() {
+  const desdeSanity = await getDestinosListado();
+
+  const destinos: CountryCard[] = desdeSanity.length > 0
+    ? desdeSanity.map((s) => {
+        const est = countries.find((c) => c.id === s.countryId);
+        return {
+          id:           s.countryId,
+          name:         s.nombre    ?? est?.name     ?? s.countryId,
+          code:         s.codigoISO ?? est?.code     ?? '',
+          region:       s.region    ?? est?.region   ?? '',
+          language:     s.idioma    ?? est?.language ?? '',
+          image:        s.imagenUrl ?? est?.image    ?? IMAGEN_POR_DEFECTO,
+          // Sin dato en Sanity van a 0, y la rejilla trata el 0 como
+          // "sin dato" y no lo pinta.
+          universities: s.universidades ?? 0,
+          costOfLiving: s.costoVida     ?? 0,
+        };
+      })
+    : countries;
+
   return (
     <div>
 
@@ -46,7 +85,7 @@ export default function DestinosPage() {
       {/* ── Grid con filtros ── */}
       <section className="py-16 min-h-screen" style={{ background: 'var(--surface-2)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <CountryGrid countries={countries} columns={3} />
+          <CountryGrid countries={destinos} columns={3} />
         </div>
       </section>
 

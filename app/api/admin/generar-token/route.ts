@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { writeClient } from '@/lib/sanity/writeClient';
 
 export async function POST(req: NextRequest) {
@@ -9,7 +10,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No autorizado.' }, { status: 401 });
   }
 
-  const { label } = await req.json().catch(() => ({ label: '' }));
+  // `label` se guardaba tal cual en Sanity, sin ningún límite de longitud.
+  const body = await req.json().catch(() => ({}));
+  const parsed = z
+    .object({ label: z.string().trim().max(120).optional() })
+    .safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'Etiqueta no válida.' }, { status: 400 });
+  }
+  const { label } = parsed.data;
 
   const token   = crypto.randomUUID();
   const host    = req.headers.get('host') ?? 'localhost:3000';

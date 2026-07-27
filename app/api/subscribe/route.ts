@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { subscribeSchema } from '@/lib/validations/subscribe';
 import { subscribeAdminHtml } from '@/lib/email/templates';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -44,9 +45,13 @@ export async function POST(req: NextRequest) {
 
   const { email } = result.data;
 
+  // Antes iba a un correo personal escrito a mano en el código, así que no se
+  // podía cambiar sin tocar el repositorio.
+  const { emailAdmin } = await getContactInfo();
+
   const { error } = await resend.emails.send({
     from: 'CILC Web <onboarding@resend.dev>',
-    to: 'jesussanchez19062002@gmail.com',
+    to: emailAdmin,
     subject: `[CILC Newsletter] Nueva suscripción: ${email}`,
     html: subscribeAdminHtml(email),
   });

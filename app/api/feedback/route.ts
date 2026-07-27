@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -47,9 +48,12 @@ export async function POST(req: NextRequest) {
   const { rating, comment, page } = result.data;
   const stars = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
 
+  // Antes iba a un correo personal escrito a mano en el código.
+  const { emailAdmin } = await getContactInfo();
+
   const { error } = await resend.emails.send({
     from: 'CILC Web <onboarding@resend.dev>',
-    to: 'jesussanchez19062002@gmail.com',
+    to: emailAdmin,
     subject: `[CILC Feedback] ${stars} — ${page ?? 'Página desconocida'}`,
     html: `
       <h2>Nuevo feedback de usuario</h2>

@@ -5,8 +5,18 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Country } from '@/lib/types';
 
+/**
+ * Solo los campos que pinta la rejilla. Así puede recibir tanto un `Country`
+ * completo del archivo estático como uno construido desde Sanity, sin obligar
+ * a rellenar campos que aquí no se usan (visa, clima, desglose de costos…).
+ */
+export type CountryCard = Pick<
+  Country,
+  'id' | 'name' | 'code' | 'image' | 'region' | 'language' | 'universities' | 'costOfLiving'
+>;
+
 interface CountryGridProps {
-  countries: Country[];
+  countries: CountryCard[];
   columns?: 2 | 3 | 4;
 }
 
@@ -15,8 +25,8 @@ export default function CountryGrid({ countries, columns = 3 }: CountryGridProps
   const [langFilter, setLangFilter] = useState('');
   const [gridVisible, setGridVisible] = useState(false);
 
-  const regions = useMemo(() => [...new Set(countries.map((c) => c.region))].sort(), [countries]);
-  const languages = useMemo(() => [...new Set(countries.map((c) => c.language))].sort(), [countries]);
+  const regions = useMemo(() => [...new Set(countries.map((c) => c.region).filter(Boolean))].sort(), [countries]);
+  const languages = useMemo(() => [...new Set(countries.map((c) => c.language).filter(Boolean))].sort(), [countries]);
 
   const filtered = useMemo(() =>
     countries.filter((c) => {
@@ -132,19 +142,23 @@ export default function CountryGrid({ countries, columns = 3 }: CountryGridProps
 
               {/* Flag + language pill */}
               <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                <span
-                  className="px-2.5 py-1 rounded-full text-xs font-semibold text-white"
-                  style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}
-                >
-                  {country.language}
-                </span>
-                <span
-                  className="px-1.5 py-1 rounded-full overflow-hidden flex items-center"
-                  style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={28} height={20} className="h-5 w-auto rounded-sm" />
-                </span>
+                {country.language && (
+                  <span
+                    className="px-2.5 py-1 rounded-full text-xs font-semibold text-white"
+                    style={{ background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}
+                  >
+                    {country.language}
+                  </span>
+                )}
+                {country.code && (
+                  <span
+                    className="px-1.5 py-1 rounded-full overflow-hidden flex items-center"
+                    style={{ background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', backdropFilter: 'blur(8px)' }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={28} height={20} className="h-5 w-auto rounded-sm" />
+                  </span>
+                )}
               </div>
 
               {/* Content */}
@@ -156,12 +170,22 @@ export default function CountryGrid({ countries, columns = 3 }: CountryGridProps
                   {country.name}
                 </h3>
 
-                {/* Stats row */}
-                <div className="flex items-center gap-3 text-xs text-slate-300 mb-3">
-                  <span>{country.universities.toLocaleString()} universidades</span>
-                  <span className="w-px h-3 bg-slate-600" />
-                  <span>~${country.costOfLiving.toLocaleString()}/mes</span>
-                </div>
+                {/* Stats row — cada dato aparece solo si existe. El separador
+                    se pinta únicamente cuando hay algo a ambos lados, para no
+                    dejar una rayita suelta. */}
+                {(country.universities > 0 || country.costOfLiving > 0) && (
+                  <div className="flex items-center gap-3 text-xs text-slate-300 mb-3">
+                    {country.universities > 0 && (
+                      <span>{country.universities.toLocaleString()} universidades</span>
+                    )}
+                    {country.universities > 0 && country.costOfLiving > 0 && (
+                      <span className="w-px h-3 bg-slate-600" />
+                    )}
+                    {country.costOfLiving > 0 && (
+                      <span>~${country.costOfLiving.toLocaleString()}/mes</span>
+                    )}
+                  </div>
+                )}
 
                 {/* CTA revealed on hover */}
                 <div

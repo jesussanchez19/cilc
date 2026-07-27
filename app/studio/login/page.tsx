@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { IDLE_LABEL } from '@/lib/auth/session';
+import PasswordInput from '@/components/shared/PasswordInput';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -22,6 +23,13 @@ export default function StudioLoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!password) {
+      setError('Escribe tu contraseña.');
+      inputRef.current?.focus();
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -33,11 +41,23 @@ export default function StudioLoginPage() {
 
       if (res.ok) {
         router.push(from);
+        return;
+      }
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.status === 429) {
+        // Antes esto decía "contraseña incorrecta" y mandaba a seguir
+        // probando, justo cuando el servidor ya estaba rechazando por exceso
+        // de intentos. Se conserva lo tecleado: la contraseña puede ser buena.
+        setError(data.error ?? 'Demasiados intentos. Espera unos minutos.');
+      } else if (res.status >= 500) {
+        setError('El servidor no pudo verificar la contraseña. Inténtalo más tarde.');
       } else {
         setError('Contraseña incorrecta. Inténtalo de nuevo.');
         setPassword('');
-        inputRef.current?.focus();
       }
+      inputRef.current?.focus();
     } catch {
       setError('Error de conexión. Inténtalo de nuevo.');
     } finally {
@@ -96,25 +116,13 @@ export default function StudioLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <input
+              <PasswordInput
                 ref={inputRef}
-                type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Contraseña"
-                required
-                className="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-slate-500 outline-none transition-all duration-200"
-                style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: error ? '1px solid rgba(227,30,36,0.6)' : '1px solid rgba(255,255,255,0.10)',
-                  caretColor: '#1B67E8',
-                }}
-                onFocus={(e) => {
-                  if (!error) e.currentTarget.style.border = '1px solid rgba(27,103,232,0.6)';
-                }}
-                onBlur={(e) => {
-                  if (!error) e.currentTarget.style.border = '1px solid rgba(255,255,255,0.10)';
-                }}
+                onChange={(v) => { setPassword(v); if (error) setError(''); }}
+                invalid={Boolean(error)}
+                autoComplete="current-password"
+                disabled={loading}
               />
               {error && (
                 <p className="text-xs mt-2" style={{ color: '#E31E24' }}>{error}</p>

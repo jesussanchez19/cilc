@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import SearchBar from '@/components/shared/SearchBar';
 import { searchAll, groupResultsByType, SearchResult } from '@/lib/search';
+import { getSearchIndex } from '@/lib/sanity/queries';
 
 interface BuscarPageProps {
   searchParams: Promise<{ q?: string }>;
@@ -12,12 +13,14 @@ const TYPE_LABEL: Record<SearchResult['type'], string> = {
   programa: 'Programas',
   destino: 'Destinos',
   articulo: 'Artículos',
+  pagina: 'Páginas del sitio',
 };
 
 const TYPE_ICON: Record<SearchResult['type'], string> = {
   programa: '🎓',
   destino: '🌍',
   articulo: '📰',
+  pagina: '📄',
 };
 
 function ResultCard({ r }: { r: SearchResult }) {
@@ -41,7 +44,8 @@ function ResultCard({ r }: { r: SearchResult }) {
 export default async function BuscarPage({ searchParams }: BuscarPageProps) {
   const { q: rawQ } = await searchParams;
   const q = rawQ?.trim() ?? '';
-  const results = q ? searchAll(q) : [];
+  const index = q ? await getSearchIndex() : [];
+  const results = q ? searchAll(q, index) : [];
   const grouped = groupResultsByType(results);
 
   // ── Búsqueda vacía ──
@@ -56,7 +60,7 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
               Busca entre nuestros programas, destinos y artículos del blog.
             </p>
           </div>
-          <SearchBar fullWidth autoFocus />
+          <SearchBar fullWidth autoFocus index={await getSearchIndex()} />
         </div>
       </div>
     );
@@ -77,7 +81,7 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
           {/* Permite afinar la búsqueda sin volver atrás — en móvil el header
               no tiene barra, así que este es el único punto de entrada. */}
           <div className="max-w-xl">
-            <SearchBar fullWidth initialQuery={q} />
+            <SearchBar fullWidth initialQuery={q} index={index} />
           </div>
         </div>
 
@@ -88,8 +92,8 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
           </div>
         ) : (
           <div className="space-y-10">
-            {(['programa', 'destino', 'articulo'] as const).map((type) => {
-              const items = grouped[type === 'programa' ? 'programas' : type === 'destino' ? 'destinos' : 'articulos'];
+            {(['programa', 'destino', 'articulo', 'pagina'] as const).map((type) => {
+              const items = grouped[type === 'programa' ? 'programas' : type === 'destino' ? 'destinos' : type === 'articulo' ? 'articulos' : 'paginas'];
               if (items.length === 0) return null;
               return (
                 <div key={type}>

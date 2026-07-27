@@ -1,4 +1,5 @@
 import { client, cdnClient } from './client';
+import { SITE_PAGES, type SearchDoc } from '@/lib/search';
 import { writeClient } from './writeClient';
 
 // ── Testimonios ───────────────────────────────────────────────────────────────
@@ -118,7 +119,10 @@ export async function marcarTokenUsado(token: string): Promise<void> {
 // ── Configuración del sitio ───────────────────────────────────────────────────
 
 export interface SanityContactInfo {
+  /** Buzón comercial: contacto, cotizaciones, testimonios, suscripciones. */
   emailAdmin: string;
+  /** Buzón de seguridad: recuperación de contraseña del Studio. */
+  emailSeguridad?: string;
   telefonos?: { display: string; wa: string; esPrincipal?: boolean }[];
   direccion?: string;
   urlMapa?: string;
@@ -151,7 +155,7 @@ export async function getContactInfo(): Promise<SanityContactInfo> {
   try {
     const result = await client.fetch<SanityContactInfo | null>(
       `*[_type == "configuracion" && _id == "configuracion-singleton"][0]{
-        emailAdmin, telefonos, direccion, urlMapa,
+        emailAdmin, emailSeguridad, telefonos, direccion, urlMapa,
         facebook, instagram, linkedin, youtube, tiktok
       }`,
     );
@@ -304,6 +308,125 @@ export interface SanityMember {
 export async function getTeamMembers(): Promise<SanityMember[]> {
   try {
     return await client.fetch(`*[_type == "teamMember"] | order(_createdAt asc)`);
+  } catch {
+    return [];
+  }
+}
+
+// ── Índice de búsqueda ────────────────────────────────────────────────────────
+
+/**
+ * Índice plano de todo lo buscable, leído de Sanity.
+ *
+ * Antes el buscador leía de `lib/data/*.ts`, datos estáticos que dejaron de
+ * actualizarse cuando el catálogo migró al CMS: un programa creado desde el
+ * Studio no aparecía al buscar. Se construye en una sola consulta para no
+ * encadenar tres viajes a Sanity.
+ */
+export async function getSearchIndex(): Promise<SearchDoc[]> {
+  try {
+    const data = await client.fetch<{
+      programas: { slug?: string; titulo?: string; subtitulo?: string; descripcion?: string; img?: string }[];
+      destinos: { countryId?: string; nombre?: string; descripcion?: string; region?: string; idioma?: string; img?: string }[];
+      posts: { slug?: string; title?: string; excerpt?: string; category?: string; tipo?: string; urlExterna?: string; imagenUrl?: string; img?: string }[];
+    }>(`{
+      "programas": *[_type == "programa" && defined(programaId.current)]{
+        "slug": programaId.current, titulo, subtitulo, descripcion,
+        "img": imagenHero.asset->url
+      },
+      "destinos": *[_type == "destino" && defined(countryId.current)]{
+        "countryId": countryId.current, nombre, descripcion, region, idioma,
+        "img": imagen.asset->url
+      },
+      "posts": *[_type == "blogPost" && visible != false]{
+        "slug": slug.current, title, excerpt, category, tipo, urlExterna, imagenUrl,
+        "img": image.asset->url
+      }
+    }`);
+
+    // Las páginas fijas van primero: no dependen de la consulta y así
+    // siguen apareciendo aunque Sanity falle.
+    const docs: SearchDoc[] = [...SITE_PAGES];
+
+    for (const p of data.programas ?? []) {
+      if (!p.slug || !p.titulo) continue;
+      docs.push({
+        type: 'programa',
+        title: p.titulo,
+        description: p.subtitulo ?? p.descripcion ?? '',
+        // La ruta real es /programas/[slug]. Antes se generaba `/${slug}`, que
+        // solo funcionaba por las redirecciones de next.config.ts para los seis
+        // slugs antiguos: un programa nuevo daba 404.
+        href: `/programas/${p.slug}`,
+        image: p.img,
+        keywords: p.descripcion,
+      });
+    }
+
+    for (const d of data.destinos ?? []) {
+      if (!d.countryId || !d.nombre) continue;
+      docs.push({
+        type: 'destino',
+        title: d.nombre,
+        description: d.descripcion ?? '',
+        href: `/destinos/${d.countryId}`,
+        image: d.img,
+        keywords: [d.region, d.idioma].filter(Boolean).join(' '),
+      });
+    }
+
+    for (const a of data.posts ?? []) {
+      if (!a.title) continue;
+      // Los posts externos apuntan fuera del sitio; los propios a /blog/[slug].
+      const href = a.tipo === 'externo' ? a.urlExterna : a.slug ? `/blog/${a.slug}` : undefined;
+      if (!href) continue;
+      docs.push({
+        type: 'articulo',
+        title: a.title,
+        description: a.excerpt ?? '',
+        href,
+        image: a.img ?? a.imagenUrl,
+        keywords: a.category,
+      });
+    }
+
+    return docs;
+  } catch {
+    // Si Sanity no responde, al menos las páginas del sitio se pueden buscar.
+    return [...SITE_PAGES];
+  }
+}
+
+// ── Listado de destinos ───────────────────────────────────────────────────────
+
+export interface DestinoListado {
+  countryId: string;
+  nombre?: string;
+  codigoISO?: string;
+  region?: string;
+  idioma?: string;
+  descripcion?: string;
+  universidades?: number;
+  costoVida?: number;
+  estudiantes?: number;
+  imagenUrl?: string;
+}
+
+/**
+ * Destinos con los campos que necesita la rejilla de /destinos.
+ *
+ * Existe aparte de `getAllDestinos` porque aquella devuelve el documento
+ * entero con `countryId` como objeto slug, y la rejilla necesita el string.
+ */
+export async function getDestinosListado(): Promise<DestinoListado[]> {
+  try {
+    return await client.fetch<DestinoListado[]>(
+      `*[_type == "destino" && defined(countryId.current)]{
+        "countryId": countryId.current, nombre, codigoISO, region, idioma,
+        descripcion, universidades, costoVida, estudiantes,
+        "imagenUrl": imagen.asset->url
+      } | order(nombre asc)`,
+    );
   } catch {
     return [];
   }

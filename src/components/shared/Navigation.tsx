@@ -47,10 +47,9 @@ export default function Navigation() {
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
-  const isStudio = pathname.startsWith('/studio');
-
+  // El ocultamiento en /studio lo gestiona SiteChrome, en el layout raíz.
   return (
-    <div style={{ display: isStudio ? 'none' : 'contents' }}>
+    <>
       {/* NAVBAR */}
       <nav
         ref={navRef}
@@ -150,6 +149,6 @@ export default function Navigation() {
           </div>
         </button>
       </div>
-    </div>
+    </>
   );
 }
