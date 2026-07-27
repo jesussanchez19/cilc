@@ -167,6 +167,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                   }}
                   disabled={status === 'loading'}
                   placeholder="Tu nombre completo"
+                  maxLength={100} autoComplete="name" required
                   className={`input-field ${errors.nombre ? 'border-red-400 focus:ring-red-300' : ''}`}
                 />
                 {errors.nombre && <p className="mt-1.5 text-xs text-red-500">{errors.nombre}</p>}
@@ -187,6 +188,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                     }}
                     disabled={status === 'loading'}
                     placeholder="tu@email.com"
+                    maxLength={200} autoComplete="email" required
                     className={`input-field ${errors.email ? 'border-red-400 focus:ring-red-300' : ''}`}
                   />
                   {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
@@ -205,6 +207,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                     }}
                     disabled={status === 'loading'}
                     placeholder="55 1234 5678"
+                    maxLength={30} autoComplete="tel" inputMode="tel"
                     className={`input-field ${errors.telefono ? 'border-red-400 focus:ring-red-300' : ''}`}
                   />
                   {errors.telefono && <p className="mt-1.5 text-xs text-red-500">{errors.telefono}</p>}
@@ -219,6 +222,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                   value={mensaje} onChange={(e) => setMensaje(e.target.value)}
                   disabled={status === 'loading'} rows={3}
                   placeholder="Cuéntanos un poco sobre ti y tus objetivos..."
+                  maxLength={2000}
                   className="input-field resize-none"
                 />
               </div>

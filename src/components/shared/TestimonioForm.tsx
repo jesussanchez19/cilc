@@ -129,7 +129,10 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Honeypot — invisible para humanos, los bots lo rellenan */}
-      <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none', tabIndex: -1 }}>
+      {/* tabIndex iba dentro de `style`, donde no es una propiedad CSS y no
+          hacía nada. El input de abajo ya lo lleva como atributo, que es
+          donde surte efecto. */}
+      <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}>
         <label htmlFor="website">Sitio web</label>
         <input type="text" id="website" name="website" autoComplete="off" tabIndex={-1} />
       </div>

@@ -152,6 +152,7 @@ export default function WhatsAppButton() {
                     }
                   }}
                   autoComplete="name"
+                  maxLength={100} // igual que contactSchema, para no rebotar en el servidor
                   className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
                   style={{ background: '#fff', boxShadow: errors.nombre ? '0 0 0 1.5px #f87171' : '0 1px 4px rgba(0,0,0,0.10)' }}
                 />
@@ -170,6 +171,8 @@ export default function WhatsAppButton() {
                     }
                   }}
                   autoComplete="tel"
+                  inputMode="tel"
+                  maxLength={30}
                   className="w-full px-4 py-2.5 rounded-xl text-sm outline-none text-slate-800 placeholder-slate-400"
                   style={{ background: '#fff', boxShadow: errors.telefono ? '0 0 0 1.5px #f87171' : '0 1px 4px rgba(0,0,0,0.10)' }}
                 />
