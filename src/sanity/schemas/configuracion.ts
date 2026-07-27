@@ -70,6 +70,13 @@ export const configuracionSchema = defineType({
       rows: 3,
       description: 'Cada línea se muestra por separado. Ej:\nAv. Insurgentes Sur 863, Piso 7\nCol. Nápoles, C.P. 03810\nCDMX, México',
     }),
+    defineField({
+      name: 'urlMapa',
+      title: 'Ubicación en Google Maps',
+      type: 'string',
+      group: 'contacto',
+      description: 'Abre Google Maps, busca la ubicación y copia la URL que aparece en la barra del navegador. El texto de la tarjeta y el mapa se generan solos.',
+    }),
 
     // ── Redes sociales ─────────────────────────────────────────────────────────
     defineField({

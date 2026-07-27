@@ -46,3 +46,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# graphify — se versiona solo el grafo, para que cualquier sesión (incluidos
+# agentes en la nube, sin la herramienta instalada) lo tenga sin regenerarlo.
+# El resto es visualización, instantáneas y caché: pesa 1.2 MB, se reconstruye
+# con `graphify extract` y manifest.json guarda mtime propios de cada máquina.
+graphify-out/*
+!graphify-out/graph.json
