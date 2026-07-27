@@ -12,12 +12,22 @@ export const tokenTestimonioSchema = defineType({
       type: 'string',
       description: 'Escribe el nombre y presiona "Generar token" — los demás campos se llenan solos.',
       components: { input: TokenGeneratorInput },
+      // Mismo tope que /api/admin/generar-token, que es quien crea el documento.
+      validation: (r) => r.required().max(120),
     }),
     defineField({
       name: 'token',
       title: 'Token',
       type: 'string',
       readOnly: true,
+      // Lo genera crypto.randomUUID() en el servidor. `readOnly` evita la
+      // edición desde la interfaz, pero no desde la API: si el formato no es
+      // UUID el enlace no valida y el alumno se queda sin poder responder.
+      validation: (r) =>
+        r.required().regex(
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+          { name: 'UUID' },
+        ),
     }),
     defineField({
       name: 'url',
@@ -25,6 +35,7 @@ export const tokenTestimonioSchema = defineType({
       type: 'string',
       readOnly: true,
       description: 'Copia esta URL y envíala al estudiante',
+      validation: (r) => r.required(),
     }),
     defineField({
       name: 'usado',
