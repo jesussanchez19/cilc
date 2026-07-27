@@ -4,8 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
+import type { SearchDoc } from '@/lib/search';
 
-export default function Header() {
+export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[] }) {
   const pathname = usePathname();
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -103,7 +104,7 @@ export default function Header() {
           </Link>
           {/* Tablet/Desktop: barra completa */}
           <div className="hidden sm:block w-64 search-dark shrink-0">
-            <SearchBar dark />
+            <SearchBar dark index={searchIndex} />
           </div>
 
         </div>

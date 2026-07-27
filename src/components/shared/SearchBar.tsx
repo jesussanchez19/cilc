@@ -3,22 +3,31 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { searchAll, groupResultsByType, SearchResult } from '@/lib/search';
+import { searchAll, groupResultsByType, type SearchResult, type SearchDoc } from '@/lib/search';
+
 
 const TYPE_LABEL: Record<SearchResult['type'], string> = {
   programa: 'Programas',
   destino: 'Destinos',
   articulo: 'Artículos',
+  pagina: 'Páginas del sitio',
 };
 
 const TYPE_DOT: Record<SearchResult['type'], string> = {
   programa: '#3b82f6',
   destino:  '#10b981',
   articulo: '#8b5cf6',
+  pagina:   '#64748b',
 };
 
 interface SearchBarProps {
   dark?: boolean;
+  /**
+   * Índice ya construido en el servidor. Se pasa por props en vez de
+   * consultarlo aquí porque el desplegable filtra en cada tecla: con una
+   * llamada de red por pulsación la sugerencia llegaría siempre tarde.
+   */
+  index?: SearchDoc[];
   /** Texto inicial — permite precargar la búsqueda actual en /buscar. */
   initialQuery?: string;
   /** Sin el tope de 320px del header, para usarlo como buscador de página. */
@@ -29,6 +38,7 @@ interface SearchBarProps {
 
 export default function SearchBar({
   dark = false,
+  index = [],
   initialQuery = '',
   fullWidth = false,
   autoFocus = false,
@@ -38,7 +48,7 @@ export default function SearchBar({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const results = searchAll(query);
+  const results = searchAll(query, index);
   const grouped = groupResultsByType(results);
 
   useEffect(() => {
@@ -155,6 +165,7 @@ export default function SearchBar({
               {renderGroup('programa', grouped.programas)}
               {renderGroup('destino', grouped.destinos)}
               {renderGroup('articulo', grouped.articulos)}
+              {renderGroup('pagina', grouped.paginas)}
               <Link
                 href={`/buscar?q=${encodeURIComponent(query.trim())}`}
                 onClick={() => setOpen(false)}
