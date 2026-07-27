@@ -1,34 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { SESSION_COOKIE, IDLE_SECONDS, IDLE_MS } from '@/lib/auth/session';
+import { createSessionCookie, verifySessionCookie } from '@/lib/auth/sessionToken';
 
-const SESSION_COOKIE = '__studio_sess';
-const IDLE_SECONDS   = 10 * 60; // 10 minutos sin actividad
+// Rutas que deben seguir accesibles sin sesión, o no habría forma de iniciarla.
+const PUBLIC_PATHS = ['/studio/login', '/studio/reset'];
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Rutas excluidas de la protección
-  if (
-    pathname === '/studio/login' ||
-    pathname === '/studio/reset' ||
-    pathname.startsWith('/api/studio-auth')
-  ) {
+  if (PUBLIC_PATHS.includes(pathname) || pathname.startsWith('/api/studio-auth')) {
     return NextResponse.next();
   }
 
-  const token     = process.env.STUDIO_SESSION_TOKEN;
+  const secret    = process.env.STUDIO_SESSION_TOKEN;
   const cookieVal = req.cookies.get(SESSION_COOKIE)?.value;
 
-  if (!cookieVal || cookieVal !== token) {
+  // La antigüedad se comprueba aquí, en el servidor. Antes bastaba con
+  // reenviar la cookie a mano para saltarse la caducidad, porque el único
+  // control era que el navegador la borrara.
+  const authed =
+    Boolean(secret) &&
+    Boolean(cookieVal) &&
+    (await verifySessionCookie(cookieVal!, secret!, IDLE_MS));
+
+  if (!authed) {
+    // Las rutas de API responden 401. Redirigirlas al login devolvería HTML a
+    // un `fetch` que espera JSON y enmascararía el fallo real.
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
     const loginUrl = new URL('/studio/login', req.url);
     loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Sesión válida → renueva la cookie (ventana deslizante)
+  // Sesión válida → reemite la cookie con fecha nueva (ventana deslizante).
+  // Al reemitir, la antigüedad se reinicia solo mientras haya actividad real.
   const res = NextResponse.next();
-  res.cookies.set(SESSION_COOKIE, token!, {
+  res.cookies.set(SESSION_COOKIE, await createSessionCookie(secret!), {
     httpOnly: true,
     sameSite: 'strict',
+    // En producción solo viaja por HTTPS. En dev se accede por http desde la
+    // IP de red local, donde `secure` impediría que el navegador la enviara.
+    secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: IDLE_SECONDS,
   });
@@ -36,5 +50,14 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/studio/:path*'],
+  matcher: [
+    '/studio/:path*',
+    // El panel de admin exponía los leads (nombres, correos, teléfonos) a
+    // cualquiera que supiera la URL: no tenía ninguna comprobación propia.
+    '/admin/:path*',
+    // delete-doc borra documentos de Sanity sin autenticar; fetch-og hace
+    // peticiones salientes arbitrarias desde el servidor.
+    '/api/admin/:path*',
+    '/api/fetch-og',
+  ],
 };

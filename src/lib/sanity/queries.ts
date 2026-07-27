@@ -121,12 +121,12 @@ export interface SanityContactInfo {
   emailAdmin: string;
   telefonos?: { display: string; wa: string; esPrincipal?: boolean }[];
   direccion?: string;
+  urlMapa?: string;
   facebook?: string;
   instagram?: string;
   linkedin?: string;
   youtube?: string;
   tiktok?: string;
-  studioPassword?: string;
 }
 
 const CONTACT_FALLBACK: SanityContactInfo = {
@@ -139,14 +139,43 @@ const CONTACT_FALLBACK: SanityContactInfo = {
   direccion: 'Av. Insurgentes Sur 863, Piso 7\nCol. Nápoles, C.P. 03810\nCDMX, México',
 };
 
+/**
+ * Datos de contacto para la web.
+ *
+ * La proyección es explícita a propósito. Antes traía el documento entero, así
+ * que el hash de la contraseña del Studio viajaba a los 6 llamadores de esta
+ * función — incluido el layout raíz, que se ejecuta en cada página. No llegaba
+ * al HTML, pero era superficie que no hacía falta exponer.
+ */
 export async function getContactInfo(): Promise<SanityContactInfo> {
   try {
     const result = await client.fetch<SanityContactInfo | null>(
-      `*[_type == "configuracion" && _id == "configuracion-singleton"][0]`,
+      `*[_type == "configuracion" && _id == "configuracion-singleton"][0]{
+        emailAdmin, telefonos, direccion, urlMapa,
+        facebook, instagram, linkedin, youtube, tiktok
+      }`,
     );
     return result ?? CONTACT_FALLBACK;
   } catch {
     return CONTACT_FALLBACK;
+  }
+}
+
+/**
+ * Hash de la contraseña del Studio. Solo lo usa `/api/studio-auth`.
+ *
+ * Va aparte de `getContactInfo` para que el secreto se pida únicamente donde
+ * se necesita. Devuelve cadena vacía ante cualquier fallo: el login la trata
+ * como "sin contraseña" y deniega, de modo que falla cerrado.
+ */
+export async function getStudioPasswordHash(): Promise<string> {
+  try {
+    const result = await client.fetch<string | null>(
+      `*[_type == "configuracion" && _id == "configuracion-singleton"][0].studioPassword`,
+    );
+    return result?.trim() ?? '';
+  } catch {
+    return '';
   }
 }
 

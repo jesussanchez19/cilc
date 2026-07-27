@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { IDLE_LABEL } from '@/lib/auth/session';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -146,7 +147,7 @@ export default function StudioLoginPage() {
         </div>
 
         <p className="text-center text-slate-600 text-xs mt-6">
-          La sesión expira tras 30 minutos de inactividad
+          La sesión expira tras {IDLE_LABEL} de inactividad
         </p>
       </div>
     </div>

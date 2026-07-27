@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { writeClient } from '@/lib/sanity/writeClient';
+import { hashPassword } from '@/lib/auth/password';
 
 function verifyResetToken(token: string): boolean {
   const parts = token.split('.');
@@ -29,13 +30,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Enlace inválido o expirado' }, { status: 400 });
   }
 
-  if (!password || password.length < 6) {
-    return NextResponse.json({ error: 'La contraseña debe tener al menos 6 caracteres' }, { status: 400 });
+  if (typeof password !== 'string' || password.length < 10) {
+    return NextResponse.json(
+      { error: 'La contraseña debe tener al menos 10 caracteres' },
+      { status: 400 },
+    );
   }
 
   await writeClient
     .patch('configuracion-singleton')
-    .set({ studioPassword: password })
+    .set({ studioPassword: hashPassword(password) })
     .commit();
 
   return NextResponse.json({ ok: true });
