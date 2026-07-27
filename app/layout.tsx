@@ -84,6 +84,14 @@ export default async function RootLayout({
 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        {/* Red de seguridad sin JS. Sustituye a los antiguos setTimeout de
+            AnimateIn/LazySection, que eran inútiles: si el JS no corre, el
+            temporizador tampoco. `!important` gana a los estilos inline. */}
+        <noscript>
+          <style>{`.reveal,.reveal-blur,.reveal-left,.reveal-right,.reveal-scale,.lazy-section{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col bg-white">
         {GA_ID && (
           <>

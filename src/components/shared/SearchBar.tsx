@@ -19,10 +19,21 @@ const TYPE_DOT: Record<SearchResult['type'], string> = {
 
 interface SearchBarProps {
   dark?: boolean;
+  /** Texto inicial — permite precargar la búsqueda actual en /buscar. */
+  initialQuery?: string;
+  /** Sin el tope de 320px del header, para usarlo como buscador de página. */
+  fullWidth?: boolean;
+  /** Abre el teclado al entrar. Solo para la página de búsqueda vacía. */
+  autoFocus?: boolean;
 }
 
-export default function SearchBar({ dark = false }: SearchBarProps) {
-  const [query, setQuery] = useState('');
+export default function SearchBar({
+  dark = false,
+  initialQuery = '',
+  fullWidth = false,
+  autoFocus = false,
+}: SearchBarProps) {
+  const [query, setQuery] = useState(initialQuery);
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -83,7 +94,7 @@ export default function SearchBar({ dark = false }: SearchBarProps) {
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-xs">
+    <div ref={wrapperRef} className={`relative w-full ${fullWidth ? '' : 'max-w-xs'}`}>
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +104,9 @@ export default function SearchBar({ dark = false }: SearchBarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
           </svg>
           <input
-            type="text"
+            type="search"
+            enterKeyHint="search"
+            autoFocus={autoFocus}
             value={query}
             onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
             onFocus={() => query && setOpen(true)}

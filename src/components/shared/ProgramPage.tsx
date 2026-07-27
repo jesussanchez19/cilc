@@ -552,31 +552,6 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
 
       <QuoteModal isOpen={modalOpen} onClose={() => setModalOpen(false)} programaInicial={programaParaModal} />
 
-      {/* Sticky CTA bar — mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 px-4 py-3 flex gap-3"
-        style={{ background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(12px)', borderTop: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 -4px 24px rgba(0,0,0,0.08)' }}>
-        <a
-          href="https://wa.me/525518944494"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm text-white transition-all duration-200 active:scale-95"
-          style={{ background: 'linear-gradient(135deg,#22c55e,#16a34a)' }}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-4 h-4" fill="currentColor">
-            <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333z" />
-          </svg>
-          WhatsApp
-        </a>
-        <button
-          onClick={() => setModalOpen(true)}
-          className="flex-1 py-3 rounded-xl font-bold text-sm text-white transition-all duration-200 active:scale-95"
-          style={{ background: 'linear-gradient(135deg,#3b82f6,#2563eb)' }}
-        >
-          Cotizar gratis
-        </button>
-      </div>
-
-      <div className="md:hidden h-20" />
     </div>
   );
 }

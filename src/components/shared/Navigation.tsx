@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { useFloatingChromeVisible } from '@/hooks/useFloatingChromeVisible';
 
 const NAV_LINKS = [
   { href: '/',                               label: 'Inicio' },
@@ -17,6 +18,7 @@ const NAV_LINKS = [
 
 export default function Navigation() {
   const pathname = usePathname();
+  const chromeVisible = useFloatingChromeVisible();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -87,11 +89,12 @@ export default function Navigation() {
         </div>
       </nav>
 
-      {/* Floating menu on scroll */}
+      {/* Floating menu on scroll — comparte visibilidad con el botón de
+          WhatsApp: ambos aparecen al scrollear y se ocultan en el footer. */}
       <div
         ref={menuRef}
         className={`fixed bottom-6 right-6 z-50 transition-all duration-300 ${
-          scrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+          chromeVisible || menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
         <div

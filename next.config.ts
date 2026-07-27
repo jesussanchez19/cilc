@@ -11,6 +11,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // Permite abrir el dev server desde el celular por IP de red local.
+  // Sin esto Next devuelve 403 en /_next/* y la página nunca hidrata.
+  allowedDevOrigins: ['192.168.68.*', '192.168.1.*', '192.168.0.*', '10.0.0.*'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'cdn.sanity.io' },
