@@ -1,5 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# leads — datos privados, no subir al repo
+/data/leads.json
+
 # dependencies
 /node_modules
 /.pnp
@@ -24,14 +27,18 @@
 .DS_Store
 *.pem
 
+# Claude Code
+.claude/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files
 .env*
+!.env.example
 
 # vercel
 .vercel
