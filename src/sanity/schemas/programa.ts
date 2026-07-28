@@ -130,7 +130,7 @@ export const programaSchema = defineType({
         ],
         preview: {
           select: { title: 'texto' },
-          prepare({ title }: { title: string }) { return { title: title ?? 'Sin texto' }; },
+          prepare({ title }) { return { title: title ?? 'Sin texto' }; },
         },
       }],
     }),
@@ -159,7 +159,7 @@ export const programaSchema = defineType({
         ],
         preview: {
           select: { title: 'texto' },
-          prepare({ title }: { title: string }) { return { title: title ?? 'Sin texto' }; },
+          prepare({ title }) { return { title: title ?? 'Sin texto' }; },
         },
       }],
     }),
@@ -215,7 +215,7 @@ export const programaSchema = defineType({
           ],
           preview: {
             select: { title: 'titulo' },
-            prepare({ title }: { title: string }) { return { title: title ?? 'Sin título' }; },
+            prepare({ title }) { return { title: title ?? 'Sin título' }; },
           },
         },
       ],

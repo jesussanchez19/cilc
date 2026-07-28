@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { useFormValue } from 'sanity';
+import { useFormValue, useDocumentOperation } from 'sanity';
 import type { DocumentActionProps } from 'sanity';
 
 export function ImportarDesdeUrlAction(props: DocumentActionProps) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  // `props.patch` no existe en DocumentActionProps: las operaciones sobre el
+  // documento se obtienen con este hook, que debe llamarse en el cuerpo de la
+  // acción y no dentro de onHandle.
+  const { patch } = useDocumentOperation(props.id, props.type);
 
   const tipo = useFormValue(['tipo']) as string | undefined;
   const urlExterna = useFormValue(['urlExterna']) as string | undefined;
@@ -45,7 +50,7 @@ export function ImportarDesdeUrlAction(props: DocumentActionProps) {
         if (data.excerpt) patches.push({ set: { excerpt: data.excerpt } });
         if (data.imagenUrl) patches.push({ set: { imagenUrl: data.imagenUrl } });
         if (data.date) patches.push({ set: { date: data.date } });
-        if (patches.length) props.patch.execute(patches);
+        if (patches.length) patch.execute(patches);
 
         props.onComplete();
       } catch {

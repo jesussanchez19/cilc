@@ -327,21 +327,31 @@ export function contactUserHtml(name: string, whatsapp?: string): string {
 export function quoteAdminHtml(data: {
   name: string;
   email: string;
-  phone: string;
+  /** Opcional en el formulario de cotización: la fila se omite si no viene. */
+  phone?: string;
   program: string;
   message?: string;
 }): string {
+  // Las filas se arman antes para poder saltarse el teléfono cuando no hay.
+  // El sombreado se calcula por posición, no fijo, o al quitar una fila se
+  // rompería la alternancia de fondos.
+  const celdas: [string, string][] = [
+    ['Nombre', data.name],
+    ['Email', `<a href="mailto:${data.email}" style="color:${BLUE};text-decoration:none;">${data.email}</a>`],
+  ];
+
+  if (data.phone) {
+    celdas.push(['Teléfono', `<a href="tel:${data.phone}" style="color:${BLUE};text-decoration:none;">${data.phone}</a>`]);
+  }
+
+  celdas.push(['Programa', `<strong>${data.program}</strong>`]);
+
   return adminLayout({
     badge: 'Cotización',
     badgeColor: ACCENT.cotizacion,
     title: 'Nueva solicitud de cotización',
     subtitle: `${new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
-    rows: [
-      dataRow('Nombre',    data.name,    false),
-      dataRow('Email',     `<a href="mailto:${data.email}" style="color:${BLUE};text-decoration:none;">${data.email}</a>`, true),
-      dataRow('Teléfono',  `<a href="tel:${data.phone}" style="color:${BLUE};text-decoration:none;">${data.phone}</a>`, false),
-      dataRow('Programa',  `<strong>${data.program}</strong>`, true),
-    ].join(''),
+    rows: celdas.map(([label, valor], i) => dataRow(label, valor, i % 2 === 1)).join(''),
     note: data.message,
     noteLabel: 'Mensaje adicional',
   });

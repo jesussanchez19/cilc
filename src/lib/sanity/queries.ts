@@ -95,18 +95,18 @@ export async function getAllDestinos(): Promise<SanityDestino[]> {
 // ── Tokens de uso único ───────────────────────────────────────────────────────
 
 export async function verificarToken(token: string): Promise<{ _id: string; usado: boolean } | null> {
-  const results = await cdnClient.fetch<{ _id: string; usado: boolean }[]>(
-    `*[_type == "tokenTestimonio" && token == $token][0...1]{ _id, usado }`,
-    { token },
+  const results: { _id: string; usado: boolean }[] = await cdnClient.fetch(
+    `*[_type == "tokenTestimonio" && token == $t][0...1]{ _id, usado }`,
+    { t: token },
     { next: { revalidate: 0 } },
   );
   return results[0] ?? null;
 }
 
 export async function marcarTokenUsado(token: string): Promise<void> {
-  const doc = await writeClient.fetch<{ _id: string } | null>(
-    `*[_type == "tokenTestimonio" && token == $token][0]{ _id }`,
-    { token },
+  const doc: { _id: string } | null = await writeClient.fetch(
+    `*[_type == "tokenTestimonio" && token == $t][0]{ _id }`,
+    { t: token },
   );
   if (doc) {
     await writeClient

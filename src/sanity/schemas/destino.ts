@@ -54,7 +54,9 @@ export const destinoSchema = defineType({
       group: 'basico',
       description: 'Se llena automáticamente al elegir un país del catálogo. Para un país nuevo escríbelo manualmente: malta, belgica, dubai… Sin espacios ni acentos.',
       options: {
-        source: (doc: Record<string, string>) => doc.paisExistente || doc.nombre || '',
+        // El tipo del documento es SanityDocument, cuyos valores son unknown:
+        // anotarlo como Record<string, string> no encaja con SlugSourceFn.
+        source: (doc) => (doc.paisExistente as string) || (doc.nombre as string) || '',
         maxLength: 50,
       },
       validation: (r) => r.required(),
