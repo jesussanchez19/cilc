@@ -12,9 +12,9 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    const doc = await client.fetch<{ _id: string; usado: boolean } | null>(
-      `*[_type == "tokenTestimonio" && token == $token][0]{ _id, usado }`,
-      { token },
+    const doc: { _id: string; usado: boolean } | null = await client.fetch(
+      `*[_type == "tokenTestimonio" && token == $t][0]{ _id, usado }`,
+      { t: token },
     );
     if (!doc)       return NextResponse.json({ status: 'invalid' });
     if (doc.usado)  return NextResponse.json({ status: 'used' });
