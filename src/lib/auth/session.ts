@@ -3,12 +3,12 @@
  *
  * Estos valores los comparten cuatro consumidores. Si no coinciden, la sesión
  * no caduca cuando debería — que es justo lo que pasaba cuando el login creaba
- * la cookie con 30 min y el middleware la renovaba con 10:
+ * la cookie con 30 min y el proxy la renovaba con 10:
  *
- *   - app/api/studio-auth/route.ts        crea la cookie al iniciar sesión
- *   - middleware.ts                       la renueva en cada petición /studio/*
- *   - src/components/admin/IdleRefresh    recarga el cliente al agotarse
- *   - app/studio/login/page.tsx           se lo comunica al usuario
+ *   - app/api/studio-auth/route.ts       crea la cookie al iniciar sesión
+ *   - proxy.ts                          la renueva en cada petición /studio/*
+ *   - src/components/admin/IdleRefresh   recarga el cliente al agotarse
+ *   - app/studio/login/page.tsx          se lo comunica al usuario
  */
 
 export const SESSION_COOKIE = '__studio_sess';
@@ -20,11 +20,11 @@ export const IDLE_SECONDS = 10 * 60;
 export const IDLE_MS = IDLE_SECONDS * 1000;
 
 /**
- * Cuándo debe recargar el cliente para forzar la comprobación del middleware.
+ * Cuándo debe recargar el cliente para forzar la comprobación del proxy.
  *
  * Va 5 s POR DETRÁS de la caducidad de la cookie, a propósito. Si recargara
  * justo a los IDLE_MS sería una carrera: llegando un milisegundo antes, el
- * navegador aún manda la cookie, el middleware la da por válida y la renueva
+ * navegador aún manda la cookie, el proxy la da por válida y la renueva
  * otra ventana entera — y como IdleRefresh se remonta con timer nuevo, la
  * sesión se renueva sola para siempre y nunca caduca.
  */

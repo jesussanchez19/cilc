@@ -101,7 +101,12 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(10,15,30,0.7)', backdropFilter: 'blur(8px)' }}
     >
+      {/* role/aria-modal faltaban: sin ellos un lector de pantalla no anuncia
+          que se ha abierto un diálogo ni acota la lectura a su contenido. */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quote-modal-title"
         className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl animate-scale-in"
         style={{
           background: '#ffffff',
@@ -112,7 +117,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
         <div className="flex items-center justify-between px-6 py-5"
           style={{ borderBottom: '1px solid rgba(15,23,42,0.07)' }}>
           <div>
-            <h2 className="text-lg font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>
+            <h2 id="quote-modal-title" className="text-lg font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>
               Obtén tu cotización
             </h2>
             <p className="text-sm text-slate-400 mt-0.5">Gratis y sin compromiso · Respuesta en &lt;24h</p>

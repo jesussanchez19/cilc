@@ -2,10 +2,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SESSION_COOKIE, IDLE_SECONDS, IDLE_MS } from '@/lib/auth/session';
 import { createSessionCookie, verifySessionCookie } from '@/lib/auth/sessionToken';
 
+// El convenio `middleware` quedó deprecado en Next 16 y se renombró a `proxy`:
+// el nombre anterior se confundía con el middleware de Express. La firma y el
+// `config.matcher` no cambian.
+
 // Rutas que deben seguir accesibles sin sesión, o no habría forma de iniciarla.
 const PUBLIC_PATHS = ['/studio/login', '/studio/reset'];
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (PUBLIC_PATHS.includes(pathname) || pathname.startsWith('/api/studio-auth')) {

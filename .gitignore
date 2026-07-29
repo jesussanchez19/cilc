@@ -53,3 +53,9 @@ next-env.d.ts
 # con `graphify extract` y manifest.json guarda mtime propios de cada máquina.
 graphify-out/*
 !graphify-out/graph.json
+
+# playwright (salida de las ejecuciones: capturas, vídeos y trazas)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
