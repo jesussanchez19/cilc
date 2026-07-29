@@ -12,6 +12,37 @@ interface Recuadro { top: number; left: number; width: number; height: number }
 /** Prefijo de las entradas de `prepara` que abren un menú desplegable. */
 const MENU_CON = 'menu-con:';
 
+const pausa = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/**
+ * Cuánto se espera, como máximo, a que aparezca algo con lo que hay que
+ * interactuar. Cada clic abre un panel que el Studio tiene que cargar y pintar.
+ */
+const ESPERA_MAX_MS = 5_000;
+const SONDEO_MS = 200;
+
+/**
+ * Espera a que exista alguna de las alternativas y la pulsa.
+ *
+ * Esperar es imprescindible, no una mejora: abrir un documento implica pedirlo
+ * al servidor y pintar su formulario, y eso tarda bastante más que una pausa
+ * fija entre clics. Con clic a ciegas el paso de eliminar solo funcionaba al
+ * VOLVER a él, cuando la pantalla ya estaba montada de la vez anterior; en la
+ * primera visita no encontraba nada y se quedaba sin hacer nada.
+ */
+async function pulsarCuandoExista(alternativas: string[], vigente: () => boolean): Promise<boolean> {
+  const intentos = Math.ceil(ESPERA_MAX_MS / SONDEO_MS);
+  for (let i = 0; i < intentos; i += 1) {
+    if (!vigente()) return false;
+    for (const sel of alternativas) {
+      const el = buscarElemento(sel);
+      if (el) { el.click(); return true; }
+    }
+    await pausa(SONDEO_MS);
+  }
+  return false;
+}
+
 /**
  * Resuelve un ancla a un elemento real.
  *
@@ -242,7 +273,15 @@ async function abrirMenuCon(
 
   const fila = () => filaDe.map(grupoDerechaDe).find((r) => r !== undefined && r !== null) ?? null;
 
-  const inicial = fila();
+  // La fila puede no existir todavía: si venimos de abrir el documento, su
+  // cabecera aún se está pintando. Por eso se espera en vez de abandonar al
+  // primer intento, que era lo que hacía fallar el paso en su primera visita.
+  let inicial = fila();
+  for (let i = 0; !inicial && i < Math.ceil(ESPERA_MAX_MS / SONDEO_MS); i += 1) {
+    if (!vigente()) return null;
+    await pausa(SONDEO_MS);
+    inicial = fila();
+  }
   if (!inicial) return null;
 
   const dentro = (r: DOMRect) => {
@@ -483,6 +522,11 @@ export default function StudioTour() {
     // función asíncrona y se leen en la limpieza del efecto.
     const menu: { boton: HTMLElement | null; opcion: string } = { boton: null, opcion: '' };
 
+    // Hasta cuándo se sigue remidiendo el foco. Lo adelanta la secuencia de
+    // navegación al terminar; el valor inicial es solo un tope de seguridad.
+    const nClics = paso.prepara?.length ?? 0;
+    let limite = Date.now() + (nClics ? nClics * (ESPERA_MAX_MS + 1_000) + 4_000 : 500);
+
     if (paso.prepara?.length) {
       void (async () => {
         for (const clic of paso.prepara!) {
@@ -491,22 +535,28 @@ export default function StudioTour() {
           // sucesivos: se pulsa la primera que exista y se deja el resto. Sin
           // esta distinción, un paso que solo quería abrir una carpeta con
           // reserva acababa abriendo las dos, una detrás de otra.
-          for (const sel of Array.isArray(clic) ? clic : [clic]) {
-            if (sel.startsWith(MENU_CON)) {
-              // 'menu-con:<opción>@<ref>,<ref>' — las referencias delimitan la
-              // fila donde se permite pulsar. Van en el paso, a la vista, y no
-              // escondidas aquí: son el cerco de seguridad de esta operación.
-              const [opcion, refs = ''] = sel.slice(MENU_CON.length).split('@');
-              const fila = refs.split(',').map((s) => s.trim()).filter(Boolean);
-              menu.opcion = opcion;
-              menu.boton = fila.length ? await abrirMenuCon(opcion, fila, vigente) : null;
-              break;
-            }
-            const el = buscarElemento(sel);
-            if (el) { el.click(); break; }
+          const opciones = Array.isArray(clic) ? clic : [clic];
+          const abrirMenu = opciones.find((s) => s.startsWith(MENU_CON));
+
+          if (abrirMenu) {
+            // 'menu-con:<opción>@<ref>,<ref>' — las referencias delimitan la
+            // fila donde se permite pulsar. Van en el paso, a la vista, y no
+            // escondidas aquí: son el cerco de seguridad de esta operación.
+            const [opcion, refs = ''] = abrirMenu.slice(MENU_CON.length).split('@');
+            const fila = refs.split(',').map((s) => s.trim()).filter(Boolean);
+            menu.opcion = opcion;
+            menu.boton = fila.length ? await abrirMenuCon(opcion, fila, vigente) : null;
+          } else {
+            await pulsarCuandoExista(opciones, vigente);
           }
-          await new Promise((r) => setTimeout(r, 550));
+
+          // Pausa corta: lo que hace falta esperar de verdad ya lo espera cada
+          // paso por su cuenta, comprobando que su objetivo exista.
+          await pausa(250);
         }
+        // La secuencia terminó: se deja un margen para que el último panel
+        // acabe de pintarse y se corta el remedido.
+        limite = Date.now() + 1_500;
       })();
     }
 
@@ -525,22 +575,23 @@ export default function StudioTour() {
         return nuevo;
       });
     medir();
-    // Se remide en bucle durante un rato en lugar de una sola vez: tras pulsar
-    // una carpeta el panel nuevo tarda en montarse, y una única medición a los
-    // 300 ms llegaba antes de que el botón + existiera. La ventana se alarga
-    // según cuántos clics encadenados haya —cada uno añade su pausa— y bastante
-    // más si hay que abrir un menú, porque ahí se prueban varios botones.
-    const nClics = paso.prepara?.length ?? 0;
-    const abreMenu = (paso.prepara ?? []).flat().some((s) => s.startsWith(MENU_CON));
-    const duracion = nClics ? 2200 + nClics * 700 + (abreMenu ? 5000 : 0) : 400;
-    const bucle = setInterval(medir, 200);
-    const fin = setTimeout(() => clearInterval(bucle), duracion);
+    // Se remide en bucle en lugar de una sola vez: tras pulsar una carpeta el
+    // panel nuevo tarda en montarse, y una única medición llegaba antes de que
+    // el botón existiera.
+    //
+    // El bucle lo corta la propia secuencia al acabar, no un tiempo estimado:
+    // ahora cada clic espera a su objetivo, así que la duración depende de lo
+    // que tarde el Studio y no se puede saber de antemano. El tope solo está
+    // para que nunca quede un temporizador vivo si la secuencia no termina.
+    const bucle = setInterval(() => {
+      medir();
+      if (Date.now() > limite) clearInterval(bucle);
+    }, 220);
 
     window.addEventListener('resize', medir);
     window.addEventListener('scroll', medir, true);
     return () => {
       clearInterval(bucle);
-      clearTimeout(fin);
       // Cierra el menú que este paso hubiera abierto, para que no se quede
       // desplegado al avanzar o al cerrar el tutorial.
       //
