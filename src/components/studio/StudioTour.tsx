@@ -16,19 +16,35 @@ interface Recuadro { top: number; left: number; width: number; height: number }
  * Studio está minificado y no expone identificadores estables.
  */
 function buscarElemento(ancla: string): HTMLElement | null {
-  const [tipo, ...resto] = ancla.split(':');
-  const valor = resto.join(':');
+  const corte = ancla.indexOf(':');
+  if (corte < 0) return null;
+  let tipo = ancla.slice(0, corte);
+  const valor = ancla.slice(corte + 1);
+
+  /**
+   * El prefijo `panel-` limita la búsqueda al área de paneles.
+   *
+   * Es necesario porque el Studio tiene DOS botones con el mismo significado:
+   * el + global de la barra superior y el + de la cabecera de cada carpeta.
+   * Una búsqueda por todo el documento encontraba primero el de arriba y
+   * resaltaba el botón equivocado.
+   */
+  const soloPanel = tipo.startsWith('panel-');
+  if (soloPanel) tipo = tipo.slice('panel-'.length);
+
+  const raiz: ParentNode =
+    (soloPanel && document.querySelector('[data-ui="PaneLayout"]')) || document;
 
   try {
-    if (tipo === 'css') return document.querySelector<HTMLElement>(valor);
+    if (tipo === 'css') return raiz.querySelector<HTMLElement>(valor);
 
     if (tipo === 'texto') {
-      const candidatos = [...document.querySelectorAll<HTMLElement>('button, a, [role="button"]')];
+      const candidatos = [...raiz.querySelectorAll<HTMLElement>('button, a, [role="button"]')];
       return candidatos.find((e) => (e.textContent ?? '').trim().includes(valor)) ?? null;
     }
 
     if (tipo === 'aria') {
-      const candidatos = [...document.querySelectorAll<HTMLElement>('[aria-label]')];
+      const candidatos = [...raiz.querySelectorAll<HTMLElement>('[aria-label]')];
       return candidatos.find((e) => (e.getAttribute('aria-label') ?? '').includes(valor)) ?? null;
     }
   } catch {

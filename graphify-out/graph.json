@@ -230,8 +230,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_contact_route",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "app/api/contact/route.ts"
     },
     {
@@ -241,8 +241,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "app_api_contact_route_resend",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "resend"
     },
     {
@@ -252,8 +252,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_api_contact_route_rate_limit",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "rate_limit"
     },
     {
@@ -263,8 +263,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_api_contact_route_isratelimited",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "isratelimited()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "app_api_contact_route_post",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "post()"
     },
     {
@@ -450,8 +450,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "app_api_studio_auth_forgot_route_post",
-      "community": 66,
-      "community_name": "getContactInfo",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "post()"
     },
     {
@@ -604,8 +604,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_verificar_token_route",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "verificar-token/route.ts"
     },
     {
@@ -615,8 +615,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "app_api_verificar_token_route_get",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "get()"
     },
     {
@@ -769,8 +769,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_buscar_page",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "app/buscar/page.tsx"
     },
     {
@@ -780,8 +780,8 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "app_buscar_page_buscarpageprops",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "buscarpageprops"
     },
     {
@@ -791,8 +791,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "app_buscar_page_metadata",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "metadata"
     },
     {
@@ -802,8 +802,8 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "app_buscar_page_type_label",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "type_label"
     },
     {
@@ -813,8 +813,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_buscar_page_type_icon",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "type_icon"
     },
     {
@@ -824,8 +824,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "app_buscar_page_resultcard",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "resultcard()"
     },
     {
@@ -835,8 +835,8 @@
       "source_location": "L44",
       "_origin": "ast",
       "id": "app_buscar_page_buscarpage",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "buscarpage()"
     },
     {
@@ -846,8 +846,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_contact_page",
-      "community": 66,
-      "community_name": "getContactInfo",
+      "community": 84,
+      "community_name": "app/api/quote/route.ts",
       "norm_label": "app/contact/page.tsx"
     },
     {
@@ -857,8 +857,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "app_contact_page_metadata",
-      "community": 66,
-      "community_name": "getContactInfo",
+      "community": 84,
+      "community_name": "app/api/quote/route.ts",
       "norm_label": "metadata"
     },
     {
@@ -868,8 +868,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_contact_page_contactpage",
-      "community": 66,
-      "community_name": "getContactInfo",
+      "community": 84,
+      "community_name": "app/api/quote/route.ts",
       "norm_label": "contactpage()"
     },
     {
@@ -1264,8 +1264,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_page",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "app/page.tsx"
     },
     {
@@ -1275,8 +1275,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "app_page_value_props",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "value_props"
     },
     {
@@ -1286,8 +1286,8 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "app_page_home",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "home()"
     },
     {
@@ -3101,8 +3101,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_home_statssection",
-      "community": 42,
-      "community_name": "src/components/shared/ProgramPage.tsx",
+      "community": 10,
+      "community_name": "ContactForm.tsx",
       "norm_label": "src/components/home/statssection.tsx"
     },
     {
@@ -3112,8 +3112,8 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "src_components_home_statssection_stats",
-      "community": 42,
-      "community_name": "src/components/shared/ProgramPage.tsx",
+      "community": 10,
+      "community_name": "ContactForm.tsx",
       "norm_label": "stats"
     },
     {
@@ -3123,8 +3123,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "src_components_home_statssection_starsfill",
-      "community": 42,
-      "community_name": "src/components/shared/ProgramPage.tsx",
+      "community": 10,
+      "community_name": "ContactForm.tsx",
       "norm_label": "starsfill()"
     },
     {
@@ -3134,8 +3134,8 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_home_statssection_statssectionprops",
-      "community": 42,
-      "community_name": "src/components/shared/ProgramPage.tsx",
+      "community": 10,
+      "community_name": "ContactForm.tsx",
       "norm_label": "statssectionprops"
     },
     {
@@ -3145,8 +3145,8 @@
       "source_location": "L43",
       "_origin": "ast",
       "id": "src_components_home_statssection_statssection",
-      "community": 42,
-      "community_name": "src/components/shared/ProgramPage.tsx",
+      "community": 10,
+      "community_name": "ContactForm.tsx",
       "norm_label": "statssection()"
     },
     {
@@ -4091,8 +4091,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_components_shared_testimonialscarousel",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "src/components/shared/testimonialscarousel.tsx"
     },
     {
@@ -4102,8 +4102,8 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_components_shared_testimonialscarousel_testimonial",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "testimonial"
     },
     {
@@ -4113,8 +4113,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_components_shared_testimonialscarousel_testimonialscarouselprops",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "testimonialscarouselprops"
     },
     {
@@ -4124,8 +4124,8 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_components_shared_testimonialscarousel_testimonialscarousel",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "testimonialscarousel()"
     },
     {
@@ -4319,7 +4319,7 @@
       "label": "PASOS",
       "file_type": "code",
       "source_file": "src/components/studio/tourSteps.ts",
-      "source_location": "L27",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "src_components_studio_toursteps_pasos",
       "community": 122,
@@ -5026,8 +5026,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_email_sender",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 66,
+      "community_name": "getContactInfo",
       "norm_label": "sender.ts"
     },
     {
@@ -5037,8 +5037,8 @@
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_lib_email_sender_dominio",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 66,
+      "community_name": "getContactInfo",
       "norm_label": "dominio"
     },
     {
@@ -5048,8 +5048,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_email_sender_remitente",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 66,
+      "community_name": "getContactInfo",
       "norm_label": "remitente()"
     },
     {
@@ -5059,8 +5059,8 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_lib_email_sender_from_web",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 84,
+      "community_name": "app/api/quote/route.ts",
       "norm_label": "from_web"
     },
     {
@@ -5070,8 +5070,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_lib_email_sender_from_cliente",
-      "community": 120,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "from_cliente"
     },
     {
@@ -5224,8 +5224,8 @@
       "source_location": "L359",
       "_origin": "ast",
       "id": "src_lib_email_templates_quoteuserhtml",
-      "community": 84,
-      "community_name": "app/api/quote/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "quoteuserhtml()"
     },
     {
@@ -5235,8 +5235,8 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "src_lib_email_templates_testimonioadminhtml",
-      "community": 57,
-      "community_name": "src/lib/email/templates.ts",
+      "community": 79,
+      "community_name": "app/api/testimonio/route.ts",
       "norm_label": "testimonioadminhtml()"
     },
     {
@@ -5246,8 +5246,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_leads",
-      "community": 84,
-      "community_name": "app/api/quote/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "src/lib/leads.ts"
     },
     {
@@ -5268,8 +5268,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_leads_leads_file",
-      "community": 84,
-      "community_name": "app/api/quote/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "leads_file"
     },
     {
@@ -5279,8 +5279,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_leads_readleads",
-      "community": 84,
-      "community_name": "app/api/quote/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "readleads()"
     },
     {
@@ -5290,8 +5290,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_lib_leads_savelead",
-      "community": 84,
-      "community_name": "app/api/quote/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "savelead()"
     },
     {
@@ -5301,8 +5301,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_sanity_client",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "src/lib/sanity/client.ts"
     },
     {
@@ -5312,8 +5312,8 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "src_lib_sanity_client_base",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "base"
     },
     {
@@ -5323,8 +5323,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_sanity_client_client",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "client"
     },
     {
@@ -5334,8 +5334,8 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_lib_sanity_client_cdnclient",
-      "community": 125,
-      "community_name": "src/lib/sanity/client.ts",
+      "community": 47,
+      "community_name": "src/lib/sanity/queries.ts",
       "norm_label": "cdnclient"
     },
     {
@@ -5521,8 +5521,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "src_lib_sanity_queries_getcontactinfo",
-      "community": 66,
-      "community_name": "getContactInfo",
+      "community": 84,
+      "community_name": "app/api/quote/route.ts",
       "norm_label": "getcontactinfo()"
     },
     {
@@ -5565,8 +5565,8 @@
       "source_location": "L211",
       "_origin": "ast",
       "id": "src_lib_sanity_queries_getlatestposts",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "getlatestposts()"
     },
     {
@@ -5598,8 +5598,8 @@
       "source_location": "L243",
       "_origin": "ast",
       "id": "src_lib_sanity_queries_getsocios",
-      "community": 47,
-      "community_name": "src/lib/sanity/queries.ts",
+      "community": 83,
+      "community_name": "app/page.tsx",
       "norm_label": "getsocios()"
     },
     {
@@ -5675,8 +5675,8 @@
       "source_location": "L326",
       "_origin": "ast",
       "id": "src_lib_sanity_queries_getsearchindex",
-      "community": 121,
-      "community_name": "app/buscar/page.tsx",
+      "community": 65,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "getsearchindex()"
     },
     {
@@ -23363,7 +23363,19 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/components/studio/StudioTour.tsx",
-      "source_location": "L115",
+      "source_location": "L121",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "src_components_studio_studiotour_studiotour",
+      "target": "src_components_studio_studiotour_buscarelemento",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/components/studio/StudioTour.tsx",
+      "source_location": "L131",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_studio_studiotour_studiotour",
@@ -23385,7 +23397,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/components/studio/tourSteps.ts",
-      "source_location": "L27",
+      "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
       "source": "src_components_studio_toursteps",
@@ -36580,5 +36592,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "190cd2ada101aefbdf484d5eedaa29e87d1fceed"
+  "built_at_commit": "a308cc72a522ce3bc6fd793f288de5d990f429ad"
 }

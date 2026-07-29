@@ -15,6 +15,11 @@
  *   'css:<selector>'   → querySelector normal
  *   'texto:<palabra>'  → primer botón o enlace cuyo texto contenga la palabra
  *   'aria:<etiqueta>'  → elemento cuyo aria-label contenga la etiqueta
+ *
+ * Cualquiera admite el prefijo `panel-` para buscar SOLO dentro del área de
+ * paneles: 'panel-aria:Create'. Casi siempre es lo que se quiere. El Studio
+ * repite botones equivalentes en la barra superior — hay un + global además
+ * del + de cada carpeta— y sin acotar se resalta el de arriba.
  */
 export interface PasoTutorial {
   titulo: string;
@@ -66,12 +71,15 @@ export const PASOS: PasoTutorial[] = [
       'Ese botón solo aparece DENTRO de una carpeta, no en el índice. Al pulsarlo se ' +
       'abre un documento en blanco a la derecha, listo para rellenar.',
     // Abre una carpeta primero: el + no existe en la lista raíz.
-    prepara: ['texto:Blog / Noticias', 'texto:Destinos'],
+    prepara: ['panel-texto:Blog / Noticias', 'panel-texto:Destinos'],
+    // Todas acotadas al área de paneles: el + de la barra superior significa lo
+    // mismo y una búsqueda global lo encontraba antes, resaltando el de arriba
+    // en lugar del de la carpeta.
     anclas: [
-      'css:[data-testid="create-new-document-button"]',
-      'aria:Create new document',
-      'aria:Create',
-      'css:[data-testid="pane-header"] button[aria-label*="reate"]',
+      'panel-css:[data-testid="create-new-document-button"]',
+      'panel-aria:Create new document',
+      'panel-css:[data-testid="pane-header"] button[aria-label*="reate"]',
+      'panel-aria:Create',
     ],
     tip: 'Configuración del sitio y Programas no tienen +: son documentos fijos que solo se editan.',
   },
@@ -85,10 +93,10 @@ export const PASOS: PasoTutorial[] = [
       'publicar hasta corregirlo. Los avisos en amarillo son recomendaciones: no bloquean.',
     // Un singleton: se abre directo como documento, y siempre existe. Blog está
     // vacío, así que no serviría para enseñar un formulario.
-    prepara: ['texto:Configuración del sitio'],
+    prepara: ['panel-texto:Configuración del sitio'],
     anclas: [
-      'css:[data-testid="document-pane"]',
-      'css:[data-ui="DocumentPanel"]',
+      'panel-css:[data-testid="document-pane"]',
+      'panel-css:[data-ui="DocumentPanel"]',
       'css:[data-ui="PaneLayout"] > div:last-child',
     ],
     tip: 'Los campos obligatorios se marcan solos. No hace falta que los adivines.',
@@ -101,10 +109,10 @@ export const PASOS: PasoTutorial[] = [
       'Para que salga publicado, pulsa el botón Publicar de abajo. Si aparece apagado ' +
       'es que no hay cambios pendientes.',
     anclas: [
-      'css:[data-testid="action-Publish"]',
-      'texto:Publish',
-      'texto:Publicar',
-      'css:[data-testid="pane-footer"]',
+      'panel-css:[data-testid="action-Publish"]',
+      'panel-texto:Publish',
+      'panel-texto:Publicar',
+      'panel-css:[data-testid="pane-footer"]',
     ],
     tip: 'Atajo: Ctrl + S (o Cmd + S en Mac) publica sin tocar el ratón.',
   },
