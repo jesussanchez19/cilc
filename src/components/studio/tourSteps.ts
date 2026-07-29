@@ -61,7 +61,9 @@ export const PASOS: PasoTutorial[] = [
       '• Socios y Miembros — el equipo y las alianzas\n' +
       '• Solicitudes de Testimonio — lo que envían los alumnos\n' +
       '• Tokens de Testimonio — enlaces de un solo uso',
-    anclas: ['css:[data-ui="PaneLayout"] > div:first-child', 'css:#structure', 'css:main'],
+    // Sin `main` como reserva: abarca toda la página, y resaltarla entera no
+    // señala nada ni deja sitio para la tarjeta.
+    anclas: ['css:[data-ui="PaneLayout"] > div:first-child', 'css:#structure'],
   },
   {
     titulo: 'Crear contenido nuevo',
@@ -75,11 +77,13 @@ export const PASOS: PasoTutorial[] = [
     // Todas acotadas al área de paneles: el + de la barra superior significa lo
     // mismo y una búsqueda global lo encontraba antes, resaltando el de arriba
     // en lugar del de la carpeta.
+    // El + de la cabecera no tiene identificador reconocible ni un aria-label
+    // con "Create", así que se localiza por su posición: mismo renglón que el
+    // título del panel y a su derecha.
     anclas: [
+      'junto-a:Blog / Noticias',
       'panel-css:[data-testid="create-new-document-button"]',
       'panel-aria:Create new document',
-      'panel-css:[data-testid="pane-header"] button[aria-label*="reate"]',
-      'panel-aria:Create',
     ],
     tip: 'Configuración del sitio y Programas no tienen +: son documentos fijos que solo se editan.',
   },

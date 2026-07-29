@@ -51,6 +51,8 @@ function buscarElemento(ancla: string): HTMLElement | null {
   };
 
   try {
+    if (tipo === 'junto-a') return botonJuntoATexto(valor);
+
     if (tipo === 'css') {
       const todos = [...raiz.querySelectorAll<HTMLElement>(valor)];
       return todos.find(filtrar) ?? null;
@@ -71,6 +73,40 @@ function buscarElemento(ancla: string): HTMLElement | null {
   return null;
 }
 
+/**
+ * Botón que está en la misma fila que un texto dado y a su derecha.
+ *
+ * Sirve para el + de la cabecera de una carpeta, que no lleva `data-testid`
+ * reconocible ni un aria-label con "Create". Buscarlo por su posición respecto
+ * al título del panel es más estable que depender del DOM interno del Studio.
+ *
+ * Se toma la ÚLTIMA coincidencia del texto porque el nombre de la carpeta
+ * aparece dos veces: en la barra lateral y en la cabecera del panel abierto.
+ */
+function botonJuntoATexto(texto: string): HTMLElement | null {
+  const limite = bordeInferiorNavbar();
+
+  const rotulos = [...document.querySelectorAll<HTMLElement>('h1, h2, h3, span, div')]
+    .filter((e) => (e.textContent ?? '').trim() === texto)
+    .filter((e) => e.getBoundingClientRect().top >= limite);
+  const rotulo = rotulos[rotulos.length - 1];
+  if (!rotulo) return null;
+
+  const r = rotulo.getBoundingClientRect();
+  const centro = r.top + r.height / 2;
+
+  const botones = [...document.querySelectorAll<HTMLElement>('button')]
+    .filter((b) => {
+      const rb = b.getBoundingClientRect();
+      if (rb.width < 8 || rb.height < 8) return false;
+      // Misma franja horizontal y a la derecha del rótulo.
+      return Math.abs(rb.top + rb.height / 2 - centro) < 22 && rb.left > r.right;
+    })
+    .sort((a, z) => a.getBoundingClientRect().left - z.getBoundingClientRect().left);
+
+  return botones[0] ?? null;
+}
+
 /** Dónde termina la barra superior, medida desde sus pestañas de herramientas. */
 function bordeInferiorNavbar(): number {
   const pestanas = ['Structure', 'Vision', 'Releases'];
@@ -81,13 +117,22 @@ function bordeInferiorNavbar(): number {
 
 /** Primer ancla que exista y sea visible. `null` si ninguna coincide. */
 function localizar(paso: PasoTutorial): Recuadro | null {
+  const areaPantalla = window.innerWidth * window.innerHeight;
+
   for (const ancla of paso.anclas ?? []) {
     const el = buscarElemento(ancla);
     if (!el) continue;
     const r = el.getBoundingClientRect();
+
     // Descarta elementos ocultos o de tamaño ridículo: resaltarlos se vería peor
     // que no resaltar nada.
     if (r.width < 8 || r.height < 8) continue;
+
+    // Y también los que ocupan casi toda la pantalla. Resaltar "todo" no señala
+    // nada, y además no deja hueco donde poner la tarjeta sin taparlo. En ese
+    // caso es mejor oscurecer sin foco.
+    if ((r.width * r.height) / areaPantalla > 0.7) continue;
+
     return { top: r.top, left: r.left, width: r.width, height: r.height };
   }
   return null;
@@ -248,6 +293,31 @@ export default function StudioTour() {
       if (r.right > vw - 12) left = Math.max(12, vw - r.width - 12);
       if (left < 12) left = 12;
 
+      // Recolocar por el borde puede devolver la tarjeta encima del recuadro
+      // resaltado, que es justo lo que hay que evitar: si se solapa, se aparta
+      // al lado con más espacio.
+      if (foco) {
+        const choca =
+          left < foco.left + foco.width + 4 && left + r.width > foco.left - 4 &&
+          top < foco.top + foco.height + 4 && top + r.height > foco.top - 4;
+
+        if (choca) {
+          const espacio = {
+            izq: foco.left,
+            der: vw - (foco.left + foco.width),
+            arr: foco.top,
+            aba: vh - (foco.top + foco.height),
+          };
+          const mejor = (Object.keys(espacio) as (keyof typeof espacio)[])
+            .sort((a, z) => espacio[z] - espacio[a])[0];
+
+          if (mejor === 'izq') left = Math.max(12, foco.left - r.width - 12);
+          else if (mejor === 'der') left = Math.min(vw - r.width - 12, foco.left + foco.width + 12);
+          else if (mejor === 'arr') top = Math.max(12, foco.top - r.height - 12);
+          else top = Math.min(vh - r.height - 12, foco.top + foco.height + 12);
+        }
+      }
+
       if (Math.abs(top - r.top) > 0.5) card.style.top = `${top}px`;
       if (Math.abs(left - r.left) > 0.5) card.style.left = `${left}px`;
     };
@@ -279,35 +349,47 @@ export default function StudioTour() {
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
-  let posTop: number;
-  let posLeft: number;
+  /**
+   * Elige dónde poner la tarjeta SIN taparla contra lo que está resaltando.
+   *
+   * Es el punto clave: colocarla encima del foco hace inútil el resaltado,
+   * porque el usuario no puede ver aquello de lo que le estamos hablando. Pasaba
+   * con el panel de documento —que ocupa media pantalla— y con el botón de
+   * salir, que quedaba oculto tras la propia tarjeta.
+   *
+   * Se prueban los cuatro lados y se descarta el que se solape o se salga. Si
+   * ninguno vale, se usa el lado con más espacio libre aunque quede justo.
+   */
+  const { top: posTop, left: posLeft } = (() => {
+    const centrado = { top: vh / 2 - ALTO_EST / 2, left: vw / 2 - ANCHO / 2 };
+    if (!hayFoco) return centrado;
 
-  if (hayFoco) {
-    const debajo = foco.top + foco.height + HUECO;
-    const encima = foco.top - HUECO - ALTO_EST;
-    const derecha = foco.left + foco.width + HUECO;
-    const izquierda = foco.left - HUECO - ANCHO;
+    const cx = foco.left + foco.width / 2 - ANCHO / 2;
+    const cy = foco.top + foco.height / 2 - ALTO_EST / 2;
 
-    if (debajo + ALTO_EST <= vh) {
-      posTop = debajo;
-      posLeft = foco.left + foco.width / 2 - ANCHO / 2;
-    } else if (encima >= 0) {
-      posTop = encima;
-      posLeft = foco.left + foco.width / 2 - ANCHO / 2;
-    } else if (derecha + ANCHO <= vw) {
-      posLeft = derecha;
-      posTop = foco.top + foco.height / 2 - ALTO_EST / 2;
-    } else if (izquierda >= 0) {
-      posLeft = izquierda;
-      posTop = foco.top + foco.height / 2 - ALTO_EST / 2;
-    } else {
-      posLeft = vw / 2 - ANCHO / 2;
-      posTop = vh / 2 - ALTO_EST / 2;
-    }
-  } else {
-    posLeft = vw / 2 - ANCHO / 2;
-    posTop = vh / 2 - ALTO_EST / 2;
-  }
+    const opciones = [
+      { top: foco.top + foco.height + HUECO, left: cx, hueco: vh - (foco.top + foco.height) },
+      { top: foco.top - HUECO - ALTO_EST,    left: cx, hueco: foco.top },
+      { top: cy, left: foco.left + foco.width + HUECO, hueco: vw - (foco.left + foco.width) },
+      { top: cy, left: foco.left - HUECO - ANCHO,      hueco: foco.left },
+    ];
+
+    const cabe = (o: { top: number; left: number }) => {
+      const t = Math.max(12, Math.min(o.top, vh - ALTO_EST - 12));
+      const l = Math.max(12, Math.min(o.left, vw - ANCHO - 12));
+      if (o.top < 0 || o.top + ALTO_EST > vh) return false;
+      if (o.left < 0 || o.left + ANCHO > vw) return false;
+      // Sin solape con el recuadro resaltado, con algo de margen.
+      const seSolapa =
+        l < foco.left + foco.width + 4 && l + ANCHO > foco.left - 4 &&
+        t < foco.top + foco.height + 4 && t + ALTO_EST > foco.top - 4;
+      return !seSolapa;
+    };
+
+    return opciones.find(cabe)
+      ?? [...opciones].sort((a, z) => z.hueco - a.hueco)[0]
+      ?? centrado;
+  })();
 
   const estiloTarjeta: React.CSSProperties = {
     position: 'fixed',
