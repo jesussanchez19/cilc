@@ -52,9 +52,17 @@ export interface PasoTutorial {
    *   ['a', 'b']    → pulsa a, espera, pulsa b   (secuencia)
    *   [['a', 'b']]  → pulsa a, o b si a no está  (alternativas)
    *
-   * Admite la sintaxis de `anclas`, más una propia: 'menu-con:<texto>' despliega
-   * el menú que contenga esa opción, probando los botones que abren menús hasta
-   * que aparece. Al cambiar de paso se cierra solo.
+   * Admite la sintaxis de `anclas`, más una propia:
+   *
+   *   'menu-con:<opción>@<ref>,<ref>' → despliega el menú que contenga esa
+   *        opción, probando los botones que declaran abrir un menú hasta que
+   *        aparece. Al cambiar de paso se cierra solo.
+   *
+   *        Las referencias tras la @ son OBLIGATORIAS y acotan la fila donde se
+   *        permite pulsar: se toma la de los botones de icono que hay a la
+   *        derecha del primer texto que exista. Sin ese cerco el tutorial
+   *        pulsaba botones de otras zonas, y en esas filas hay cosas como
+   *        cerrar el documento.
    *
    * Solo se usa para navegar. Nunca para acciones que modifiquen contenido.
    */
@@ -171,7 +179,15 @@ export const PASOS: PasoTutorial[] = [
     // Tres pasos: la carpeta, un documento y el menú. La opción de eliminar solo
     // existe con un documento abierto, y Configuración del sitio y Programas no
     // la tienen — son fijos y no deben borrarse.
-    prepara: ['panel-texto:Destinos', 'panel-texto:Canadá', 'menu-con:Eliminar'],
+    prepara: [
+      'panel-texto:Destinos',
+      'panel-texto:Canadá',
+      // Las referencias tras la @ acotan la fila donde se permite pulsar a la
+      // cabecera del documento. Es imprescindible: en esa misma fila están el
+      // botón de cerrar y el de abrir en otra pestaña, y sin el cerco el
+      // tutorial cerraba el documento que acababa de abrir.
+      'menu-con:Eliminar@Published,Draft',
+    ],
     // "Eliminar" es nuestra propia etiqueta, así que es el ancla más firme de
     // todo el tutorial. Sin prefijo `panel-` porque el menú se dibuja en un
     // portal, fuera del contenedor de paneles.

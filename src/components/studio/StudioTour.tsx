@@ -206,45 +206,69 @@ function regionDerechaDe(selector: string): Recuadro | null {
  *
  * El botón de tres puntos de la cabecera del documento no se puede identificar:
  * es uno de cinco iconos seguidos, sin aria-label ni testid propios. En vez de
- * adivinar cuál es, se prueban los que declaran abrir un menú y se COMPRUEBA el
- * resultado — si la opción buscada aparece, era ese; si no, se cierra y se
- * sigue. El criterio de éxito es justo lo que el paso necesita resaltar, así que
- * no hay forma de acertar el botón y fallar el objetivo.
+ * adivinar cuál es, se prueban los candidatos y se COMPRUEBA el resultado — si
+ * la opción buscada aparece, era ese; si no, se cierra y se sigue. El criterio
+ * de éxito es justo lo que el paso necesita resaltar, así que no hay forma de
+ * acertar el botón y fallar el objetivo.
  *
- * Se descartan los enlaces y se ordena de arriba abajo a propósito: en esa fila
- * también están el botón de cerrar el documento y los menús de cada campo del
- * formulario, y pulsar el de cerrar dejaría el paso sin nada que enseñar.
+ * Lo delicado es a quién se le permite un clic de prueba, porque en esa misma
+ * fila están el botón de CERRAR el documento y el de abrirlo en otra pestaña.
+ * Dos cercos, y los dos son necesarios:
+ *
+ *  1. Solo `aria-haspopup`, que es lo que declara "esto abre un menú". Antes se
+ *     aceptaba también `aria-expanded` y fue un error: ese atributo lo llevan
+ *     los botones de expandir y colapsar, así que el tutorial cerraba el
+ *     documento y abría una pestaña nueva.
+ *  2. Solo dentro de la fila indicada en `filaDe`. Sin ese cerco entraban los
+ *     menús de cada campo del formulario y el de la cabecera de la lista, y
+ *     cada clic de prueba era una ocasión más de tocar algo indebido.
+ *
+ * Aun así se comprueba que el documento siga abierto después de cada intento:
+ * si la fila de referencia desaparece, se para en seco.
  */
-async function abrirMenuCon(texto: string): Promise<HTMLElement | null> {
-  const visible = () => buscarElemento(`texto:${texto}`);
+async function abrirMenuCon(opcion: string, filaDe: string[]): Promise<HTMLElement | null> {
+  const visible = () => buscarElemento(`texto:${opcion}`);
   // Si ya está abierto no se toca nada: no lo abrimos nosotros, así que
   // tampoco nos toca cerrarlo.
   if (visible()) return null;
 
-  const limite = bordeInferiorNavbar();
-  const candidatos = [...document.querySelectorAll<HTMLElement>('[aria-haspopup], [aria-expanded]')]
+  const fila = () => filaDe.map(grupoDerechaDe).find((r) => r !== undefined && r !== null) ?? null;
+
+  const inicial = fila();
+  if (!inicial) return null;
+
+  const dentro = (r: DOMRect) => {
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+    return cx >= inicial.left - 2 && cx <= inicial.left + inicial.width + 2 &&
+           cy >= inicial.top - 2 && cy <= inicial.top + inicial.height + 2;
+  };
+
+  const candidatos = [...document.querySelectorAll<HTMLElement>('[aria-haspopup]')]
     .filter((b) => {
       if (b.tagName === 'A') return false;
-      const r = b.getBoundingClientRect();
-      if (r.width < 8 || r.height < 8 || r.top < limite) return false;
-      // Solo iconos cuadrados: descarta pestañas y desplegables de texto.
-      return Math.abs(r.width - r.height) < 12;
+      // Un menú, no un diálogo: `aria-haspopup="dialog"` abriría una ventana
+      // modal encima del tutorial.
+      const tipo = b.getAttribute('aria-haspopup');
+      if (tipo !== 'menu' && tipo !== 'true') return false;
+      return dentro(b.getBoundingClientRect());
     })
-    .sort((a, z) => {
-      const ra = a.getBoundingClientRect();
-      const rz = z.getBoundingClientRect();
-      // Cabecera del documento primero, y dentro de ella de derecha a
-      // izquierda: el menú del documento está al final de la fila.
-      return ra.top - rz.top || rz.left - ra.left;
-    });
+    // De derecha a izquierda: el menú del documento está al final de la fila.
+    .sort((a, z) => z.getBoundingClientRect().left - a.getBoundingClientRect().left);
 
   for (const boton of candidatos) {
     boton.click();
     await new Promise((r) => setTimeout(r, 380));
     if (visible()) return boton;
-    // No era este: se cierra para no ir dejando menús abiertos por la pantalla.
+
+    // No era este. Se cierra para no ir dejando menús abiertos por la pantalla.
     boton.click();
     await new Promise((r) => setTimeout(r, 140));
+
+    // Y si el clic se llevó por delante la cabecera, se abandona: seguir
+    // probando sobre una pantalla que ya no es la que medimos es justo cómo se
+    // acaba pulsando lo que no toca.
+    if (!fila()) return null;
   }
   return null;
 }
@@ -433,7 +457,12 @@ export default function StudioTour() {
           // reserva acababa abriendo las dos, una detrás de otra.
           for (const sel of Array.isArray(clic) ? clic : [clic]) {
             if (sel.startsWith(MENU_CON)) {
-              menu.boton = await abrirMenuCon(sel.slice(MENU_CON.length));
+              // 'menu-con:<opción>@<ref>,<ref>' — las referencias delimitan la
+              // fila donde se permite pulsar. Van en el paso, a la vista, y no
+              // escondidas aquí: son el cerco de seguridad de esta operación.
+              const [opcion, refs = ''] = sel.slice(MENU_CON.length).split('@');
+              const fila = refs.split(',').map((s) => s.trim()).filter(Boolean);
+              menu.boton = fila.length ? await abrirMenuCon(opcion, fila) : null;
               break;
             }
             const el = buscarElemento(sel);
