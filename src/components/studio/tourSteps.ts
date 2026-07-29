@@ -105,21 +105,21 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Crear contenido nuevo',
     cuerpo:
-      'Acabamos de abrir "Blog / Noticias" para enseñártelo. Fíjate en el botón + ' +
-      'resaltado, arriba de la lista.\n\n' +
+      'Acabamos de abrir "Destinos" para enseñártelo. Fíjate en el botón + resaltado, ' +
+      'arriba de la lista.\n\n' +
       'Ese botón solo aparece DENTRO de una carpeta, no en el índice. Al pulsarlo se ' +
       'abre un documento en blanco a la derecha, listo para rellenar.',
-    // Abre una carpeta primero: el + no existe en la lista raíz. Las dos
-    // entradas son ALTERNATIVAS de un mismo clic —de ahí la lista anidada—, no
-    // dos navegaciones seguidas.
-    prepara: [['panel-texto:Blog / Noticias', 'panel-texto:Destinos']],
+    // Abre una carpeta primero: el + no existe en la lista raíz. Destinos en
+    // todos los pasos que lo necesiten, para que el recorrido no vaya saltando
+    // de una sección a otra.
+    prepara: ['panel-texto:Destinos'],
     // El + de la cabecera no tiene identificador reconocible ni aria-label con
     // "Create", y además es un enlace, no un botón. Se localiza por posición:
     // mismo renglón que el título del panel y a su derecha. Las reservas van
     // acotadas al panel, porque el + de la barra superior significa lo mismo y
     // una búsqueda global lo encontraba antes.
     anclas: [
-      'junto-a:Blog / Noticias',
+      'junto-a:Destinos',
       'panel-css:[data-testid="create-new-document-button"]',
       'panel-aria:Create new document',
     ],
@@ -128,20 +128,29 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Rellenar los campos',
     cuerpo:
-      'Hemos abierto "Configuración del sitio" como ejemplo. Escribe en cada campo del ' +
-      'panel derecho: debajo de varios hay una nota que explica para qué sirve y qué ' +
-      'formato espera.\n\n' +
+      'Hemos abierto un destino como ejemplo. Escribe en cada campo del panel derecho: ' +
+      'debajo de varios hay una nota que explica para qué sirve y qué formato espera.\n\n' +
       'Si algo está mal o falta, aparece un aviso en rojo junto al campo y no te dejará ' +
       'publicar hasta corregirlo. Los avisos en amarillo son recomendaciones: no bloquean.',
-    // Un singleton: se abre directo como documento, y siempre existe. Blog está
-    // vacío, así que no serviría para enseñar un formulario.
-    prepara: ['panel-texto:Configuración del sitio'],
-    // Se resalta el panel de documento completo. El área se calcula a partir de
-    // la lista de carpetas porque ese contenedor no se identifica de forma
-    // fiable: los selectores acababan cayendo en el separador entre paneles.
+    // Se abre un destino concreto. Las alternativas son por si algún día se
+    // borra el primero: el tutorial seguiría funcionando con otro.
+    prepara: [
+      'panel-texto:Destinos',
+      ['panel-texto:Canadá', 'panel-texto:Japón', 'panel-texto:Australia'],
+    ],
+    // Se resalta el panel de documento completo. El área se calcula a partir del
+    // panel que tiene a su izquierda porque ese contenedor no se identifica de
+    // forma fiable: los selectores acababan cayendo en el separador entre
+    // paneles.
+    //
+    // Se mide desde el SEGUNDO panel, que es la lista de destinos. La reserva
+    // parte del primero y cubre el caso de un documento que se abre sin lista
+    // intermedia, como los singletons.
+    //
     // La tarjeta va a la izquierda, encajada sobre la lista, para dejar el
     // formulario entero a la vista.
     anclas: [
+      'region-derecha:[data-ui="PaneLayout"] > div:nth-child(2)',
       'region-derecha:[data-ui="PaneLayout"] > div:first-child',
       'panel-css:[data-testid="document-pane"]',
     ],
@@ -172,16 +181,17 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Eliminar un documento',
     cuerpo:
-      'Hemos abierto un destino porque aquí sí se puede borrar, y hemos desplegado por ' +
-      'ti el menú de tres puntos que hay arriba del documento. Ahí está Eliminar.\n\n' +
+      'Hemos desplegado por ti el menú de tres puntos que hay arriba del documento. ' +
+      'Ahí está Eliminar.\n\n' +
       'Pide confirmación antes de hacer nada, pero una vez confirmado NO hay vuelta ' +
       'atrás: el documento desaparece de Sanity y de la web.',
-    // Tres pasos: la carpeta, un documento y el menú. La opción de eliminar solo
-    // existe con un documento abierto, y Configuración del sitio y Programas no
-    // la tienen — son fijos y no deben borrarse.
+    // Se repiten los clics del paso anterior por si se llega aquí de vuelta con
+    // otra cosa abierta. La opción de eliminar solo existe con un documento
+    // abierto, y Configuración del sitio y Programas no la tienen — son fijos y
+    // no deben borrarse.
     prepara: [
       'panel-texto:Destinos',
-      'panel-texto:Canadá',
+      ['panel-texto:Canadá', 'panel-texto:Japón', 'panel-texto:Australia'],
       // Las referencias tras la @ acotan la fila donde se permite pulsar a la
       // cabecera del documento. Es imprescindible: en esa misma fila están el
       // botón de cerrar y el de abrir en otra pestaña, y sin el cerco el
