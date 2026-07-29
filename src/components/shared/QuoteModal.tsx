@@ -71,14 +71,23 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
     setStatus('loading');
 
     try {
-      const res = await fetch('/api/contact', {
+      // Se envía a /api/quote, no a /api/contact.
+      //
+      // Antes iba al de contacto metiendo teléfono y programa dentro del texto
+      // del mensaje. Eso tenía tres consecuencias: el lead se guardaba con
+      // tipo "contacto", así que el contador de cotizaciones de /admin/stats
+      // siempre marcaba cero; el correo al administrador usaba la plantilla
+      // genérica en vez de la de cotización, con los datos enterrados en texto
+      // libre; y el cliente recibía la confirmación equivocada.
+      const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: nombre,
           email,
-          subject: `Cotización: ${programa}`,
-          message: `Teléfono: ${telefono}\nPrograma: ${programa}\n\n${mensaje}`,
+          phone: telefono,
+          program: programa,
+          message: mensaje,
         }),
       });
 

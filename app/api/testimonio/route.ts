@@ -4,6 +4,7 @@ import { writeClient } from '@/lib/sanity/writeClient';
 import { getContactInfo, getAllDestinos, marcarTokenUsado } from '@/lib/sanity/queries';
 import { testimonioAdminHtml } from '@/lib/email/templates';
 import { Resend } from 'resend';
+import { FROM_WEB } from '@/lib/email/sender';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -162,7 +163,7 @@ export async function POST(req: NextRequest) {
   try {
     const contactInfo = await getContactInfo();
     await resend.emails.send({
-      from:    'CILC Web <onboarding@resend.dev>',
+      from:    FROM_WEB,
       to:      contactInfo.emailAdmin,
       subject: `[CILC] Nueva solicitud de testimonio — ${nombre}`,
       html:    testimonioAdminHtml({

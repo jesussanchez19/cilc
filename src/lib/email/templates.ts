@@ -39,8 +39,7 @@ const C = EMAIL_COLORS;
 const ACCENT = {
   contacto:    C.blue,
   cotizacion:  '#7c3aed',
-  testimonio:  '#059669',
-  suscripcion: '#0891b2',
+  testimonio:  '#0891b2',
 } as const;
 
 /**
@@ -393,7 +392,7 @@ export function testimonioAdminHtml(data: {
     : '—';
   return adminLayout({
     badge: 'Testimonio',
-    badgeColor: ACCENT.suscripcion,
+    badgeColor: ACCENT.testimonio,
     title: 'Nueva solicitud de testimonio',
     subtitle: `${new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
     rows: [
@@ -411,11 +410,3 @@ export function testimonioAdminHtml(data: {
   });
 }
 
-export function subscribeAdminHtml(email: string): string {
-  return adminLayout({
-    badge: 'Newsletter',
-    badgeColor: ACCENT.testimonio,
-    title: 'Nueva suscripción al newsletter',
-    rows: dataRow('Email', `<a href="mailto:${email}" style="color:${BLUE};text-decoration:none;">${email}</a>`, false),
-  });
-}

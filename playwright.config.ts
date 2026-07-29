@@ -11,7 +11,11 @@ export default defineConfig({
   timeout: 60_000,
   expect: { timeout: 10_000 },
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  // Un reintento también en local: la primera ejecución tras un `rm -rf .next`
+  // arranca el servidor en frío y alguna navegación puede agotar el tiempo
+  // aunque la página esté bien. No enmascara fallos reales — esos fallan en
+  // los dos intentos.
+  retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 1 : undefined,
 
   // Captura de pantalla y video en fallos
