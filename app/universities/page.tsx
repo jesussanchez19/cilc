@@ -77,7 +77,7 @@ export default function UniversitiesPage() {
                     <div className="space-y-2">
                       <div className="text-sm text-slate-600">
                         <span className="font-semibold" style={{ color: 'var(--blue-600)' }}>
-                          ${uni.costPerYear.toLocaleString()}
+                          ${uni.costPerYear.toLocaleString('es-MX')}
                         </span>
                         <span className="text-slate-400"> /año</span>
                       </div>
