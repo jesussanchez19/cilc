@@ -78,9 +78,9 @@ export default function FeaturedCountries() {
                   {country.name}
                 </h3>
                 <div className="flex items-center gap-3 text-xs text-slate-300 mb-3">
-                  <span>{country.universities.toLocaleString()} universidades</span>
+                  <span>{country.universities.toLocaleString('es-MX')} universidades</span>
                   <span className="w-px h-3 bg-slate-600" />
-                  <span>~${country.costOfLiving.toLocaleString()}/mes</span>
+                  <span>~${country.costOfLiving.toLocaleString('es-MX')}/mes</span>
                 </div>
 
                 {/* CTA revealed on hover */}

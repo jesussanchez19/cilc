@@ -64,8 +64,8 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
   const imgs = getCountryImages(country.id);
 
   const stats = [
-    { label: 'Universidades',              value: country.universities.toLocaleString(), icon: '🎓', bg: 'bg-blue-50',   text: 'text-blue-600'   },
-    { label: 'Costo de vida/mes',          value: `$${country.costOfLiving.toLocaleString()}`, icon: '💰', bg: 'bg-green-50',  text: 'text-green-600'  },
+    { label: 'Universidades',              value: country.universities.toLocaleString('es-MX'), icon: '🎓', bg: 'bg-blue-50',   text: 'text-blue-600'   },
+    { label: 'Costo de vida/mes',          value: `$${country.costOfLiving.toLocaleString('es-MX')}`, icon: '💰', bg: 'bg-green-50',  text: 'text-green-600'  },
     { label: 'Estudiantes internacionales',value: `${(country.students / 1000).toFixed(0)}K`,  icon: '🌍', bg: 'bg-purple-50', text: 'text-purple-600' },
     { label: 'Idioma principal',           value: country.language,                             icon: '💬', bg: 'bg-orange-50', text: 'text-orange-600' },
   ];
@@ -173,7 +173,7 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
                   </div>
                   <p className="text-gray-600 mb-1 text-sm">
                     <span className="font-semibold">Costo anual aprox.: </span>
-                    ${uni.costPerYear.toLocaleString()} USD
+                    ${uni.costPerYear.toLocaleString('es-MX')} USD
                   </p>
                   <a href={uni.website} target="_blank" rel="noopener noreferrer"
                     className="text-blue-600 text-sm hover:underline mb-3 inline-block">

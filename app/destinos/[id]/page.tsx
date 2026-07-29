@@ -90,8 +90,8 @@ export default async function CountryPage({ params }: PageProps) {
   // Solo entran las que tienen dato: una tarjeta con "—" no informa de nada y
   // hace parecer incompleta la ficha del destino.
   const stats = [
-    universidades ? { label: 'Universidades',    value: universidades.toLocaleString(),            icon: '🎓', accent: '#1B67E8' } : null,
-    costoVida     ? { label: 'Costo / mes',      value: `$${costoVida.toLocaleString()} USD`,      icon: '💰', accent: '#10b981' } : null,
+    universidades ? { label: 'Universidades',    value: universidades.toLocaleString('es-MX'),            icon: '🎓', accent: '#1B67E8' } : null,
+    costoVida     ? { label: 'Costo / mes',      value: `$${costoVida.toLocaleString('es-MX')} USD`,      icon: '💰', accent: '#10b981' } : null,
     estudiantes   ? { label: 'Est. internac.',   value: `${(estudiantes / 1000).toFixed(0)}K+`,    icon: '🌍', accent: '#8b5cf6' } : null,
     idioma        ? { label: 'Idioma principal', value: idioma,                                    icon: '💬', accent: '#f59e0b' } : null,
   ].filter((s): s is NonNullable<typeof s> => s !== null);
@@ -326,7 +326,7 @@ export default async function CountryPage({ params }: PageProps) {
                   <p className="text-blue-100 text-sm leading-relaxed mb-4">{costoVidaNota}</p>
                   {costoVida > 0 && (
                     <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/15 border border-white/25">
-                      <span className="text-white font-extrabold text-lg">${costoVida.toLocaleString()} USD</span>
+                      <span className="text-white font-extrabold text-lg">${costoVida.toLocaleString('es-MX')} USD</span>
                       <span className="text-blue-200 text-sm">/ mes estimado</span>
                     </div>
                   )}
