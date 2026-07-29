@@ -12,7 +12,7 @@
  * Ahora el valor lleva dentro su fecha de emisión y va firmado, así que el
  * servidor puede comprobar antigüedad de verdad en cada petición.
  *
- * Se usa Web Crypto (no el `crypto` de Node) porque el middleware corre en el
+ * Se usa Web Crypto (no el `crypto` de Node) porque el proxy corre en el
  * runtime Edge, donde los módulos de Node no están disponibles. Web Crypto
  * existe en ambos entornos.
  */
