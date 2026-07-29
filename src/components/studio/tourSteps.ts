@@ -22,6 +22,18 @@ export interface PasoTutorial {
   anclas?: string[];
   /** Consejo corto que se muestra destacado bajo el texto. */
   tip?: string;
+  /**
+   * Elementos que el tutorial pulsa ANTES de medir el foco, con la misma
+   * sintaxis que `anclas`.
+   *
+   * Hace falta porque algunas cosas no existen hasta que navegas: el botón +
+   * solo aparece dentro de una carpeta, no en la lista raíz. Sin esto, el paso
+   * de "crear contenido" no tenía nada que resaltar.
+   *
+   * Solo se usa para navegar dentro del panel. Nunca para acciones que
+   * modifiquen contenido.
+   */
+  prepara?: string[];
 }
 
 export const PASOS: PasoTutorial[] = [
@@ -49,20 +61,36 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Crear contenido nuevo',
     cuerpo:
-      'Para añadir un elemento, entra en su carpeta y pulsa el botón con el símbolo + ' +
-      'que aparece arriba de la lista.\n\n' +
-      'Se abre un documento en blanco a la derecha, listo para rellenar.',
-    anclas: ['aria:Create', 'texto:Create', 'css:[data-ui="Button"][aria-label*="reate"]'],
+      'Acabamos de abrir "Blog / Noticias" para enseñártelo. Fíjate en el botón + ' +
+      'resaltado, arriba de la lista.\n\n' +
+      'Ese botón solo aparece DENTRO de una carpeta, no en el índice. Al pulsarlo se ' +
+      'abre un documento en blanco a la derecha, listo para rellenar.',
+    // Abre una carpeta primero: el + no existe en la lista raíz.
+    prepara: ['texto:Blog / Noticias', 'texto:Destinos'],
+    anclas: [
+      'css:[data-testid="create-new-document-button"]',
+      'aria:Create new document',
+      'aria:Create',
+      'css:[data-testid="pane-header"] button[aria-label*="reate"]',
+    ],
     tip: 'Configuración del sitio y Programas no tienen +: son documentos fijos que solo se editan.',
   },
   {
     titulo: 'Rellenar los campos',
     cuerpo:
-      'Escribe en cada campo del panel derecho. Debajo de varios verás una nota que ' +
-      'explica para qué sirve y qué formato espera.\n\n' +
+      'Hemos abierto "Configuración del sitio" como ejemplo. Escribe en cada campo del ' +
+      'panel derecho: debajo de varios hay una nota que explica para qué sirve y qué ' +
+      'formato espera.\n\n' +
       'Si algo está mal o falta, aparece un aviso en rojo junto al campo y no te dejará ' +
       'publicar hasta corregirlo. Los avisos en amarillo son recomendaciones: no bloquean.',
-    anclas: ['css:[data-ui="DocumentPanel"]', 'css:[data-ui="PaneLayout"] > div:last-child'],
+    // Un singleton: se abre directo como documento, y siempre existe. Blog está
+    // vacío, así que no serviría para enseñar un formulario.
+    prepara: ['texto:Configuración del sitio'],
+    anclas: [
+      'css:[data-testid="document-pane"]',
+      'css:[data-ui="DocumentPanel"]',
+      'css:[data-ui="PaneLayout"] > div:last-child',
+    ],
     tip: 'Los campos obligatorios se marcan solos. No hace falta que los adivines.',
   },
   {
@@ -70,8 +98,14 @@ export const PASOS: PasoTutorial[] = [
     cuerpo:
       'Mientras escribes, el Studio guarda un borrador automáticamente. Ese borrador ' +
       'todavía NO se ve en la web.\n\n' +
-      'Para que salga publicado, pulsa el botón Publicar abajo a la derecha.',
-    anclas: ['texto:Publish', 'texto:Publicar', 'aria:Publish', 'css:[data-ui="PaneFooter"]'],
+      'Para que salga publicado, pulsa el botón Publicar de abajo. Si aparece apagado ' +
+      'es que no hay cambios pendientes.',
+    anclas: [
+      'css:[data-testid="action-Publish"]',
+      'texto:Publish',
+      'texto:Publicar',
+      'css:[data-testid="pane-footer"]',
+    ],
     tip: 'Atajo: Ctrl + S (o Cmd + S en Mac) publica sin tocar el ratón.',
   },
   {

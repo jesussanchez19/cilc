@@ -107,6 +107,22 @@ export default function StudioTour() {
   // paneles al redimensionar.
   useEffect(() => {
     if (!abierto || !paso) return;
+
+    /**
+     * Algunos pasos necesitan navegar antes de poder señalar nada: el botón +
+     * no existe hasta que se abre una carpeta. Se pulsa el primer candidato
+     * que exista y se deja que el panel se monte antes de medir.
+     *
+     * Es deliberadamente solo navegación. Nada que cree, edite ni borre
+     * contenido: el tutorial no debe tocar los datos de nadie.
+     */
+    if (paso.prepara?.length) {
+      for (const sel of paso.prepara) {
+        const destino = buscarElemento(sel);
+        if (destino) { destino.click(); break; }
+      }
+    }
+
     // Se compara antes de guardar: `localizar` devuelve un objeto nuevo cada
     // vez, así que asignarlo sin más provocaría un render en cada evento de
     // scroll y la tarjeta nunca llegaría a quedarse quieta.
@@ -122,11 +138,16 @@ export default function StudioTour() {
         return nuevo;
       });
     medir();
-    const t = setTimeout(medir, 300); // por si el panel aún estaba animando
+    // Varios reintentos en vez de uno: tras pulsar una carpeta el panel nuevo
+    // tarda en montarse, y una sola medición a los 300 ms llegaba antes de que
+    // el botón + existiera.
+    const espera = paso.prepara?.length ? [150, 400, 800, 1400, 2200] : [300];
+    const temporizadores = espera.map((ms) => setTimeout(medir, ms));
+
     window.addEventListener('resize', medir);
     window.addEventListener('scroll', medir, true);
     return () => {
-      clearTimeout(t);
+      temporizadores.forEach(clearTimeout);
       window.removeEventListener('resize', medir);
       window.removeEventListener('scroll', medir, true);
     };
