@@ -9,6 +9,9 @@ const CLAVE_VISTO = 'cilc-studio-tour-visto';
 
 interface Recuadro { top: number; left: number; width: number; height: number }
 
+/** Prefijo de las entradas de `prepara` que abren un menú desplegable. */
+const MENU_CON = 'menu-con:';
+
 /**
  * Resuelve un ancla a un elemento real.
  *
@@ -60,7 +63,10 @@ function buscarElemento(ancla: string): HTMLElement | null {
     }
 
     if (tipo === 'texto') {
-      const candidatos = [...raiz.querySelectorAll<HTMLElement>('button, a, [role="button"]')]
+      // `menuitem` incluido para las opciones de los menús desplegables, que no
+      // son botones ni enlaces y sin esto quedaban fuera del alcance.
+      const candidatos = [...raiz
+        .querySelectorAll<HTMLElement>('button, a, [role="button"], [role="menuitem"]')]
         .filter(filtrar);
       // La coincidencia exacta va primero. Buscando solo "contiene", `Publish`
       // encontraba antes el distintivo "Published" de la cabecera que el botón
@@ -192,6 +198,55 @@ function regionDerechaDe(selector: string): Recuadro | null {
 
   if (width < 120 || height < 120) return null;
   return { top, left, width, height };
+}
+
+/**
+ * Abre el menú desplegable que contiene una opción concreta y devuelve el botón
+ * que lo abrió, o `null` si no se logró.
+ *
+ * El botón de tres puntos de la cabecera del documento no se puede identificar:
+ * es uno de cinco iconos seguidos, sin aria-label ni testid propios. En vez de
+ * adivinar cuál es, se prueban los que declaran abrir un menú y se COMPRUEBA el
+ * resultado — si la opción buscada aparece, era ese; si no, se cierra y se
+ * sigue. El criterio de éxito es justo lo que el paso necesita resaltar, así que
+ * no hay forma de acertar el botón y fallar el objetivo.
+ *
+ * Se descartan los enlaces y se ordena de arriba abajo a propósito: en esa fila
+ * también están el botón de cerrar el documento y los menús de cada campo del
+ * formulario, y pulsar el de cerrar dejaría el paso sin nada que enseñar.
+ */
+async function abrirMenuCon(texto: string): Promise<HTMLElement | null> {
+  const visible = () => buscarElemento(`texto:${texto}`);
+  // Si ya está abierto no se toca nada: no lo abrimos nosotros, así que
+  // tampoco nos toca cerrarlo.
+  if (visible()) return null;
+
+  const limite = bordeInferiorNavbar();
+  const candidatos = [...document.querySelectorAll<HTMLElement>('[aria-haspopup], [aria-expanded]')]
+    .filter((b) => {
+      if (b.tagName === 'A') return false;
+      const r = b.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8 || r.top < limite) return false;
+      // Solo iconos cuadrados: descarta pestañas y desplegables de texto.
+      return Math.abs(r.width - r.height) < 12;
+    })
+    .sort((a, z) => {
+      const ra = a.getBoundingClientRect();
+      const rz = z.getBoundingClientRect();
+      // Cabecera del documento primero, y dentro de ella de derecha a
+      // izquierda: el menú del documento está al final de la fila.
+      return ra.top - rz.top || rz.left - ra.left;
+    });
+
+  for (const boton of candidatos) {
+    boton.click();
+    await new Promise((r) => setTimeout(r, 380));
+    if (visible()) return boton;
+    // No era este: se cierra para no ir dejando menús abiertos por la pantalla.
+    boton.click();
+    await new Promise((r) => setTimeout(r, 140));
+  }
+  return null;
 }
 
 /**
@@ -364,6 +419,10 @@ export default function StudioTour() {
      * contenido: el tutorial no debe tocar los datos de nadie.
      */
     let cancelado = false;
+    // En un objeto y no en una variable suelta porque se asigna dentro de la
+    // función asíncrona y se lee en la limpieza del efecto.
+    const menu: { boton: HTMLElement | null } = { boton: null };
+
     if (paso.prepara?.length) {
       void (async () => {
         for (const clic of paso.prepara!) {
@@ -373,6 +432,10 @@ export default function StudioTour() {
           // esta distinción, un paso que solo quería abrir una carpeta con
           // reserva acababa abriendo las dos, una detrás de otra.
           for (const sel of Array.isArray(clic) ? clic : [clic]) {
+            if (sel.startsWith(MENU_CON)) {
+              menu.boton = await abrirMenuCon(sel.slice(MENU_CON.length));
+              break;
+            }
             const el = buscarElemento(sel);
             if (el) { el.click(); break; }
           }
@@ -396,21 +459,26 @@ export default function StudioTour() {
         return nuevo;
       });
     medir();
-    // Varios reintentos en vez de uno: tras pulsar una carpeta el panel nuevo
-    // tarda en montarse, y una sola medición a los 300 ms llegaba antes de que
-    // el botón + existiera. La ventana se alarga según cuántos clics
-    // encadenados haya, ya que cada uno añade su propia pausa.
+    // Se remide en bucle durante un rato en lugar de una sola vez: tras pulsar
+    // una carpeta el panel nuevo tarda en montarse, y una única medición a los
+    // 300 ms llegaba antes de que el botón + existiera. La ventana se alarga
+    // según cuántos clics encadenados haya —cada uno añade su pausa— y bastante
+    // más si hay que abrir un menú, porque ahí se prueban varios botones.
     const nClics = paso.prepara?.length ?? 0;
-    const espera = nClics
-      ? [150, 400, 800, 1400, 2200, 2200 + nClics * 700]
-      : [300];
-    const temporizadores = espera.map((ms) => setTimeout(medir, ms));
+    const abreMenu = (paso.prepara ?? []).flat().some((s) => s.startsWith(MENU_CON));
+    const duracion = nClics ? 2200 + nClics * 700 + (abreMenu ? 5000 : 0) : 400;
+    const bucle = setInterval(medir, 200);
+    const fin = setTimeout(() => clearInterval(bucle), duracion);
 
     window.addEventListener('resize', medir);
     window.addEventListener('scroll', medir, true);
     return () => {
       cancelado = true;
-      temporizadores.forEach(clearTimeout);
+      clearInterval(bucle);
+      clearTimeout(fin);
+      // Cierra el menú que este paso hubiera abierto. Sin esto se quedaba
+      // desplegado al avanzar o al cerrar el tutorial.
+      menu.boton?.click();
       window.removeEventListener('resize', medir);
       window.removeEventListener('scroll', medir, true);
     };

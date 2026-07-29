@@ -52,6 +52,10 @@ export interface PasoTutorial {
    *   ['a', 'b']    → pulsa a, espera, pulsa b   (secuencia)
    *   [['a', 'b']]  → pulsa a, o b si a no está  (alternativas)
    *
+   * Admite la sintaxis de `anclas`, más una propia: 'menu-con:<texto>' despliega
+   * el menú que contenga esa opción, probando los botones que abren menús hasta
+   * que aparece. Al cambiar de paso se cierra solo.
+   *
    * Solo se usa para navegar. Nunca para acciones que modifiquen contenido.
    */
   prepara?: (string | string[])[];
@@ -160,23 +164,23 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Eliminar un documento',
     cuerpo:
-      'Hemos abierto un destino porque aquí sí se puede borrar. Entre los iconos ' +
-      'resaltados, arriba del documento, está el de tres puntos: ahí dentro aparece ' +
-      'la opción Eliminar.\n\n' +
+      'Hemos abierto un destino porque aquí sí se puede borrar, y hemos desplegado por ' +
+      'ti el menú de tres puntos que hay arriba del documento. Ahí está Eliminar.\n\n' +
       'Pide confirmación antes de hacer nada, pero una vez confirmado NO hay vuelta ' +
       'atrás: el documento desaparece de Sanity y de la web.',
-    // Dos clics encadenados: primero la carpeta, luego un documento. La opción
-    // de eliminar solo existe con un documento abierto, y Configuración del
-    // sitio y Programas no la tienen — son fijos y no deben borrarse.
-    prepara: ['panel-texto:Destinos', 'panel-texto:Canadá'],
-    // Se resalta la barra de iconos completa. El de tres puntos no se puede
-    // distinguir de sus vecinos por el DOM, y los aria-label que se probaron
-    // ("Document actions", "Actions") no existen en esta versión del Studio: el
-    // paso se quedaba sin foco. Se toman los distintivos de estado como
-    // referencia de la fila, con reserva por si el documento aún no está
-    // publicado y solo aparece "Draft".
-    anclas: ['grupo-derecha:Published', 'grupo-derecha:Draft'],
-    lado: 'abajo',
+    // Tres pasos: la carpeta, un documento y el menú. La opción de eliminar solo
+    // existe con un documento abierto, y Configuración del sitio y Programas no
+    // la tienen — son fijos y no deben borrarse.
+    prepara: ['panel-texto:Destinos', 'panel-texto:Canadá', 'menu-con:Eliminar'],
+    // "Eliminar" es nuestra propia etiqueta, así que es el ancla más firme de
+    // todo el tutorial. Sin prefijo `panel-` porque el menú se dibuja en un
+    // portal, fuera del contenedor de paneles.
+    //
+    // Si el menú no llegara a abrirse se resalta la barra de iconos entera: el
+    // botón de tres puntos no se distingue de sus vecinos por el DOM, así que se
+    // señala el grupo y el texto concreta cuál pulsar.
+    anclas: ['texto:Eliminar', 'grupo-derecha:Published', 'grupo-derecha:Draft'],
+    lado: 'izquierda',
     tip: 'Configuración del sitio y Programas no se pueden eliminar: el sitio los necesita.',
   },
   {
