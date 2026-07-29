@@ -160,35 +160,100 @@ export default function StudioTour() {
 
   useEffect(() => { tarjetaRef.current?.focus(); }, [indice, abierto]);
 
+  /**
+   * Corrige la posición con la altura REAL de la tarjeta.
+   *
+   * El cálculo previo usa una altura estimada porque hay que decidir dónde
+   * ponerla antes de pintarla. Pero los pasos con más texto miden bastante más,
+   * y con la estimación corta se salían por abajo. Aquí ya existe en el DOM, se
+   * mide y se ajusta antes de que el navegador pinte, así que no se ve saltar.
+   */
+  useEffect(() => {
+    const card = tarjetaRef.current;
+    if (!abierto || !card) return;
+
+    const ajustar = () => {
+      const r = card.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+
+      let top = r.top;
+      let left = r.left;
+
+      if (r.bottom > vh - 12) top = Math.max(12, vh - r.height - 12);
+      if (top < 12) top = 12;
+      if (r.right > vw - 12) left = Math.max(12, vw - r.width - 12);
+      if (left < 12) left = 12;
+
+      if (Math.abs(top - r.top) > 0.5) card.style.top = `${top}px`;
+      if (Math.abs(left - r.left) > 0.5) card.style.left = `${left}px`;
+    };
+
+    ajustar();
+    window.addEventListener('resize', ajustar);
+    return () => window.removeEventListener('resize', ajustar);
+  }, [abierto, indice, foco]);
+
   if (!enStudio || !abierto || !paso) return null;
 
   const MARGEN = 8;
   const hayFoco = foco !== null;
 
-  // La tarjeta se coloca debajo del foco, o encima si no cabe. Sin foco, va
-  // centrada en la pantalla.
-  const alturaEstimada = 260;
-  const cabeDebajo = hayFoco && foco.top + foco.height + alturaEstimada < window.innerHeight;
-  const anchoTarjeta = 380;
+  /**
+   * Coloca la tarjeta sin que se salga nunca de la pantalla.
+   *
+   * Se prueba debajo, encima, a la derecha y a la izquierda, en ese orden. El
+   * caso que obliga a los laterales es un panel a altura completa —como la
+   * lista de contenido—: no cabe ni encima ni debajo, y colocarla ahí empujaba
+   * la tarjeta fuera del borde superior.
+   *
+   * Al final se recorta a los límites de la ventana, para que ningún cálculo
+   * pueda dejarla inaccesible.
+   */
+  const ANCHO = 380;
+  const ALTO_EST = 300;
+  const HUECO = 20;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
 
-  const estiloTarjeta: React.CSSProperties = hayFoco
-    ? {
-        position: 'fixed',
-        top: cabeDebajo ? foco.top + foco.height + 20 : undefined,
-        bottom: cabeDebajo ? undefined : window.innerHeight - foco.top + 20,
-        left: Math.min(
-          Math.max(12, foco.left + foco.width / 2 - anchoTarjeta / 2),
-          Math.max(12, window.innerWidth - anchoTarjeta - 12),
-        ),
-        width: anchoTarjeta,
-      }
-    : {
-        position: 'fixed',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: anchoTarjeta,
-      };
+  let posTop: number;
+  let posLeft: number;
+
+  if (hayFoco) {
+    const debajo = foco.top + foco.height + HUECO;
+    const encima = foco.top - HUECO - ALTO_EST;
+    const derecha = foco.left + foco.width + HUECO;
+    const izquierda = foco.left - HUECO - ANCHO;
+
+    if (debajo + ALTO_EST <= vh) {
+      posTop = debajo;
+      posLeft = foco.left + foco.width / 2 - ANCHO / 2;
+    } else if (encima >= 0) {
+      posTop = encima;
+      posLeft = foco.left + foco.width / 2 - ANCHO / 2;
+    } else if (derecha + ANCHO <= vw) {
+      posLeft = derecha;
+      posTop = foco.top + foco.height / 2 - ALTO_EST / 2;
+    } else if (izquierda >= 0) {
+      posLeft = izquierda;
+      posTop = foco.top + foco.height / 2 - ALTO_EST / 2;
+    } else {
+      posLeft = vw / 2 - ANCHO / 2;
+      posTop = vh / 2 - ALTO_EST / 2;
+    }
+  } else {
+    posLeft = vw / 2 - ANCHO / 2;
+    posTop = vh / 2 - ALTO_EST / 2;
+  }
+
+  const estiloTarjeta: React.CSSProperties = {
+    position: 'fixed',
+    top: Math.min(Math.max(12, posTop), Math.max(12, vh - ALTO_EST - 12)),
+    left: Math.min(Math.max(12, posLeft), Math.max(12, vw - ANCHO - 12)),
+    width: ANCHO,
+    maxHeight: vh - 24,
+    overflowY: 'auto',
+  };
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 100000 }} role="dialog" aria-modal="true" aria-label="Tutorial del panel">
