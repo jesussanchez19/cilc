@@ -7,6 +7,36 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 
+/**
+ * Índice de contenido del Studio: donde se empieza siempre al entrar.
+ *
+ * Se nombra la ruta completa en vez de dejar que la raíz `/studio` redirija,
+ * porque así queda a la vista dónde acaba el usuario.
+ */
+const INICIO_STUDIO = '/studio/structure';
+
+/**
+ * A dónde llevar al usuario después de iniciar sesión.
+ *
+ * Del Studio no se conserva nada: siempre se vuelve al índice de contenido,
+ * nunca al documento que estuviera abierto. Si la sesión caducaba con un
+ * destino abierto, `from` traía esa ruta exacta y se reaparecía dentro de ese
+ * destino en lugar de en la portada del panel.
+ *
+ * De las rutas de administración sí se vuelve a la pedida, porque ahí cada una
+ * es una pantalla concreta a la que ibas a propósito.
+ *
+ * Y se exige que sea una ruta interna. `from` sale de la URL, así que sin
+ * comprobarlo un enlace preparado con `?from=https://…` se llevaría al usuario
+ * a otro sitio justo después de escribir su contraseña. Se rechaza también `//`
+ * y `/\`, que el navegador interpreta como dirección externa.
+ */
+function destinoTrasEntrar(from: string | null): string {
+  if (!from || from[0] !== '/' || from[1] === '/' || from[1] === '\\') return INICIO_STUDIO;
+  if (from.startsWith('/admin')) return from;
+  return INICIO_STUDIO;
+}
+
 export default function LoginForm() {
   const [password, setPassword]       = useState('');
   const [error, setError]             = useState('');
@@ -16,7 +46,7 @@ export default function LoginForm() {
   const inputRef                  = useRef<HTMLInputElement>(null);
   const router                    = useRouter();
   const searchParams              = useSearchParams();
-  const from                      = searchParams.get('from') ?? '/studio';
+  const from                      = destinoTrasEntrar(searchParams.get('from'));
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
