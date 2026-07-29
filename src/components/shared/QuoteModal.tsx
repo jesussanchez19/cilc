@@ -2,6 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { sileo } from 'sileo';
+import { quoteSchema } from '@/lib/validations/quote';
+
+type FieldErrors = Partial<Record<'nombre' | 'email' | 'telefono' | 'programa', string>>;
 
 const PROGRAMAS = [
   'Idiomas',
@@ -27,6 +30,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
   const [programa, setPrograma] = useState(programaInicial);
   const [mensaje,  setMensaje]  = useState('');
   const [status,   setStatus]   = useState<Status>('idle');
+  const [errors,   setErrors]   = useState<FieldErrors>({});
   const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setPrograma(programaInicial); }, [programaInicial]);
@@ -51,17 +55,39 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const parsed = quoteSchema.safeParse({ name: nombre, email, phone: telefono, program: programa, message: mensaje });
+    if (!parsed.success) {
+      const flat = parsed.error.flatten().fieldErrors;
+      setErrors({
+        nombre:   flat.name?.[0],
+        email:    flat.email?.[0],
+        telefono: flat.phone?.[0],
+        programa: flat.program?.[0],
+      });
+      return;
+    }
+    setErrors({});
     setStatus('loading');
 
     try {
-      const res = await fetch('/api/contact', {
+      // Se envía a /api/quote, no a /api/contact.
+      //
+      // Antes iba al de contacto metiendo teléfono y programa dentro del texto
+      // del mensaje. Eso tenía tres consecuencias: el lead se guardaba con
+      // tipo "contacto", así que el contador de cotizaciones de /admin/stats
+      // siempre marcaba cero; el correo al administrador usaba la plantilla
+      // genérica en vez de la de cotización, con los datos enterrados en texto
+      // libre; y el cliente recibía la confirmación equivocada.
+      const res = await fetch('/api/quote', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: nombre,
           email,
-          subject: `Cotización: ${programa}`,
-          message: `Teléfono: ${telefono}\nPrograma: ${programa}\n\n${mensaje}`,
+          phone: telefono,
+          program: programa,
+          message: mensaje,
         }),
       });
 
@@ -84,7 +110,12 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(10,15,30,0.7)', backdropFilter: 'blur(8px)' }}
     >
+      {/* role/aria-modal faltaban: sin ellos un lector de pantalla no anuncia
+          que se ha abierto un diálogo ni acota la lectura a su contenido. */}
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quote-modal-title"
         className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl animate-scale-in"
         style={{
           background: '#ffffff',
@@ -95,7 +126,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
         <div className="flex items-center justify-between px-6 py-5"
           style={{ borderBottom: '1px solid rgba(15,23,42,0.07)' }}>
           <div>
-            <h2 className="text-lg font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>
+            <h2 id="quote-modal-title" className="text-lg font-extrabold text-slate-900" style={{ letterSpacing: '-0.02em' }}>
               Obtén tu cotización
             </h2>
             <p className="text-sm text-slate-400 mt-0.5">Gratis y sin compromiso · Respuesta en &lt;24h</p>
@@ -118,46 +149,82 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Programa *</label>
                 <select
-                  value={programa} onChange={(e) => setPrograma(e.target.value)}
-                  required disabled={status === 'loading'}
-                  className="input-field"
+                  value={programa}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setPrograma(val);
+                    if (errors.programa !== undefined) {
+                      const r = quoteSchema.shape.program.safeParse(val);
+                      setErrors((p) => ({ ...p, programa: r.success ? undefined : r.error.issues[0]?.message }));
+                    }
+                  }}
+                  disabled={status === 'loading'}
+                  className={`input-field ${errors.programa ? 'border-red-400 focus:ring-red-300' : ''}`}
                 >
                   <option value="">Selecciona un programa</option>
                   {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
+                {errors.programa && <p className="mt-1.5 text-xs text-red-500">{errors.programa}</p>}
               </div>
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nombre *</label>
                 <input
-                  type="text" required value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
+                  type="text" value={nombre}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setNombre(val);
+                    if (errors.nombre !== undefined) {
+                      const r = quoteSchema.shape.name.safeParse(val);
+                      setErrors((p) => ({ ...p, nombre: r.success ? undefined : r.error.issues[0]?.message }));
+                    }
+                  }}
                   disabled={status === 'loading'}
                   placeholder="Tu nombre completo"
-                  className="input-field"
+                  maxLength={100} autoComplete="name" required
+                  className={`input-field ${errors.nombre ? 'border-red-400 focus:ring-red-300' : ''}`}
                 />
+                {errors.nombre && <p className="mt-1.5 text-xs text-red-500">{errors.nombre}</p>}
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email *</label>
                   <input
-                    type="email" required value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="email" value={email}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setEmail(val);
+                      if (errors.email !== undefined) {
+                        const r = quoteSchema.shape.email.safeParse(val);
+                        setErrors((p) => ({ ...p, email: r.success ? undefined : r.error.issues[0]?.message }));
+                      }
+                    }}
                     disabled={status === 'loading'}
                     placeholder="tu@email.com"
-                    className="input-field"
+                    maxLength={200} autoComplete="email" required
+                    className={`input-field ${errors.email ? 'border-red-400 focus:ring-red-300' : ''}`}
                   />
+                  {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Teléfono</label>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1.5">Teléfono <span className="text-slate-400 font-normal">(opcional)</span></label>
                   <input
                     type="tel" value={telefono}
-                    onChange={(e) => setTelefono(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setTelefono(val);
+                      if (errors.telefono !== undefined) {
+                        const r = quoteSchema.shape.phone.safeParse(val);
+                        setErrors((p) => ({ ...p, telefono: r.success ? undefined : r.error.issues[0]?.message }));
+                      }
+                    }}
                     disabled={status === 'loading'}
                     placeholder="55 1234 5678"
-                    className="input-field"
+                    maxLength={30} autoComplete="tel" inputMode="tel"
+                    className={`input-field ${errors.telefono ? 'border-red-400 focus:ring-red-300' : ''}`}
                   />
+                  {errors.telefono && <p className="mt-1.5 text-xs text-red-500">{errors.telefono}</p>}
                 </div>
               </div>
 
@@ -169,6 +236,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                   value={mensaje} onChange={(e) => setMensaje(e.target.value)}
                   disabled={status === 'loading'} rows={3}
                   placeholder="Cuéntanos un poco sobre ti y tus objetivos..."
+                  maxLength={2000}
                   className="input-field resize-none"
                 />
               </div>

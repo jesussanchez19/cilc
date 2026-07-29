@@ -3,31 +3,52 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { searchAll, groupResultsByType, SearchResult } from '@/lib/search';
+import { searchAll, groupResultsByType, type SearchResult, type SearchDoc } from '@/lib/search';
+
 
 const TYPE_LABEL: Record<SearchResult['type'], string> = {
   programa: 'Programas',
   destino: 'Destinos',
   articulo: 'Artículos',
+  pagina: 'Páginas del sitio',
 };
 
 const TYPE_DOT: Record<SearchResult['type'], string> = {
   programa: '#3b82f6',
   destino:  '#10b981',
   articulo: '#8b5cf6',
+  pagina:   '#64748b',
 };
 
 interface SearchBarProps {
   dark?: boolean;
+  /**
+   * Índice ya construido en el servidor. Se pasa por props en vez de
+   * consultarlo aquí porque el desplegable filtra en cada tecla: con una
+   * llamada de red por pulsación la sugerencia llegaría siempre tarde.
+   */
+  index?: SearchDoc[];
+  /** Texto inicial — permite precargar la búsqueda actual en /buscar. */
+  initialQuery?: string;
+  /** Sin el tope de 320px del header, para usarlo como buscador de página. */
+  fullWidth?: boolean;
+  /** Abre el teclado al entrar. Solo para la página de búsqueda vacía. */
+  autoFocus?: boolean;
 }
 
-export default function SearchBar({ dark = false }: SearchBarProps) {
-  const [query, setQuery] = useState('');
+export default function SearchBar({
+  dark = false,
+  index = [],
+  initialQuery = '',
+  fullWidth = false,
+  autoFocus = false,
+}: SearchBarProps) {
+  const [query, setQuery] = useState(initialQuery);
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  const results = searchAll(query);
+  const results = searchAll(query, index);
   const grouped = groupResultsByType(results);
 
   useEffect(() => {
@@ -83,7 +104,7 @@ export default function SearchBar({ dark = false }: SearchBarProps) {
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-xs">
+    <div ref={wrapperRef} className={`relative w-full ${fullWidth ? '' : 'max-w-xs'}`}>
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <svg xmlns="http://www.w3.org/2000/svg"
@@ -93,7 +114,9 @@ export default function SearchBar({ dark = false }: SearchBarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
           </svg>
           <input
-            type="text"
+            type="search"
+            enterKeyHint="search"
+            autoFocus={autoFocus}
             value={query}
             onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
             onFocus={() => query && setOpen(true)}
@@ -142,6 +165,7 @@ export default function SearchBar({ dark = false }: SearchBarProps) {
               {renderGroup('programa', grouped.programas)}
               {renderGroup('destino', grouped.destinos)}
               {renderGroup('articulo', grouped.articulos)}
+              {renderGroup('pagina', grouped.paginas)}
               <Link
                 href={`/buscar?q=${encodeURIComponent(query.trim())}`}
                 onClick={() => setOpen(false)}

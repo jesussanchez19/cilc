@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { promises as fs } from 'fs';
 import path from 'path';
 import type { Lead } from '@/lib/leads';
+import GenerarToken from '@/components/admin/GenerarToken';
 
 export const metadata: Metadata = {
   title: 'Dashboard | Admin CILC',
@@ -36,11 +37,17 @@ export default async function DashboardPage() {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
+  const masterToken = process.env.TESTIMONIAL_ACCESS_TOKEN ?? '';
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard Admin</h1>
         <p className="text-gray-500 mt-1">CILC — Canadian & International Language Centers</p>
+      </div>
+
+      <div className="mb-10">
+        <GenerarToken masterToken={masterToken} />
       </div>
 
       {/* KPIs */}

@@ -1,94 +1,189 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { sileo } from 'sileo';
-import { countries } from '@/lib/data/countries';
 
 const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
-export default function TestimonioForm() {
-  const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', ciudad: '', texto: '' });
+export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void }) {
+  const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [calificacion, setCalificacion] = useState(0);
   const [hovered, setHovered] = useState(0);
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [nombreEnviado, setNombreEnviado] = useState('');
 
-  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
+  const set = (k: string, v: string) => {
+    setForm((f) => ({ ...f, [k]: v }));
+    if (Object.keys(errors).length > 0) {
+      setErrors(validate({ ...form, [k]: v }, calificacion));
+    }
+  };
 
   const handleFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] ?? null;
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        setErrors((prev) => ({ ...prev, foto: 'Solo se permiten imágenes (JPG, PNG, etc.)' }));
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors((prev) => ({ ...prev, foto: 'La foto no debe superar 5 MB' }));
+        return;
+      }
+      setErrors((prev) => { const next = { ...prev }; delete next.foto; return next; });
+    }
     setFoto(file);
     setPreview(file ? URL.createObjectURL(file) : null);
   };
 
+  const validate = (f = form, cal = calificacion) => {
+    const e: Record<string, string> = {};
+    if (f.nombre.trim().length < 2) e.nombre = 'El nombre debe tener al menos 2 caracteres';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email)) e.email = 'Ingresa un email válido';
+    if (f.texto.trim().length < 10) e.texto = 'Cuéntanos un poco más (mínimo 10 caracteres)';
+    if (cal === 0) e.calificacion = 'Selecciona una calificación';
+    if (!aceptaPrivacidad) e.privacidad = 'Debes aceptar el aviso de privacidad para continuar';
+    return e;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const errs = validate(form, calificacion);
+    if (Object.keys(errs).length > 0) {
+      setErrors(errs);
+      return;
+    }
+    setErrors({});
     setStatus('loading');
     try {
       const fd = new FormData();
       fd.append('nombre', form.nombre);
       fd.append('email', form.email);
       fd.append('programa', form.programa);
-      fd.append('pais', [form.ciudad, form.pais].filter(Boolean).join(', '));
+      fd.append('pais', form.pais);
       fd.append('texto', form.texto);
       if (calificacion > 0) fd.append('calificacion', String(calificacion));
       if (foto) fd.append('foto', foto);
+      if (tokenUsoUnico) fd.append('tokenUsoUnico', tokenUsoUnico);
 
       const res = await fetch('/api/testimonio', { method: 'POST', body: fd });
       if (res.ok) {
-        sileo.success({ title: '¡Gracias por tu testimonio!', description: 'Lo revisaremos y publicaremos pronto.', fill: '#1B67E8' });
-        setForm({ nombre: '', email: '', programa: '', pais: '', ciudad: '', texto: '' });
-        setFoto(null); setPreview(null); setCalificacion(0);
+        setNombreEnviado(form.nombre);
+        setStatus('success');
+        onSuccess?.();
       } else {
         sileo.error({ title: 'Error al enviar', description: 'Ocurrió un error. Intenta de nuevo.', fill: '#E31E24' });
+        setStatus('idle');
       }
-      setStatus('idle');
     } catch {
       sileo.error({ title: 'Error al enviar', description: 'No se pudo conectar con el servidor.', fill: '#E31E24' });
       setStatus('idle');
     }
+
   };
+
+  if (status === 'success') {
+    return (
+      <div className="flex flex-col items-center text-center py-6 space-y-5">
+        {/* Ícono animado */}
+        <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center">
+          <svg className="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-extrabold text-slate-900 mb-2" style={{ letterSpacing: '-0.02em' }}>
+            ¡Gracias, {nombreEnviado.split(' ')[0]}!
+          </h2>
+          <p className="text-slate-500 text-sm leading-relaxed max-w-xs mx-auto">
+            Tu testimonio fue enviado correctamente. Lo revisaremos y lo publicaremos pronto en el sitio de CILC.
+          </p>
+        </div>
+
+        <div className="w-full pt-2 border-t border-slate-100">
+          <p className="text-xs text-slate-400 mb-3">¿Conoces a alguien más que quiera compartir su experiencia?</p>
+          <a
+            href="https://wa.me/525518944494"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
+            style={{ background: '#25D366' }}
+          >
+            <svg viewBox="0 0 32 32" className="w-4 h-4" fill="currentColor">
+              <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333z" />
+            </svg>
+            Contactar a CILC
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Nombre *</label>
-          <input className="input-field" placeholder="Tu nombre completo" value={form.nombre}
-            onChange={(e) => set('nombre', e.target.value)} required />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Email *</label>
-          <input className="input-field" type="email" placeholder="tu@email.com" value={form.email}
-            onChange={(e) => set('email', e.target.value)} required />
-        </div>
+      {/* Honeypot — invisible para humanos, los bots lo rellenan */}
+      {/* tabIndex iba dentro de `style`, donde no es una propiedad CSS y no
+          hacía nada. El input de abajo ya lo lleva como atributo, que es
+          donde surte efecto. */}
+      <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}>
+        <label htmlFor="website">Sitio web</label>
+        <input type="text" id="website" name="website" autoComplete="off" tabIndex={-1} />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Nombre *</label>
+          <input
+            className={`input-field ${errors.nombre ? 'border-red-400 focus:ring-red-300' : ''}`}
+            placeholder="Tu nombre completo" value={form.nombre}
+            onChange={(e) => set('nombre', e.target.value)} />
+          {errors.nombre && <p className="mt-1.5 text-xs text-red-500">{errors.nombre}</p>}
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Email *</label>
+          <input
+            className={`input-field ${errors.email ? 'border-red-400 focus:ring-red-300' : ''}`}
+            type="email" placeholder="tu@email.com" value={form.email}
+            onChange={(e) => set('email', e.target.value)} />
+          {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
+        </div>
+      </div>
+      {form.programa === 'Idiomas en Línea' ? (
+        <div>
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
-          <select className="input-field" value={form.programa} onChange={(e) => set('programa', e.target.value)}>
+          <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
             <option value="">Selecciona un programa</option>
             {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Ciudad</label>
-          <input className="input-field" placeholder="Ej: Vancouver" value={form.ciudad}
-            onChange={(e) => set('ciudad', e.target.value)} />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
+            <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
+              <option value="">Selecciona un programa</option>
+              {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+            </select>
+          </div>
+          {form.programa && (
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">País</label>
+            <select className="input-field" value={form.pais} onChange={(e) => set('pais', e.target.value)}>
+              <option value="">Selecciona un país</option>
+              {(paisesPorPrograma[form.programa] ?? []).map((nombre) => (
+                <option key={nombre} value={nombre}>{nombre}</option>
+              ))}
+            </select>
+          </div>
+          )}
         </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 mb-1.5">País</label>
-        <select className="input-field" value={form.pais} onChange={(e) => set('pais', e.target.value)}>
-          <option value="">Selecciona un país</option>
-          {countries.map((c) => (
-            <option key={c.id} value={c.name}>{c.flag} {c.name}</option>
-          ))}
-        </select>
-      </div>
+      )}
 
       {/* Foto */}
       <div>
@@ -120,19 +215,23 @@ export default function TestimonioForm() {
             </button>
           )}
         </div>
+        {errors.foto && <p className="mt-1.5 text-xs text-red-500">{errors.foto}</p>}
       </div>
 
       {/* Calificación */}
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-2">¿Cómo calificarías tu experiencia? *</label>
-        <div className="flex gap-1">
+        <div className={`flex gap-1 ${errors.calificacion ? 'rounded-lg ring-1 ring-red-300 p-1' : ''}`}>
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
               onMouseEnter={() => setHovered(star)}
               onMouseLeave={() => setHovered(0)}
-              onClick={() => setCalificacion(star)}
+              onClick={() => {
+                setCalificacion(star);
+                if (Object.keys(errors).length > 0) setErrors(validate(form, star));
+              }}
               className="transition-transform duration-100 hover:scale-110 focus:outline-none"
               aria-label={`${star} estrellas`}
             >
@@ -153,36 +252,79 @@ export default function TestimonioForm() {
             </span>
           )}
         </div>
+        {errors.calificacion && <p className="mt-1.5 text-xs text-red-500">{errors.calificacion}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-slate-700 mb-1.5">Tu experiencia *</label>
-        <textarea className="input-field resize-none" rows={4}
+        <textarea
+          className={`input-field resize-none ${errors.texto ? 'border-red-400 focus:ring-red-300' : ''}`}
+          rows={4}
           placeholder="Cuéntanos cómo fue tu experiencia con CILC..."
-          value={form.texto} onChange={(e) => set('texto', e.target.value)} required />
+          value={form.texto} onChange={(e) => set('texto', e.target.value)} />
+        {errors.texto && <p className="mt-1.5 text-xs text-red-500">{errors.texto}</p>}
       </div>
       {/* Consentimiento */}
-      <label className="flex items-start gap-3 cursor-pointer group">
-        <input
-          type="checkbox"
-          checked={aceptaPrivacidad}
-          onChange={(e) => setAceptaPrivacidad(e.target.checked)}
-          required
-          className="mt-0.5 w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 shrink-0"
-        />
-        <span className="text-sm text-slate-600 leading-snug">
-          He leído y acepto el{' '}
-          <a href="/aviso-de-privacidad" target="_blank" rel="noopener noreferrer"
-            className="text-blue-600 hover:underline font-medium">
-            Aviso de Privacidad
-          </a>
-          {' '}y autorizo el uso de mis datos para publicar mi testimonio en el sitio de CILC.
-        </span>
-      </label>
+      <div>
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <input
+            type="checkbox"
+            checked={aceptaPrivacidad}
+            onChange={(e) => {
+              const checked = e.target.checked;
+              setAceptaPrivacidad(checked);
+              if (Object.keys(errors).length > 0) {
+                setErrors((prev) => {
+                  const next = { ...prev };
+                  if (checked) delete next.privacidad;
+                  else next.privacidad = 'Debes aceptar el aviso de privacidad para continuar';
+                  return next;
+                });
+              }
+            }}
+            className={`mt-0.5 w-4 h-4 rounded text-blue-600 focus:ring-blue-500 shrink-0 ${errors.privacidad ? 'border-red-400' : 'border-slate-300'}`}
+          />
+          <span className="text-sm text-slate-600 leading-snug">
+            He leído y acepto el{' '}
+            <a href="/aviso-de-privacidad" target="_blank" rel="noopener noreferrer"
+              className="text-blue-600 hover:underline font-medium">
+              Aviso de Privacidad
+            </a>
+            {' '}y autorizo el uso de mis datos para publicar mi testimonio en el sitio de CILC.
+          </span>
+        </label>
+        {errors.privacidad && <p className="mt-1.5 text-xs text-red-500 pl-7">{errors.privacidad}</p>}
+      </div>
 
-      <button type="submit" disabled={status === 'loading' || !aceptaPrivacidad} className="btn-primary w-full justify-center">
-        {status === 'loading' ? 'Enviando...' : 'Enviar testimonio'}
+      <button type="submit" disabled={status === 'loading'} className="btn-primary w-full justify-center">
+        Enviar testimonio
       </button>
+
+      {/* Overlay de carga — montado en document.body para evitar conflictos con transform/filter */}
+      {status === 'loading' && typeof window !== 'undefined' && createPortal(
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 24,
+            background: 'rgba(15, 23, 42, 0.72)',
+          }}
+        >
+          <div
+            style={{
+              width: 64, height: 64, borderRadius: '50%',
+              border: '5px solid rgba(255,255,255,0.2)',
+              borderTopColor: '#fff',
+              animation: 'spin 0.8s linear infinite',
+            }}
+          />
+          <div style={{ textAlign: 'center' }}>
+            <p style={{ color: '#fff', fontWeight: 600, fontSize: 18, margin: 0 }}>Enviando tu testimonio…</p>
+            <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: 14, marginTop: 6 }}>Solo tomará un momento</p>
+          </div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>,
+        document.body,
+      )}
     </form>
   );
 }

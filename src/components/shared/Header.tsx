@@ -4,8 +4,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
+import type { SearchDoc } from '@/lib/search';
 
-export default function Header() {
+export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[] }) {
   const pathname = usePathname();
 
   const handleLogoClick = (e: React.MouseEvent) => {
@@ -17,13 +18,17 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 overflow-hidden"
+      className="sticky top-0 z-50"
       style={{
         background: '#060d1a',
         borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}
     >
       {/* Orbe azul — lado izquierdo, detrás del logo */}
+      <div
+        className="absolute pointer-events-none overflow-hidden inset-0 z-0"
+        style={{ pointerEvents: 'none' }}
+      >
       <div
         className="absolute pointer-events-none"
         style={{
@@ -51,8 +56,10 @@ export default function Header() {
         }}
       />
 
+      </div>
+
       {/* Contenido */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex items-center h-16 gap-4">
 
           {/* Logo */}
@@ -84,17 +91,31 @@ export default function Header() {
           </div>
 
           {/* Search — derecha */}
-          <div className="w-64 search-dark shrink-0">
-            <SearchBar dark />
+          {/* Móvil: solo ícono lupa */}
+          <Link
+            href="/buscar"
+            className="sm:hidden flex items-center justify-center w-10 h-10 rounded-xl shrink-0 transition-colors"
+            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+            aria-label="Buscar"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </Link>
+          {/* Tablet/Desktop: barra completa */}
+          <div className="hidden sm:block w-64 search-dark shrink-0">
+            <SearchBar dark index={searchIndex} />
           </div>
 
         </div>
       </div>
 
-      {/* Línea scanner al fondo */}
-      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'rgba(255,255,255,0.04)' }}>
+      {/* Línea scanner al fondo — overflow-hidden es obligatorio: la animación
+          desplaza la línea más allá del borde derecho y sin recorte ensancha
+          el documento, lo que descoloca los elementos position:fixed. */}
+      <div className="absolute bottom-0 left-0 right-0 h-px overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
         <div
-          className="absolute top-0 h-px"
+          className="absolute top-0 left-0 h-px"
           style={{
             width: '180px',
             background: 'linear-gradient(90deg, transparent, rgba(99,102,241,0.9), rgba(59,130,246,0.7), transparent)',

@@ -5,7 +5,8 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 interface LazySectionProps {
   children: ReactNode;
   className?: string;
-  // Qué tan antes del viewport se activa (default: 100px antes de entrar)
+  // Margen del observer. Por defecto la sección debe entrar 80px en el
+  // viewport para que la animación se vea; súbelo si prefieres adelantarla.
   rootMargin?: string;
   // Animación de entrada: fade (solo opacidad) o slide (sube + opacidad)
   animation?: 'fade' | 'slide';
@@ -24,25 +25,25 @@ interface LazySectionProps {
 export default function LazySection({
   children,
   className = '',
-  rootMargin = '100px',
+  rootMargin = '0px 0px -80px 0px',
   animation = 'slide',
 }: LazySectionProps) {
   const ref = useRef<HTMLDivElement>(null);
+  // Siempre false en el primer render: servidor y cliente coinciden (sin
+  // mismatch de hidratación) y la animación corre igual en móvil que en desktop.
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
 
-    // Si ya está en viewport al montar (above the fold) lo mostramos de inmediato
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect(); // Solo se activa una vez
-        }
+        if (!entry.isIntersecting) return;
+        setVisible(true);
+        observer.disconnect();
       },
-      { rootMargin, threshold: 0.05 }
+      { rootMargin, threshold: 0 }
     );
 
     observer.observe(el);
@@ -66,7 +67,7 @@ export default function LazySection({
   return (
     <div
       ref={ref}
-      className={className}
+      className={`lazy-section ${className}`}
       style={{ ...baseStyle, ...(visible ? visibleStyle : hiddenStyle) }}
     >
       {children}

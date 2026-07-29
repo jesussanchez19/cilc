@@ -64,8 +64,8 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
   const imgs = getCountryImages(country.id);
 
   const stats = [
-    { label: 'Universidades',              value: country.universities.toLocaleString(), icon: '🎓', bg: 'bg-blue-50',   text: 'text-blue-600'   },
-    { label: 'Costo de vida/mes',          value: `$${country.costOfLiving.toLocaleString()}`, icon: '💰', bg: 'bg-green-50',  text: 'text-green-600'  },
+    { label: 'Universidades',              value: country.universities.toLocaleString('es-MX'), icon: '🎓', bg: 'bg-blue-50',   text: 'text-blue-600'   },
+    { label: 'Costo de vida/mes',          value: `$${country.costOfLiving.toLocaleString('es-MX')}`, icon: '💰', bg: 'bg-green-50',  text: 'text-green-600'  },
     { label: 'Estudiantes internacionales',value: `${(country.students / 1000).toFixed(0)}K`,  icon: '🌍', bg: 'bg-purple-50', text: 'text-purple-600' },
     { label: 'Idioma principal',           value: country.language,                             icon: '💬', bg: 'bg-orange-50', text: 'text-orange-600' },
   ];
@@ -82,7 +82,8 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14 pt-32 w-full">
           <div className="flex items-center gap-4 mb-3">
-            <span className="text-6xl">{country.flag}</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`https://flagcdn.com/w80/${country.code.toLowerCase()}.png`} alt={country.name} width={80} className="h-14 w-auto rounded-sm drop-shadow-lg" />
             <h1 className="text-5xl font-bold text-white">{country.name}</h1>
           </div>
           <p className="text-xl text-white/85 max-w-2xl mb-8">{country.description}</p>
@@ -172,7 +173,7 @@ export default function CountryDetail({ country, universities }: CountryDetailPr
                   </div>
                   <p className="text-gray-600 mb-1 text-sm">
                     <span className="font-semibold">Costo anual aprox.: </span>
-                    ${uni.costPerYear.toLocaleString()} USD
+                    ${uni.costPerYear.toLocaleString('es-MX')} USD
                   </p>
                   <a href={uni.website} target="_blank" rel="noopener noreferrer"
                     className="text-blue-600 text-sm hover:underline mb-3 inline-block">

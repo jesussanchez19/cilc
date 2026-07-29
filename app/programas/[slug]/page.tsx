@@ -62,10 +62,10 @@ export default async function ProgramaPage({ params }: Props) {
     highlights:      sanity?.puntosClave ? sanity.puntosClave.map((p) => p.texto) : (base?.highlights ?? []),
     includes:        sanity?.queIncluye  ? sanity.queIncluye.map((p)  => p.texto) : (base?.includes  ?? []),
     highlightTooltips: sanity?.puntosClave
-      ? Object.fromEntries(sanity.puntosClave.filter((p) => p.tooltip).map((p) => [p.texto, p.tooltip!]))
+      ? Object.fromEntries(sanity.puntosClave.map((p) => [p.texto, p.tooltip ?? '']))
       : undefined,
     includeTooltips: sanity?.queIncluye
-      ? Object.fromEntries(sanity.queIncluye.filter((p) => p.tooltip).map((p) => [p.texto, p.tooltip!]))
+      ? Object.fromEntries(sanity.queIncluye.map((p) => [p.texto, p.tooltip ?? '']))
       : undefined,
     idealFor:        sanity?.paraQuien        ?? base?.idealFor        ?? '',
     whatsappMessage: sanity?.whatsappMessage  ?? base?.whatsappMessage ?? '',

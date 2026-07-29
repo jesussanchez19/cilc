@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ContactFormData } from '@/lib/validations/contact';
+import { contactSchema, ContactFormData } from '@/lib/validations/contact';
 import { sileo } from 'sileo';
 
 type FieldErrors = Partial<Record<keyof ContactFormData, string[]>>;
@@ -27,12 +27,24 @@ export default function ContactForm() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    const updated = { ...formData, [name]: value };
+    setFormData(updated);
+    if (Object.values(fieldErrors).some(Boolean)) {
+      const r = contactSchema.safeParse(updated);
+      setFieldErrors(r.success ? {} : r.error.flatten().fieldErrors as FieldErrors);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const parsed = contactSchema.safeParse(formData);
+    if (!parsed.success) {
+      const flat = parsed.error.flatten().fieldErrors;
+      setFieldErrors(flat as FieldErrors);
+      return;
+    }
+
     setStatus('loading');
     setFieldErrors({});
 
@@ -74,6 +86,7 @@ export default function ContactForm() {
             type="text" id="name" name="name"
             value={formData.name} onChange={handleChange}
             disabled={status === 'loading'} placeholder="Tu nombre"
+            maxLength={100} autoComplete="name" required
             className="input-field"
           />
           {fieldErrors.name && <p className="mt-1.5 text-sm text-red-500">{fieldErrors.name[0]}</p>}
@@ -84,6 +97,7 @@ export default function ContactForm() {
             type="email" id="email" name="email"
             value={formData.email} onChange={handleChange}
             disabled={status === 'loading'} placeholder="tu@email.com"
+            maxLength={200} autoComplete="email" required
             className="input-field"
           />
           {fieldErrors.email && <p className="mt-1.5 text-sm text-red-500">{fieldErrors.email[0]}</p>}
@@ -115,8 +129,13 @@ export default function ContactForm() {
           value={formData.message} onChange={handleChange}
           disabled={status === 'loading'} rows={6}
           placeholder="Cuéntanos más sobre ti y tu interés en estudiar en el extranjero..."
+          maxLength={2000} required
           className="input-field resize-none"
         />
+        {/* Contador: con un tope de 2000 conviene que se vea acercarse. */}
+        <p className="mt-1 text-xs text-slate-400 text-right">
+          {formData.message.length} / 2000
+        </p>
         {fieldErrors.message && <p className="mt-1.5 text-sm text-red-500">{fieldErrors.message[0]}</p>}
       </div>
 

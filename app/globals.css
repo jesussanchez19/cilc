@@ -67,6 +67,11 @@
 html {
   scroll-behavior: smooth;
 }
+/* Nota: aquí había un `body { overflow-x: clip }`. Se quitó a propósito.
+   Solo enmascaraba el desbordamiento de la línea scanner del Header (que ya
+   se recorta en su contenedor) y de paso descolocaba los position:fixed en
+   Chrome Android. Si vuelve a aparecer scroll horizontal, hay que corregir
+   el elemento que se desborda — no clipear el body. */
 
 body {
   background: var(--background);
@@ -386,11 +391,13 @@ input::placeholder, textarea::placeholder { color: var(--text-subtle); }
   100% { background-position: 0% 50%; }
 }
 
+/* transform en lugar de `left`: la animación corre en el compositor y no
+   fuerza layout en cada frame. El contenedor recorta con overflow-hidden. */
 @keyframes scanLine {
-  0%   { left: -200px; opacity: 0; }
+  0%   { transform: translateX(-200px); opacity: 0; }
   8%   { opacity: 1; }
   92%  { opacity: 1; }
-  100% { left: calc(100% + 200px); opacity: 0; }
+  100% { transform: translateX(calc(100vw + 200px)); opacity: 0; }
 }
 
 @keyframes orbFloat1 {

@@ -58,14 +58,15 @@ export default function FeaturedCountries() {
 
               {/* Flag pill */}
               <div
-                className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-xl"
+                className="absolute top-4 right-4 px-2 py-1.5 rounded-full overflow-hidden flex items-center"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   border: '1px solid rgba(255,255,255,0.2)',
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                {country.flag}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={32} height={22} className="h-5 w-auto rounded-sm" />
               </div>
 
               {/* Content */}
@@ -77,9 +78,9 @@ export default function FeaturedCountries() {
                   {country.name}
                 </h3>
                 <div className="flex items-center gap-3 text-xs text-slate-300 mb-3">
-                  <span>{country.universities} universidades</span>
+                  <span>{country.universities.toLocaleString('es-MX')} universidades</span>
                   <span className="w-px h-3 bg-slate-600" />
-                  <span>~${country.costOfLiving}/mes</span>
+                  <span>~${country.costOfLiving.toLocaleString('es-MX')}/mes</span>
                 </div>
 
                 {/* CTA revealed on hover */}
@@ -122,14 +123,15 @@ export default function FeaturedCountries() {
 
               {/* Flag */}
               <div
-                className="absolute top-3 right-3 px-2 py-1 rounded-full text-base leading-none"
+                className="absolute top-3 right-3 px-1.5 py-1 rounded-full overflow-hidden flex items-center"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   border: '1px solid rgba(255,255,255,0.2)',
                   backdropFilter: 'blur(8px)',
                 }}
               >
-                {country.flag}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`https://flagcdn.com/w40/${country.code.toLowerCase()}.png`} alt={country.name} width={28} height={20} className="h-4 w-auto rounded-sm" />
               </div>
 
               <div className="absolute bottom-0 left-0 right-0 p-4">

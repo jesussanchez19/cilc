@@ -15,7 +15,30 @@ export default async function ContactPage() {
   const phones = contact.telefonos ?? [];
   const mainPhone = (phones.find((p) => p.esPrincipal) ?? phones[0])?.wa ?? '525518944494';
   const email = contact.emailAdmin;
-  const addressLines = (contact.direccion ?? '').split('\n').filter(Boolean);
+  // Extrae dirección legible de la URL del navegador de Google Maps
+  function parseMapsUrl(url: string | undefined): { address: string | null; embedSrc: string | null; link: string | null } {
+    if (!url) return { address: null, embedSrc: null, link: null };
+    try {
+      const placeMatch = url.match(/\/maps\/place\/([^/@?]+)/);
+      if (placeMatch) {
+        const raw = placeMatch[1];
+        const address = decodeURIComponent(raw.replace(/\+/g, ' '));
+        return {
+          address,
+          embedSrc: `https://maps.google.com/maps?q=${raw}&output=embed`,
+          link: url,
+        };
+      }
+      // Si ya es embed URL o formato desconocido, úsala tal cual para embed
+      return { address: null, embedSrc: url, link: null };
+    } catch {
+      return { address: null, embedSrc: null, link: null };
+    }
+  }
+
+  const { address: parsedAddress, embedSrc: mapEmbedSrc, link: mapsLink } = parseMapsUrl(contact.urlMapa);
+  const displayAddress = parsedAddress ?? contact.direccion ?? '';
+  const addressLines = displayAddress.split(/,\s*|\n/).filter(Boolean);
   return (
     <div>
 
@@ -48,13 +71,13 @@ export default async function ContactPage() {
       {/* ── Contact cards ── */}
       <section className="py-14" style={{ background: 'var(--dark)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 items-stretch">
 
             {/* Email */}
-            <AnimateIn animation="blur" delay={0}>
+            <AnimateIn animation="blur" delay={0} className="h-full">
               <a
                 href={`mailto:${email}`}
-                className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02]"
+                className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] h-full"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center"
@@ -73,12 +96,12 @@ export default async function ContactPage() {
             </AnimateIn>
 
             {/* WhatsApp */}
-            <AnimateIn animation="blur" delay={110}>
+            <AnimateIn animation="blur" delay={110} className="h-full">
               <a
                 href={`https://wa.me/${mainPhone}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02]"
+                className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] h-full"
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center"
@@ -99,27 +122,53 @@ export default async function ContactPage() {
             </AnimateIn>
 
             {/* Oficina */}
-            <AnimateIn animation="blur" delay={220}>
-              <div
-                className="rounded-2xl p-6 flex flex-col gap-4"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
-              >
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                  style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                  </svg>
+            <AnimateIn animation="blur" delay={220} className="h-full">
+              {mapsLink ? (
+                <a
+                  href={mapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group rounded-2xl p-6 flex flex-col gap-4 transition-all duration-300 hover:scale-[1.02] h-full"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">Oficina</p>
+                    <p className="text-white font-semibold text-sm leading-relaxed group-hover:text-violet-400 transition-colors duration-200 text-left">
+                      {addressLines.map((line, i) => (
+                        <span key={i}>{line}{i < addressLines.length - 1 && <br />}</span>
+                      ))}
+                    </p>
+                  </div>
+                </a>
+              ) : (
+                <div
+                  className="rounded-2xl p-6 flex flex-col gap-4 h-full"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                >
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                    style={{ background: 'rgba(139,92,246,0.15)', border: '1px solid rgba(139,92,246,0.25)' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">Oficina</p>
+                    <p className="text-white font-semibold text-sm leading-relaxed">
+                      {addressLines.map((line, i) => (
+                        <span key={i}>{line}{i < addressLines.length - 1 && <br />}</span>
+                      ))}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">Oficina</p>
-                  <p className="text-white font-semibold text-sm leading-relaxed">
-                    {addressLines.map((line, i) => (
-                      <span key={i}>{line}{i < addressLines.length - 1 && <br />}</span>
-                    ))}
-                  </p>
-                </div>
-              </div>
+              )}
             </AnimateIn>
           </div>
 
@@ -153,6 +202,28 @@ export default async function ContactPage() {
         </div>
       </section>
 
+      {/* ── Mapa ── */}
+      {mapEmbedSrc && (
+        <section className="py-0" style={{ background: 'var(--dark)' }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+            <div
+              className="overflow-hidden rounded-2xl aspect-video sm:aspect-16/7"
+              style={{ border: '1px solid rgba(255,255,255,0.08)' }}
+            >
+              <iframe
+                src={mapEmbedSrc}
+                width="100%"
+                height="100%"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación de la oficina CILC"
+              />
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ── Formulario ── */}
       <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -168,7 +239,7 @@ export default async function ContactPage() {
           </div>
 
           <div
-            className="rounded-2xl p-8 md:p-12"
+            className="rounded-2xl p-4 sm:p-8 md:p-12"
             style={{ border: '1px solid rgba(15,23,42,0.08)', boxShadow: '0 4px 24px rgba(0,0,0,0.06)' }}
           >
             <ContactForm />

@@ -10,11 +10,12 @@ import Footer from '@/components/shared/Footer';
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import StudioExitButton from '@/components/shared/StudioExitButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
+import SiteChrome from '@/components/shared/SiteChrome';
 import { Toaster } from 'sileo';
 
 import { GA_ID } from '@/lib/analytics';
 import { organizationSchema } from '@/lib/seo/schemas';
-import { getContactInfo } from '@/lib/sanity/queries';
+import { getContactInfo, getSearchIndex } from '@/lib/sanity/queries';
  
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -76,7 +77,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const contact = await getContactInfo();
+  // Las dos consultas en paralelo: son independientes entre sí.
+  const [contact, searchIndex] = await Promise.all([getContactInfo(), getSearchIndex()]);
   const mainPhone = (contact.telefonos?.find((p) => p.esPrincipal) ?? contact.telefonos?.[0])?.wa;
   return (
     <html
@@ -84,6 +86,14 @@ export default async function RootLayout({
 
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        {/* Red de seguridad sin JS. Sustituye a los antiguos setTimeout de
+            AnimateIn/LazySection, que eran inútiles: si el JS no corre, el
+            temporizador tampoco. `!important` gana a los estilos inline. */}
+        <noscript>
+          <style>{`.reveal,.reveal-blur,.reveal-left,.reveal-right,.reveal-scale,.lazy-section{opacity:1!important;transform:none!important;filter:none!important;transition:none!important}`}</style>
+        </noscript>
+      </head>
       <body className="min-h-full flex flex-col bg-white">
         {GA_ID && (
           <>
@@ -105,23 +115,29 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
         />
-        <Header />
-        <Suspense fallback={null}><Navigation /></Suspense>
-        <Breadcrumb />
+        <SiteChrome>
+          <Header searchIndex={searchIndex} />
+          <Suspense fallback={null}><Navigation /></Suspense>
+          <Breadcrumb />
+        </SiteChrome>
+
         <main className="flex-1">{children}</main>
-        <Footer
-          contactEmail={contact.emailAdmin}
-          phones={contact.telefonos}
-          mainPhone={mainPhone}
-          address={contact.direccion}
-          socialLinks={{
-            facebook:  contact.facebook,
-            instagram: contact.instagram,
-            linkedin:  contact.linkedin,
-            youtube:   contact.youtube,
-            tiktok:    contact.tiktok,
-          }}
-        />
+
+        <SiteChrome>
+          <Footer
+            contactEmail={contact.emailAdmin}
+            phones={contact.telefonos}
+            mainPhone={mainPhone}
+            address={contact.direccion}
+            socialLinks={{
+              facebook:  contact.facebook,
+              instagram: contact.instagram,
+              linkedin:  contact.linkedin,
+              youtube:   contact.youtube,
+              tiktok:    contact.tiktok,
+            }}
+          />
+        </SiteChrome>
 
         <WhatsAppButton />
         <StudioExitButton />

@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import SearchBar from '@/components/shared/SearchBar';
 import { searchAll, groupResultsByType, SearchResult } from '@/lib/search';
+import { getSearchIndex } from '@/lib/sanity/queries';
 
 interface BuscarPageProps {
   searchParams: Promise<{ q?: string }>;
@@ -11,12 +13,14 @@ const TYPE_LABEL: Record<SearchResult['type'], string> = {
   programa: 'Programas',
   destino: 'Destinos',
   articulo: 'Artículos',
+  pagina: 'Páginas del sitio',
 };
 
 const TYPE_ICON: Record<SearchResult['type'], string> = {
   programa: '🎓',
   destino: '🌍',
   articulo: '📰',
+  pagina: '📄',
 };
 
 function ResultCard({ r }: { r: SearchResult }) {
@@ -40,19 +44,23 @@ function ResultCard({ r }: { r: SearchResult }) {
 export default async function BuscarPage({ searchParams }: BuscarPageProps) {
   const { q: rawQ } = await searchParams;
   const q = rawQ?.trim() ?? '';
-  const results = q ? searchAll(q) : [];
+  const index = q ? await getSearchIndex() : [];
+  const results = q ? searchAll(q, index) : [];
   const grouped = groupResultsByType(results);
 
   // ── Búsqueda vacía ──
   if (!q) {
     return (
       <div className="py-24 bg-gray-50 min-h-screen">
-        <div className="max-w-2xl mx-auto px-4 text-center">
-          <div className="text-5xl mb-6">🔍</div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">¿Qué quieres encontrar?</h1>
-          <p className="text-gray-500">
-            Usa la barra de búsqueda en la parte superior para encontrar programas, destinos y artículos del blog.
-          </p>
+        <div className="max-w-2xl mx-auto px-4">
+          <div className="text-center">
+            <div className="text-5xl mb-6">🔍</div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-3">¿Qué quieres encontrar?</h1>
+            <p className="text-gray-500 mb-8">
+              Busca entre nuestros programas, destinos y artículos del blog.
+            </p>
+          </div>
+          <SearchBar fullWidth autoFocus index={await getSearchIndex()} />
         </div>
       </div>
     );
@@ -67,9 +75,14 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
         {/* Encabezado */}
         <div className="mb-10">
           <p className="text-sm text-gray-400 mb-1">Resultados de búsqueda</p>
-          <h1 className="text-3xl font-bold text-gray-900">
-            "{q}" <span className="text-gray-400 font-normal text-xl">({totalResults} resultado{totalResults !== 1 ? 's' : ''})</span>
+          <h1 className="text-3xl font-bold text-gray-900 mb-6">
+            &ldquo;{q}&rdquo; <span className="text-gray-400 font-normal text-xl">({totalResults} resultado{totalResults !== 1 ? 's' : ''})</span>
           </h1>
+          {/* Permite afinar la búsqueda sin volver atrás — en móvil el header
+              no tiene barra, así que este es el único punto de entrada. */}
+          <div className="max-w-xl">
+            <SearchBar fullWidth initialQuery={q} index={index} />
+          </div>
         </div>
 
         {totalResults === 0 ? (
@@ -79,8 +92,8 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
           </div>
         ) : (
           <div className="space-y-10">
-            {(['programa', 'destino', 'articulo'] as const).map((type) => {
-              const items = grouped[type === 'programa' ? 'programas' : type === 'destino' ? 'destinos' : 'articulos'];
+            {(['programa', 'destino', 'articulo', 'pagina'] as const).map((type) => {
+              const items = grouped[type === 'programa' ? 'programas' : type === 'destino' ? 'destinos' : type === 'articulo' ? 'articulos' : 'paginas'];
               if (items.length === 0) return null;
               return (
                 <div key={type}>
