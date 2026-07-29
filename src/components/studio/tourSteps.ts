@@ -18,6 +18,10 @@
  *   'rotulo:<texto>'   → cualquier elemento cuyo texto sea exactamente ese
  *   'junto-a:<texto>'  → primer botón o enlace en el mismo renglón que ese
  *                        texto y a su derecha (para el + de una cabecera)
+ *   'region-derecha:<selector>' → el área que queda a la derecha de ese
+ *                        elemento. No busca un elemento: construye el
+ *                        rectángulo. Útil cuando la zona a resaltar no tiene
+ *                        un contenedor identificable.
  *
  * Cualquiera admite el prefijo `panel-` para buscar SOLO dentro del área de
  * paneles: 'panel-aria:Create'. Casi siempre es lo que se quiere. El Studio
@@ -112,9 +116,11 @@ export const PASOS: PasoTutorial[] = [
     // Se resalta el panel de documento completo, que es donde está el
     // formulario, y la tarjeta se manda a la izquierda: encaja sobre la lista
     // de carpetas y deja el formulario entero a la vista.
+    // El área a la derecha de la lista de carpetas. Se calcula así porque el
+    // contenedor del panel de documento no se identifica de forma fiable: los
+    // selectores acababan cayendo en el separador entre paneles.
     anclas: [
-      'css:[data-ui="PaneLayout"] > div:last-child',
-      'css:[data-ui="PaneLayout"] > div:nth-child(2)',
+      'region-derecha:[data-ui="PaneLayout"] > div:first-child',
       'panel-css:[data-testid="document-pane"]',
     ],
     lado: 'izquierda',

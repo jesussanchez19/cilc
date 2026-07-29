@@ -136,10 +136,40 @@ function bordeInferiorNavbar(): number {
 }
 
 /** Primer ancla que exista y sea visible. `null` si ninguna coincide. */
+/**
+ * Rectángulo del área que queda a la DERECHA de un elemento, por debajo de la
+ * barra superior.
+ *
+ * Se construye a mano en vez de buscar el elemento del panel de documento
+ * porque ese contenedor no es identificable de forma fiable: los intentos
+ * acababan cayendo en el separador entre paneles, una franja de unos pocos
+ * píxeles de ancho. Calcularlo a partir de la lista de carpetas, que sí se
+ * localiza bien, da siempre el área correcta.
+ */
+function regionDerechaDe(selector: string): Recuadro | null {
+  const ref = document.querySelector<HTMLElement>(selector);
+  if (!ref) return null;
+
+  const r = ref.getBoundingClientRect();
+  const top = Math.max(bordeInferiorNavbar(), r.top);
+  const left = r.right;
+  const width = window.innerWidth - left;
+  const height = window.innerHeight - top;
+
+  if (width < 120 || height < 120) return null;
+  return { top, left, width, height };
+}
+
 function localizar(paso: PasoTutorial): Recuadro | null {
   const areaPantalla = window.innerWidth * window.innerHeight;
 
   for (const ancla of paso.anclas ?? []) {
+    if (ancla.startsWith('region-derecha:')) {
+      const rect = regionDerechaDe(ancla.slice('region-derecha:'.length));
+      if (rect) return rect;
+      continue;
+    }
+
     const el = buscarElemento(ancla);
     if (!el) continue;
     const r = el.getBoundingClientRect();
@@ -147,6 +177,14 @@ function localizar(paso: PasoTutorial): Recuadro | null {
     // Descarta elementos ocultos o de tamaño ridículo: resaltarlos se vería peor
     // que no resaltar nada.
     if (r.width < 8 || r.height < 8) continue;
+
+    // Y las franjas muy estrechas y muy altas —o al revés—, que son separadores
+    // y barras de desplazamiento. Resaltarlas confunde: parece que se señala
+    // algo cuando no hay nada que mirar ahí.
+    const esFranja =
+      (r.width < 80 && r.height > window.innerHeight * 0.4) ||
+      (r.height < 80 && r.width > window.innerWidth * 0.9 && !paso.lado);
+    if (esFranja) continue;
 
     // Y también los que ocupan casi toda la pantalla. Resaltar "todo" no señala
     // nada, y además no deja hueco donde poner la tarjeta sin taparlo. En ese
