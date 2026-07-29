@@ -9,6 +9,8 @@ import Navigation from '@/components/shared/Navigation';
 import Footer from '@/components/shared/Footer';
 import WhatsAppButton from '@/components/shared/WhatsAppButton';
 import StudioExitButton from '@/components/shared/StudioExitButton';
+import StudioTour from '@/components/studio/StudioTour';
+import StudioTourButton from '@/components/studio/StudioTourButton';
 import Breadcrumb from '@/components/shared/Breadcrumb';
 import SiteChrome from '@/components/shared/SiteChrome';
 import { Toaster } from 'sileo';
@@ -141,6 +143,8 @@ export default async function RootLayout({
 
         <WhatsAppButton />
         <StudioExitButton />
+        <StudioTourButton />
+        <StudioTour />
         <Toaster position="bottom-right" theme="system" />
       </body>
     </html>
