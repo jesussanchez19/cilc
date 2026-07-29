@@ -74,8 +74,9 @@ test.describe('Flujo principal CILC', () => {
   });
 
   test('Enviar formulario del modal (mock)', async ({ page }) => {
-    // Interceptamos la petición para no depender del servidor real
-    await page.route('/api/contact', async (route) => {
+    // Interceptamos la petición para no depender del servidor real.
+    // El modal de cotización envía a /api/quote, no a /api/contact.
+    await page.route('/api/quote', async (route) => {
       await route.fulfill({ status: 200, body: JSON.stringify({ ok: true }) });
     });
 

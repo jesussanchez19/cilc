@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { FROM_CLIENTE, FROM_WEB } from '@/lib/email/sender';
 import { quoteSchema } from '@/lib/validations/quote';
 import { saveLead } from '@/lib/leads';
 import { quoteAdminHtml, quoteUserHtml } from '@/lib/email/templates';
@@ -53,21 +54,31 @@ export async function POST(req: NextRequest) {
 
   const [adminResult, userResult] = await Promise.all([
     resend.emails.send({
-      from: 'CILC Web <onboarding@resend.dev>',
+      from: FROM_WEB,
       to: contactInfo.emailAdmin,
       replyTo: email,
       subject: `[CILC Cotización] ${program} — ${name}`,
       html: quoteAdminHtml({ name, email, phone, program, message }),
     }),
     resend.emails.send({
-      from: 'CILC <onboarding@resend.dev>',
+      from: FROM_CLIENTE,
       to: email,
       subject: `Tu solicitud sobre ${program} — CILC`,
       html: quoteUserHtml(name, program, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
     }),
   ]);
 
-  if (adminResult.error || userResult.error) {
+  // Solo el aviso al administrador es crítico: si ese falla, el negocio no se
+  // entera de la solicitud. La confirmación al cliente es cortesía, y hacer
+  // fallar toda la petición por ella tiene un efecto peor — el lead YA quedó
+  // guardado y el administrador YA fue avisado, pero el usuario ve un error y
+  // reenvía, generando duplicados. Se registra y se sigue.
+  if (userResult.error) {
+    console.error('[quote] no se pudo enviar la confirmación al cliente:', userResult.error);
+  }
+
+  if (adminResult.error) {
+    console.error('[quote] no se pudo avisar al administrador:', adminResult.error);
     return NextResponse.json({ error: 'Error al enviar la solicitud.' }, { status: 500 });
   }
 

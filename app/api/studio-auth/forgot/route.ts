@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { FROM_STUDIO } from '@/lib/email/sender';
 import { getContactInfo } from '@/lib/sanity/queries';
 import { logoBlock, EMAIL_COLORS as C } from '@/lib/email/templates';
 import { createResetToken, RESET_TTL_MINUTES } from '@/lib/auth/resetToken';
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
     const resetUrl = `${origin}/studio/reset?token=${token}`;
 
     await resend.emails.send({
-      from: 'CILC Studio <onboarding@resend.dev>',
+      from: FROM_STUDIO,
       to:   destino,
       subject: 'Recuperación de acceso al Studio — CILC',
       html: `
