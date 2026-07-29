@@ -22,6 +22,10 @@
  *                        elemento. No busca un elemento: construye el
  *                        rectángulo. Útil cuando la zona a resaltar no tiene
  *                        un contenedor identificable.
+ *   'grupo-derecha:<texto>' → el conjunto de botones de icono que hay en el
+ *                        mismo renglón que ese texto y a su derecha. También
+ *                        construye el rectángulo. Para las barras de iconos
+ *                        seguidos, donde no se puede distinguir uno solo.
  *
  * Cualquiera admite el prefijo `panel-` para buscar SOLO dentro del área de
  * paneles: 'panel-aria:Create'. Casi siempre es lo que se quiere. El Studio
@@ -35,17 +39,22 @@ export interface PasoTutorial {
   /** Consejo corto que se muestra destacado bajo el texto. */
   tip?: string;
   /**
-   * Elementos que el tutorial pulsa ANTES de medir el foco, con la misma
-   * sintaxis que `anclas`.
+   * Navegación que el tutorial hace ANTES de medir el foco.
    *
    * Hace falta porque algunas cosas no existen hasta que navegas: el botón +
-   * solo aparece dentro de una carpeta, no en la lista raíz. Sin esto, el paso
-   * de "crear contenido" no tenía nada que resaltar.
+   * solo aparece dentro de una carpeta, y el menú de eliminar solo con un
+   * documento abierto.
    *
-   * Solo se usa para navegar dentro del panel. Nunca para acciones que
-   * modifiquen contenido.
+   * Cada elemento de la lista es UN clic, y se ejecutan en orden. Si un
+   * elemento es a su vez una lista, sus entradas son ALTERNATIVAS para ese
+   * mismo clic: se prueba en orden y se pulsa la primera que exista.
+   *
+   *   ['a', 'b']    → pulsa a, espera, pulsa b   (secuencia)
+   *   [['a', 'b']]  → pulsa a, o b si a no está  (alternativas)
+   *
+   * Solo se usa para navegar. Nunca para acciones que modifiquen contenido.
    */
-  prepara?: string[];
+  prepara?: (string | string[])[];
   /**
    * Fuerza de qué lado del foco se coloca la tarjeta.
    *
@@ -88,8 +97,10 @@ export const PASOS: PasoTutorial[] = [
       'resaltado, arriba de la lista.\n\n' +
       'Ese botón solo aparece DENTRO de una carpeta, no en el índice. Al pulsarlo se ' +
       'abre un documento en blanco a la derecha, listo para rellenar.',
-    // Abre una carpeta primero: el + no existe en la lista raíz.
-    prepara: ['panel-texto:Blog / Noticias', 'panel-texto:Destinos'],
+    // Abre una carpeta primero: el + no existe en la lista raíz. Las dos
+    // entradas son ALTERNATIVAS de un mismo clic —de ahí la lista anidada—, no
+    // dos navegaciones seguidas.
+    prepara: [['panel-texto:Blog / Noticias', 'panel-texto:Destinos']],
     // El + de la cabecera no tiene identificador reconocible ni aria-label con
     // "Create", y además es un enlace, no un botón. Se localiza por posición:
     // mismo renglón que el título del panel y a su derecha. Las reservas van
@@ -149,19 +160,22 @@ export const PASOS: PasoTutorial[] = [
   {
     titulo: 'Eliminar un documento',
     cuerpo:
-      'Hemos abierto un destino porque aquí sí se puede borrar. La opción Eliminar está ' +
-      'dentro del menú de tres puntos, arriba del documento.\n\n' +
+      'Hemos abierto un destino porque aquí sí se puede borrar. Entre los iconos ' +
+      'resaltados, arriba del documento, está el de tres puntos: ahí dentro aparece ' +
+      'la opción Eliminar.\n\n' +
       'Pide confirmación antes de hacer nada, pero una vez confirmado NO hay vuelta ' +
       'atrás: el documento desaparece de Sanity y de la web.',
     // Dos clics encadenados: primero la carpeta, luego un documento. La opción
     // de eliminar solo existe con un documento abierto, y Configuración del
     // sitio y Programas no la tienen — son fijos y no deben borrarse.
     prepara: ['panel-texto:Destinos', 'panel-texto:Canadá'],
-    anclas: [
-      'panel-aria:Document actions',
-      'panel-aria:Actions',
-      'panel-css:[data-testid="pane-context-menu"]',
-    ],
+    // Se resalta la barra de iconos completa. El de tres puntos no se puede
+    // distinguir de sus vecinos por el DOM, y los aria-label que se probaron
+    // ("Document actions", "Actions") no existen en esta versión del Studio: el
+    // paso se quedaba sin foco. Se toman los distintivos de estado como
+    // referencia de la fila, con reserva por si el documento aún no está
+    // publicado y solo aparece "Draft".
+    anclas: ['grupo-derecha:Published', 'grupo-derecha:Draft'],
     lado: 'abajo',
     tip: 'Configuración del sitio y Programas no se pueden eliminar: el sitio los necesita.',
   },

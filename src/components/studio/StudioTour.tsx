@@ -110,12 +110,40 @@ function botonJuntoATexto(texto: string): HTMLElement | null {
       const rb = b.getBoundingClientRect();
       if (rb.width < 8 || rb.height < 8) return false;
       // Misma franja horizontal y a la derecha del rótulo.
-      return Math.abs(rb.top + rb.height / 2 - centro) < 22 && rb.left > r.right;
+      if (Math.abs(rb.top + rb.height / 2 - centro) < 22 && rb.left > r.right) {
+        return mismaFila(rotulo, b);
+      }
+      return false;
     })
     .sort((a, z) => a.getBoundingClientRect().left - z.getBoundingClientRect().left);
 
   // El más a la izquierda: el + va antes que el menú de tres puntos.
   return candidatos[0] ?? null;
+}
+
+/**
+ * Comprueba que dos elementos pertenecen a la MISMA barra, no solo a la misma
+ * altura de la pantalla.
+ *
+ * Estar alineados horizontalmente no basta. Los paneles del Studio van lado a
+ * lado, así que el rótulo "Blog / Noticias" de la barra lateral quedaba a la
+ * misma altura que una tarjeta de la lista del panel de al lado, y el tutorial
+ * resaltaba esa tarjeta creyendo que era el botón + de la cabecera.
+ *
+ * La condición de verdad es que compartan un contenedor PEQUEÑO: una cabecera
+ * mide unas decenas de píxeles de alto y agrupa el título con sus botones. Si
+ * el primer ancestro común es alto, es que son cosas de paneles distintos que
+ * solo coinciden en pantalla por casualidad.
+ */
+function mismaFila(rotulo: HTMLElement, boton: HTMLElement): boolean {
+  const ALTO_MAX_CABECERA = 120;
+  let nodo: HTMLElement | null = rotulo.parentElement;
+  for (let i = 0; nodo && i < 8; i += 1, nodo = nodo.parentElement) {
+    if (nodo.contains(boton)) {
+      return nodo.getBoundingClientRect().height <= ALTO_MAX_CABECERA;
+    }
+  }
+  return false;
 }
 
 /**
@@ -166,12 +194,72 @@ function regionDerechaDe(selector: string): Recuadro | null {
   return { top, left, width, height };
 }
 
+/**
+ * Recuadro que engloba los botones de icono situados a la derecha de un texto,
+ * en su mismo renglón.
+ *
+ * Es para el menú de tres puntos de la cabecera del documento, donde vive la
+ * opción de eliminar. Ese botón no expone nada por lo que buscarlo: es uno de
+ * cinco iconos seguidos, sin aria-label ni testid útiles, y quedarse con "el
+ * tercero" se rompería en cuanto Sanity añadiera o quitara uno.
+ *
+ * Resaltar el grupo entero señala la zona correcta y aguanta esos cambios; el
+ * texto del paso concreta cuál de ellos hay que pulsar.
+ */
+function grupoDerechaDe(texto: string): Recuadro | null {
+  const limite = bordeInferiorNavbar();
+
+  // Se incluyen botones y enlaces: la referencia natural de esa fila son los
+  // distintivos "Published" y "Draft", que en el Studio son pulsables, no
+  // simples etiquetas. Buscando solo texto plano no se encontraba nada y el
+  // paso se quedaba sin foco.
+  const rotulos = [...document.querySelectorAll<HTMLElement>('span, div, h1, h2, h3, button, a')]
+    .filter((e) => (e.textContent ?? '').trim() === texto)
+    .filter((e) => e.getBoundingClientRect().top >= limite);
+  const rotulo = rotulos[rotulos.length - 1];
+  if (!rotulo) return null;
+
+  const r = rotulo.getBoundingClientRect();
+  const centro = r.top + r.height / 2;
+
+  const iconos = [...document.querySelectorAll<HTMLElement>('button, [role="button"]')]
+    .map((b) => b.getBoundingClientRect())
+    .filter((rb) => {
+      if (rb.width < 8 || rb.height < 8) return false;
+      if (Math.abs(rb.top + rb.height / 2 - centro) >= 22) return false;
+      if (rb.left <= r.right) return false;
+      // Solo botones cuadrados. En esa misma fila están los distintivos
+      // "Published" y "Draft", que también son botones pero alargados; sin este
+      // filtro el recuadro se estiraba desde ellos hasta el borde y dejaba de
+      // señalar los iconos.
+      return Math.abs(rb.width - rb.height) < 12;
+    });
+  if (!iconos.length) return null;
+
+  const left = Math.min(...iconos.map((b) => b.left));
+  const top = Math.min(...iconos.map((b) => b.top));
+  const width = Math.max(...iconos.map((b) => b.right)) - left;
+  const height = Math.max(...iconos.map((b) => b.bottom)) - top;
+
+  if (width < 8 || height < 8) return null;
+  return { top, left, width, height };
+}
+
 function localizar(paso: PasoTutorial): Recuadro | null {
   const areaPantalla = window.innerWidth * window.innerHeight;
 
   for (const ancla of paso.anclas ?? []) {
+    // Las anclas que construyen un rectángulo en vez de buscar un elemento se
+    // devuelven tal cual: no tienen nodo del que medir, y los descartes de más
+    // abajo (tamaño, franjas) están pensados para elementos encontrados.
     if (ancla.startsWith('region-derecha:')) {
       const rect = regionDerechaDe(ancla.slice('region-derecha:'.length));
+      if (rect) return rect;
+      continue;
+    }
+
+    if (ancla.startsWith('grupo-derecha:')) {
+      const rect = grupoDerechaDe(ancla.slice('grupo-derecha:'.length));
       if (rect) return rect;
       continue;
     }
@@ -278,9 +366,16 @@ export default function StudioTour() {
     let cancelado = false;
     if (paso.prepara?.length) {
       void (async () => {
-        for (const sel of paso.prepara!) {
+        for (const clic of paso.prepara!) {
           if (cancelado) return;
-          buscarElemento(sel)?.click();
+          // Una lista anidada son ALTERNATIVAS del mismo clic, no pasos
+          // sucesivos: se pulsa la primera que exista y se deja el resto. Sin
+          // esta distinción, un paso que solo quería abrir una carpeta con
+          // reserva acababa abriendo las dos, una detrás de otra.
+          for (const sel of Array.isArray(clic) ? clic : [clic]) {
+            const el = buscarElemento(sel);
+            if (el) { el.click(); break; }
+          }
           await new Promise((r) => setTimeout(r, 550));
         }
       })();
