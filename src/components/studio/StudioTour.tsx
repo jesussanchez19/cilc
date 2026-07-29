@@ -225,8 +225,16 @@ function regionDerechaDe(selector: string): Recuadro | null {
  *
  * Aun así se comprueba que el documento siga abierto después de cada intento:
  * si la fila de referencia desaparece, se para en seco.
+ *
+ * `vigente` corta la operación en cuanto el paso deja de ser el actual. Es
+ * obligatorio, no un adorno: sin él la rutina seguía pulsando botones sobre una
+ * pantalla que ya había cambiado de sitio.
  */
-async function abrirMenuCon(opcion: string, filaDe: string[]): Promise<HTMLElement | null> {
+async function abrirMenuCon(
+  opcion: string,
+  filaDe: string[],
+  vigente: () => boolean,
+): Promise<HTMLElement | null> {
   const visible = () => buscarElemento(`texto:${opcion}`);
   // Si ya está abierto no se toca nada: no lo abrimos nosotros, así que
   // tampoco nos toca cerrarlo.
@@ -254,11 +262,24 @@ async function abrirMenuCon(opcion: string, filaDe: string[]): Promise<HTMLEleme
       return dentro(b.getBoundingClientRect());
     })
     // De derecha a izquierda: el menú del documento está al final de la fila.
-    .sort((a, z) => z.getBoundingClientRect().left - a.getBoundingClientRect().left);
+    .sort((a, z) => z.getBoundingClientRect().left - a.getBoundingClientRect().left)
+    // Tope duro. Si en dos intentos no ha aparecido, no se sigue tanteando:
+    // cada clic de más es una ocasión más de tocar algo que no toca.
+    .slice(0, 2);
 
   for (const boton of candidatos) {
+    if (!vigente()) return null;
     boton.click();
     await new Promise((r) => setTimeout(r, 380));
+
+    // Si nos han quitado el turno mientras esperábamos, se deshace lo hecho y no
+    // se reclama nada: una secuencia caducada no debe dejar rastro, y menos un
+    // menú abierto del que nadie se hace cargo.
+    if (!vigente()) {
+      if (visible()) boton.click();
+      return null;
+    }
+
     if (visible()) return boton;
 
     // No era este. Se cierra para no ir dejando menús abiertos por la pantalla.
@@ -380,6 +401,17 @@ export default function StudioTour() {
   const [foco, setFoco] = useState<Recuadro | null>(null);
   const tarjetaRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * Cuenta de secuencias de navegación lanzadas, para que solo la última valga.
+   *
+   * Es imprescindible, no una precaución teórica. Con App Router el Strict Mode
+   * de React viene activado, así que en desarrollo cada efecto se monta dos
+   * veces: había DOS secuencias de clics corriendo a la vez, pisándose una a
+   * otra —una abría el menú y la otra lo volvía a cerrar— y siguiendo activas
+   * después de que el paso hubiera cambiado.
+   */
+  const generacion = useRef(0);
+
   const enStudio =
     pathname.startsWith('/studio') &&
     pathname !== '/studio/login' &&
@@ -442,15 +474,19 @@ export default function StudioTour() {
      * Es deliberadamente solo navegación. Nada que cree, edite ni borre
      * contenido: el tutorial no debe tocar los datos de nadie.
      */
-    let cancelado = false;
-    // En un objeto y no en una variable suelta porque se asigna dentro de la
-    // función asíncrona y se lee en la limpieza del efecto.
-    const menu: { boton: HTMLElement | null } = { boton: null };
+    // Esta ejecución se queda con el turno; cualquier secuencia anterior que
+    // siga en vuelo lo verá y se detendrá en su próxima comprobación.
+    const miTurno = (generacion.current += 1);
+    const vigente = () => generacion.current === miTurno;
+
+    // En un objeto y no en variables sueltas porque se asignan dentro de la
+    // función asíncrona y se leen en la limpieza del efecto.
+    const menu: { boton: HTMLElement | null; opcion: string } = { boton: null, opcion: '' };
 
     if (paso.prepara?.length) {
       void (async () => {
         for (const clic of paso.prepara!) {
-          if (cancelado) return;
+          if (!vigente()) return;
           // Una lista anidada son ALTERNATIVAS del mismo clic, no pasos
           // sucesivos: se pulsa la primera que exista y se deja el resto. Sin
           // esta distinción, un paso que solo quería abrir una carpeta con
@@ -462,7 +498,8 @@ export default function StudioTour() {
               // escondidas aquí: son el cerco de seguridad de esta operación.
               const [opcion, refs = ''] = sel.slice(MENU_CON.length).split('@');
               const fila = refs.split(',').map((s) => s.trim()).filter(Boolean);
-              menu.boton = fila.length ? await abrirMenuCon(opcion, fila) : null;
+              menu.opcion = opcion;
+              menu.boton = fila.length ? await abrirMenuCon(opcion, fila, vigente) : null;
               break;
             }
             const el = buscarElemento(sel);
@@ -502,12 +539,14 @@ export default function StudioTour() {
     window.addEventListener('resize', medir);
     window.addEventListener('scroll', medir, true);
     return () => {
-      cancelado = true;
       clearInterval(bucle);
       clearTimeout(fin);
-      // Cierra el menú que este paso hubiera abierto. Sin esto se quedaba
+      // Cierra el menú que este paso hubiera abierto, para que no se quede
       // desplegado al avanzar o al cerrar el tutorial.
-      menu.boton?.click();
+      //
+      // Se comprueba antes que siga abierto: el botón ALTERNA, así que pulsarlo
+      // a ciegas sobre un menú ya cerrado lo volvía a abrir.
+      if (menu.boton && buscarElemento(`texto:${menu.opcion}`)) menu.boton.click();
       window.removeEventListener('resize', medir);
       window.removeEventListener('scroll', medir, true);
     };
