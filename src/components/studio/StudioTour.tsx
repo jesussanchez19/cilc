@@ -52,6 +52,7 @@ function buscarElemento(ancla: string): HTMLElement | null {
 
   try {
     if (tipo === 'junto-a') return botonJuntoATexto(valor);
+    if (tipo === 'rotulo') return porRotulo(valor);
 
     if (tipo === 'css') {
       const todos = [...raiz.querySelectorAll<HTMLElement>(valor)];
@@ -95,7 +96,10 @@ function botonJuntoATexto(texto: string): HTMLElement | null {
   const r = rotulo.getBoundingClientRect();
   const centro = r.top + r.height / 2;
 
-  const botones = [...document.querySelectorAll<HTMLElement>('button')]
+  // Se incluyen enlaces: el + de la cabecera NO es un <button>, es un <a> que
+  // apunta a una URL de tipo `intent/create`. Buscando solo botones se
+  // encontraba el menú de tres puntos, que está justo a su derecha.
+  const candidatos = [...document.querySelectorAll<HTMLElement>('button, a, [role="button"]')]
     .filter((b) => {
       const rb = b.getBoundingClientRect();
       if (rb.width < 8 || rb.height < 8) return false;
@@ -104,7 +108,23 @@ function botonJuntoATexto(texto: string): HTMLElement | null {
     })
     .sort((a, z) => a.getBoundingClientRect().left - z.getBoundingClientRect().left);
 
-  return botones[0] ?? null;
+  // El más a la izquierda: el + va antes que el menú de tres puntos.
+  return candidatos[0] ?? null;
+}
+
+/**
+ * Cualquier elemento cuyo texto coincida exactamente, por debajo de la barra
+ * superior. A diferencia de `texto:`, no se limita a botones y enlaces, así que
+ * sirve para señalar rótulos de campos del formulario.
+ */
+function porRotulo(texto: string): HTMLElement | null {
+  const limite = bordeInferiorNavbar();
+  return [...document.querySelectorAll<HTMLElement>('label, h1, h2, h3, span, div, p')]
+    .find((e) => {
+      if ((e.textContent ?? '').trim() !== texto) return false;
+      const r = e.getBoundingClientRect();
+      return r.width >= 8 && r.height >= 8 && r.top >= limite;
+    }) ?? null;
 }
 
 /** Dónde termina la barra superior, medida desde sus pestañas de herramientas. */
@@ -131,7 +151,11 @@ function localizar(paso: PasoTutorial): Recuadro | null {
     // Y también los que ocupan casi toda la pantalla. Resaltar "todo" no señala
     // nada, y además no deja hueco donde poner la tarjeta sin taparlo. En ese
     // caso es mejor oscurecer sin foco.
-    if ((r.width * r.height) / areaPantalla > 0.7) continue;
+    //
+    // El umbral es alto a propósito: un panel de documento ocupa buena parte de
+    // la ventana y sí tiene sentido resaltarlo entero, porque se distingue del
+    // resto. Solo se descarta lo que prácticamente cubre la pantalla.
+    if ((r.width * r.height) / areaPantalla > 0.88) continue;
 
     return { top: r.top, left: r.left, width: r.width, height: r.height };
   }
@@ -367,12 +391,20 @@ export default function StudioTour() {
     const cx = foco.left + foco.width / 2 - ANCHO / 2;
     const cy = foco.top + foco.height / 2 - ALTO_EST / 2;
 
-    const opciones = [
-      { top: foco.top + foco.height + HUECO, left: cx, hueco: vh - (foco.top + foco.height) },
-      { top: foco.top - HUECO - ALTO_EST,    left: cx, hueco: foco.top },
-      { top: cy, left: foco.left + foco.width + HUECO, hueco: vw - (foco.left + foco.width) },
-      { top: cy, left: foco.left - HUECO - ANCHO,      hueco: foco.left },
-    ];
+    const porLado = {
+      abajo:     { top: foco.top + foco.height + HUECO, left: cx, hueco: vh - (foco.top + foco.height) },
+      arriba:    { top: foco.top - HUECO - ALTO_EST,    left: cx, hueco: foco.top },
+      derecha:   { top: cy, left: foco.left + foco.width + HUECO, hueco: vw - (foco.left + foco.width) },
+      izquierda: { top: cy, left: foco.left - HUECO - ANCHO,      hueco: foco.left },
+    };
+
+    // El lado pedido por el paso va primero; el resto queda como alternativa
+    // por si no cabe.
+    const orden: (keyof typeof porLado)[] = paso.lado
+      ? [paso.lado, ...(['abajo', 'arriba', 'derecha', 'izquierda'] as const).filter((l) => l !== paso.lado)]
+      : ['abajo', 'arriba', 'derecha', 'izquierda'];
+
+    const opciones = orden.map((l) => porLado[l]);
 
     const cabe = (o: { top: number; left: number }) => {
       const t = Math.max(12, Math.min(o.top, vh - ALTO_EST - 12));

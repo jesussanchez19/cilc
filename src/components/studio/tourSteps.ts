@@ -15,6 +15,9 @@
  *   'css:<selector>'   → querySelector normal
  *   'texto:<palabra>'  → primer botón o enlace cuyo texto contenga la palabra
  *   'aria:<etiqueta>'  → elemento cuyo aria-label contenga la etiqueta
+ *   'rotulo:<texto>'   → cualquier elemento cuyo texto sea exactamente ese
+ *   'junto-a:<texto>'  → primer botón o enlace en el mismo renglón que ese
+ *                        texto y a su derecha (para el + de una cabecera)
  *
  * Cualquiera admite el prefijo `panel-` para buscar SOLO dentro del área de
  * paneles: 'panel-aria:Create'. Casi siempre es lo que se quiere. El Studio
@@ -39,6 +42,15 @@ export interface PasoTutorial {
    * modifiquen contenido.
    */
   prepara?: string[];
+  /**
+   * Fuerza de qué lado del foco se coloca la tarjeta.
+   *
+   * Por defecto se elige el primer lado donde quepa sin solaparse. Sirve para
+   * los focos grandes, donde el hueco automático puede no ser el que mejor se
+   * lee: con el panel de documento resaltado, la tarjeta se quiere a la
+   * izquierda, sobre la lista de carpetas.
+   */
+  lado?: 'izquierda' | 'derecha' | 'arriba' | 'abajo';
 }
 
 export const PASOS: PasoTutorial[] = [
@@ -74,12 +86,11 @@ export const PASOS: PasoTutorial[] = [
       'abre un documento en blanco a la derecha, listo para rellenar.',
     // Abre una carpeta primero: el + no existe en la lista raíz.
     prepara: ['panel-texto:Blog / Noticias', 'panel-texto:Destinos'],
-    // Todas acotadas al área de paneles: el + de la barra superior significa lo
-    // mismo y una búsqueda global lo encontraba antes, resaltando el de arriba
-    // en lugar del de la carpeta.
-    // El + de la cabecera no tiene identificador reconocible ni un aria-label
-    // con "Create", así que se localiza por su posición: mismo renglón que el
-    // título del panel y a su derecha.
+    // El + de la cabecera no tiene identificador reconocible ni aria-label con
+    // "Create", y además es un enlace, no un botón. Se localiza por posición:
+    // mismo renglón que el título del panel y a su derecha. Las reservas van
+    // acotadas al panel, porque el + de la barra superior significa lo mismo y
+    // una búsqueda global lo encontraba antes.
     anclas: [
       'junto-a:Blog / Noticias',
       'panel-css:[data-testid="create-new-document-button"]',
@@ -98,11 +109,15 @@ export const PASOS: PasoTutorial[] = [
     // Un singleton: se abre directo como documento, y siempre existe. Blog está
     // vacío, así que no serviría para enseñar un formulario.
     prepara: ['panel-texto:Configuración del sitio'],
+    // Se resalta el panel de documento completo, que es donde está el
+    // formulario, y la tarjeta se manda a la izquierda: encaja sobre la lista
+    // de carpetas y deja el formulario entero a la vista.
     anclas: [
-      'panel-css:[data-testid="document-pane"]',
-      'panel-css:[data-ui="DocumentPanel"]',
       'css:[data-ui="PaneLayout"] > div:last-child',
+      'css:[data-ui="PaneLayout"] > div:nth-child(2)',
+      'panel-css:[data-testid="document-pane"]',
     ],
+    lado: 'izquierda',
     tip: 'Los campos obligatorios se marcan solos. No hace falta que los adivines.',
   },
   {
