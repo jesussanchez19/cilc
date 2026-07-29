@@ -113,12 +113,11 @@ export const PASOS: PasoTutorial[] = [
     // Un singleton: se abre directo como documento, y siempre existe. Blog está
     // vacío, así que no serviría para enseñar un formulario.
     prepara: ['panel-texto:Configuración del sitio'],
-    // Se resalta el panel de documento completo, que es donde está el
-    // formulario, y la tarjeta se manda a la izquierda: encaja sobre la lista
-    // de carpetas y deja el formulario entero a la vista.
-    // El área a la derecha de la lista de carpetas. Se calcula así porque el
-    // contenedor del panel de documento no se identifica de forma fiable: los
-    // selectores acababan cayendo en el separador entre paneles.
+    // Se resalta el panel de documento completo. El área se calcula a partir de
+    // la lista de carpetas porque ese contenedor no se identifica de forma
+    // fiable: los selectores acababan cayendo en el separador entre paneles.
+    // La tarjeta va a la izquierda, encajada sobre la lista, para dejar el
+    // formulario entero a la vista.
     anclas: [
       'region-derecha:[data-ui="PaneLayout"] > div:first-child',
       'panel-css:[data-testid="document-pane"]',
@@ -131,14 +130,20 @@ export const PASOS: PasoTutorial[] = [
     cuerpo:
       'Mientras escribes, el Studio guarda un borrador automáticamente. Ese borrador ' +
       'todavía NO se ve en la web.\n\n' +
-      'Para que salga publicado, pulsa el botón Publicar de abajo. Si aparece apagado ' +
-      'es que no hay cambios pendientes.',
+      'Para que salga publicado, pulsa "Guardar y publicar" abajo a la derecha. Si ' +
+      'aparece apagado es que no hay cambios pendientes.',
+    // El botón se renombró a "Guardar y publicar" en sanity.config.ts. Se dejan
+    // los nombres originales como reserva.
+    //
+    // "Publish" tiene que casar exacto: el distintivo "Published" de la cabecera
+    // contiene esa misma palabra y se encontraba antes que el botón del pie.
     anclas: [
+      'panel-texto:Guardar y publicar',
       'panel-css:[data-testid="action-Publish"]',
       'panel-texto:Publish',
-      'panel-texto:Publicar',
-      'panel-css:[data-testid="pane-footer"]',
     ],
+    // Queda abajo a la derecha, así que la tarjeta va encima para no taparlo.
+    lado: 'arriba',
     tip: 'Atajo: Ctrl + S (o Cmd + S en Mac) publica sin tocar el ratón.',
   },
   {

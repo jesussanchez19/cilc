@@ -60,8 +60,14 @@ function buscarElemento(ancla: string): HTMLElement | null {
     }
 
     if (tipo === 'texto') {
-      const candidatos = [...raiz.querySelectorAll<HTMLElement>('button, a, [role="button"]')];
-      return candidatos.find((e) => (e.textContent ?? '').trim().includes(valor) && filtrar(e)) ?? null;
+      const candidatos = [...raiz.querySelectorAll<HTMLElement>('button, a, [role="button"]')]
+        .filter(filtrar);
+      // La coincidencia exacta va primero. Buscando solo "contiene", `Publish`
+      // encontraba antes el distintivo "Published" de la cabecera que el botón
+      // de publicar del pie.
+      return candidatos.find((e) => (e.textContent ?? '').trim() === valor)
+        ?? candidatos.find((e) => (e.textContent ?? '').trim().includes(valor))
+        ?? null;
     }
 
     if (tipo === 'aria') {

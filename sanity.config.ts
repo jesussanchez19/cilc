@@ -1,4 +1,5 @@
 import { defineConfig } from 'sanity';
+import type { DocumentActionComponent } from 'sanity';
 import { structureTool } from 'sanity/structure';
 import { visionTool } from '@sanity/vision';
 import { schemas } from './src/sanity/schemas';
@@ -23,6 +24,27 @@ const HIDDEN     = ['testimonial', 'teamMember'];
  *   tokenTestimonio → los genera el servidor, con su token y su URL
  */
 const NO_CREABLES = ['configuracion', 'programa', 'testimonial', 'teamMember', 'tokenTestimonio'];
+
+/**
+ * Renombra el botón de publicar a "Guardar y publicar".
+ *
+ * Sanity guarda el borrador solo mientras escribes y el botón únicamente lo
+ * pone en producción, pero el rótulo "Publish" no transmite que lo tecleado ya
+ * está a salvo. Quien no conoce la herramienta busca un botón de guardar que no
+ * existe, o teme perder lo escrito. El nombre explícito evita esa duda.
+ *
+ * Envuelve la acción original en lugar de reemplazarla: la lógica de publicar,
+ * el estado deshabilitado y los mensajes siguen siendo los de Sanity.
+ */
+function renombrarPublicar(accion: DocumentActionComponent): DocumentActionComponent {
+  const envuelta: DocumentActionComponent = (props) => {
+    const resultado = accion(props);
+    if (!resultado) return resultado;
+    return { ...resultado, label: 'Guardar y publicar' };
+  };
+  envuelta.action = accion.action;
+  return envuelta;
+}
 
 export default defineConfig({
   name: 'cilc',
@@ -87,7 +109,9 @@ export default defineConfig({
     actions: (prev, ctx) => {
       const base = [
         CtrlSPublishAction,
-        ...prev.filter((a) => a.action !== 'delete'),
+        ...prev
+          .filter((a) => a.action !== 'delete')
+          .map((a) => (a.action === 'publish' ? renombrarPublicar(a) : a)),
       ];
       if (SINGLETONS.includes(ctx.schemaType)) return base;
       if (ctx.schemaType === 'programa') return base;
