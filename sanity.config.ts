@@ -8,6 +8,22 @@ import CtrlSPublishAction from './src/sanity/plugins/ctrlSPublish';
 const SINGLETONS = ['configuracion'];
 const HIDDEN     = ['testimonial', 'teamMember'];
 
+/**
+ * Tipos que no se deben poder crear desde el botón + de la barra superior.
+ *
+ * Ese menú lista TODOS los tipos del schema y se salta la estructura de la
+ * barra lateral: aunque ahí se oculten los singletons y los tipos internos,
+ * desde el + global se podía crear una segunda "Configuración del sitio" o un
+ * séptimo programa, que romperían las páginas que esperan documentos con un id
+ * fijo.
+ *
+ *   configuracion → documento único con id fijo
+ *   programa      → lista cerrada de 6, con ids fijos
+ *   testimonial / teamMember → ya ocultos en la barra lateral
+ *   tokenTestimonio → los genera el servidor, con su token y su URL
+ */
+const NO_CREABLES = ['configuracion', 'programa', 'testimonial', 'teamMember', 'tokenTestimonio'];
+
 export default defineConfig({
   name: 'cilc',
   title: 'CILC Admin',
@@ -63,6 +79,11 @@ export default defineConfig({
   ],
   schema: { types: schemas },
   document: {
+    // Filtra el menú del botón + de la barra superior, que por defecto ofrece
+    // todos los tipos del schema sin respetar la estructura de la barra lateral.
+    newDocumentOptions: (prev) =>
+      prev.filter((plantilla) => !NO_CREABLES.includes(plantilla.templateId)),
+
     actions: (prev, ctx) => {
       const base = [
         CtrlSPublishAction,

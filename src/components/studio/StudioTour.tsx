@@ -32,25 +32,51 @@ function buscarElemento(ancla: string): HTMLElement | null {
   const soloPanel = tipo.startsWith('panel-');
   if (soloPanel) tipo = tipo.slice('panel-'.length);
 
-  const raiz: ParentNode =
-    (soloPanel && document.querySelector('[data-ui="PaneLayout"]')) || document;
+  const raizPanel = document.querySelector('[data-ui="PaneLayout"]');
+  const raiz: ParentNode = (soloPanel && raizPanel) || document;
+
+  /**
+   * Descarta lo que esté en la barra superior.
+   *
+   * Hace falta incluso con `panel-`: si el contenedor de paneles no se
+   * encuentra —cambia entre versiones del Studio— la búsqueda caía a todo el
+   * documento y volvía a encontrar el + del navbar. Se usa como referencia el
+   * borde inferior de las pestañas de herramientas, que sí son estables.
+   */
+  const filtrar = (e: HTMLElement): boolean => {
+    if (!soloPanel) return true;
+    if (raizPanel) return raizPanel.contains(e);
+    const limite = bordeInferiorNavbar();
+    return limite === 0 || e.getBoundingClientRect().top >= limite;
+  };
 
   try {
-    if (tipo === 'css') return raiz.querySelector<HTMLElement>(valor);
+    if (tipo === 'css') {
+      const todos = [...raiz.querySelectorAll<HTMLElement>(valor)];
+      return todos.find(filtrar) ?? null;
+    }
 
     if (tipo === 'texto') {
       const candidatos = [...raiz.querySelectorAll<HTMLElement>('button, a, [role="button"]')];
-      return candidatos.find((e) => (e.textContent ?? '').trim().includes(valor)) ?? null;
+      return candidatos.find((e) => (e.textContent ?? '').trim().includes(valor) && filtrar(e)) ?? null;
     }
 
     if (tipo === 'aria') {
       const candidatos = [...raiz.querySelectorAll<HTMLElement>('[aria-label]')];
-      return candidatos.find((e) => (e.getAttribute('aria-label') ?? '').includes(valor)) ?? null;
+      return candidatos.find((e) => (e.getAttribute('aria-label') ?? '').includes(valor) && filtrar(e)) ?? null;
     }
   } catch {
     // Un selector inválido no debe tumbar el tutorial.
   }
   return null;
+}
+
+/** Dónde termina la barra superior, medida desde sus pestañas de herramientas. */
+function bordeInferiorNavbar(): number {
+  const pestanas = ['Structure', 'Vision', 'Releases'];
+  const tab = [...document.querySelectorAll<HTMLElement>('a, button, [role="tab"]')]
+    .find((e) => pestanas.includes((e.textContent ?? '').trim()));
+  return tab ? tab.getBoundingClientRect().bottom : 0;
 }
 
 /** Primer ancla que exista y sea visible. `null` si ninguna coincide. */
