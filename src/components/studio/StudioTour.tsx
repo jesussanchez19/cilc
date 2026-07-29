@@ -265,17 +265,25 @@ export default function StudioTour() {
 
     /**
      * Algunos pasos necesitan navegar antes de poder señalar nada: el botón +
-     * no existe hasta que se abre una carpeta. Se pulsa el primer candidato
-     * que exista y se deja que el panel se monte antes de medir.
+     * no existe hasta que se abre una carpeta, y el menú de eliminar hasta que
+     * se abre un documento.
+     *
+     * Los clics van EN SECUENCIA, con una pausa entre ellos, porque cada uno
+     * abre el panel donde vive el siguiente: pulsarlos de golpe fallaría, ya
+     * que el segundo elemento aún no existe cuando se busca.
      *
      * Es deliberadamente solo navegación. Nada que cree, edite ni borre
      * contenido: el tutorial no debe tocar los datos de nadie.
      */
+    let cancelado = false;
     if (paso.prepara?.length) {
-      for (const sel of paso.prepara) {
-        const destino = buscarElemento(sel);
-        if (destino) { destino.click(); break; }
-      }
+      void (async () => {
+        for (const sel of paso.prepara!) {
+          if (cancelado) return;
+          buscarElemento(sel)?.click();
+          await new Promise((r) => setTimeout(r, 550));
+        }
+      })();
     }
 
     // Se compara antes de guardar: `localizar` devuelve un objeto nuevo cada
@@ -295,13 +303,18 @@ export default function StudioTour() {
     medir();
     // Varios reintentos en vez de uno: tras pulsar una carpeta el panel nuevo
     // tarda en montarse, y una sola medición a los 300 ms llegaba antes de que
-    // el botón + existiera.
-    const espera = paso.prepara?.length ? [150, 400, 800, 1400, 2200] : [300];
+    // el botón + existiera. La ventana se alarga según cuántos clics
+    // encadenados haya, ya que cada uno añade su propia pausa.
+    const nClics = paso.prepara?.length ?? 0;
+    const espera = nClics
+      ? [150, 400, 800, 1400, 2200, 2200 + nClics * 700]
+      : [300];
     const temporizadores = espera.map((ms) => setTimeout(medir, ms));
 
     window.addEventListener('resize', medir);
     window.addEventListener('scroll', medir, true);
     return () => {
+      cancelado = true;
       temporizadores.forEach(clearTimeout);
       window.removeEventListener('resize', medir);
       window.removeEventListener('scroll', medir, true);

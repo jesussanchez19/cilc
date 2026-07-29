@@ -147,6 +147,25 @@ export const PASOS: PasoTutorial[] = [
     tip: 'Atajo: Ctrl + S (o Cmd + S en Mac) publica sin tocar el ratón.',
   },
   {
+    titulo: 'Eliminar un documento',
+    cuerpo:
+      'Hemos abierto un destino porque aquí sí se puede borrar. La opción Eliminar está ' +
+      'dentro del menú de tres puntos, arriba del documento.\n\n' +
+      'Pide confirmación antes de hacer nada, pero una vez confirmado NO hay vuelta ' +
+      'atrás: el documento desaparece de Sanity y de la web.',
+    // Dos clics encadenados: primero la carpeta, luego un documento. La opción
+    // de eliminar solo existe con un documento abierto, y Configuración del
+    // sitio y Programas no la tienen — son fijos y no deben borrarse.
+    prepara: ['panel-texto:Destinos', 'panel-texto:Canadá'],
+    anclas: [
+      'panel-aria:Document actions',
+      'panel-aria:Actions',
+      'panel-css:[data-testid="pane-context-menu"]',
+    ],
+    lado: 'abajo',
+    tip: 'Configuración del sitio y Programas no se pueden eliminar: el sitio los necesita.',
+  },
+  {
     titulo: 'Cuándo se ve en la web',
     cuerpo:
       'Los cambios aparecen en el sitio aproximadamente un minuto después de publicar. ' +
