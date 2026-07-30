@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useDocumentOperation, useEditState } from 'sanity';
 import type { DocumentActionComponent, DocumentActionDescription } from 'sanity';
+import { SITE_URL } from '@/lib/siteUrl';
 
 const GenerarTokenAction: DocumentActionComponent = ({ id, type }) => {
   const { patch } = useDocumentOperation(id, type);
@@ -18,7 +19,7 @@ const GenerarTokenAction: DocumentActionComponent = ({ id, type }) => {
     setLoading(true);
 
     const token   = crypto.randomUUID();
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.vercel.app';
+    const siteUrl = SITE_URL;
 
     patch.execute([
       {

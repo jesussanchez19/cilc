@@ -5,6 +5,7 @@ import { getContactInfo, getAllDestinos, marcarTokenUsado } from '@/lib/sanity/q
 import { testimonioAdminHtml } from '@/lib/email/templates';
 import { Resend } from 'resend';
 import { FROM_WEB } from '@/lib/email/sender';
+import { SITE_URL } from '@/lib/siteUrl';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -174,7 +175,7 @@ export async function POST(req: NextRequest) {
         texto,
         tieneFoto: !!(fotoFile && fotoFile.size > 0),
         calificacion,
-        studioUrl: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.vercel.app'}/studio`,
+        studioUrl: `/studio`,
       }),
     });
   } catch (err) {

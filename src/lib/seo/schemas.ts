@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.mx';
+import { SITE_URL as BASE_URL } from '@/lib/siteUrl';
 const ORG_NAME = 'CILC — Canadian & International Language Centers';
 
 export function organizationSchema() {
