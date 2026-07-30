@@ -10,6 +10,7 @@ import {
   getProgramaData,
   getTestimoniosPorPrograma,
   getDestinosPorPrograma,
+  getWhatsAppPrincipal,
 } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 
@@ -36,9 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProgramaPage({ params }: Props) {
   const { slug } = await params;
 
-  const [sanity, destinos] = await Promise.all([
+  const [sanity, destinos, waPrincipal] = await Promise.all([
     getProgramaData(slug),
     getDestinosPorPrograma(slug),
+    getWhatsAppPrincipal(),
   ]);
 
   const base = programs.find((p) => p.slug === slug);
@@ -96,6 +98,7 @@ export default async function ProgramaPage({ params }: Props) {
       />
       <ProgramPage
         program={program}
+        waPrincipal={waPrincipal}
         testimoniosSanity={testimonios}
         destinosSanity={destinos.length ? destinos : undefined}
       />
