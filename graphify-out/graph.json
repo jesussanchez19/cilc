@@ -230,8 +230,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_api_contact_route",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "app/api/contact/route.ts"
     },
     {
@@ -241,8 +241,8 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "app_api_contact_route_resend",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "resend"
     },
     {
@@ -252,8 +252,8 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "app_api_contact_route_rate_limit",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "rate_limit"
     },
     {
@@ -263,8 +263,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_api_contact_route_isratelimited",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "isratelimited()"
     },
     {
@@ -274,8 +274,8 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "app_api_contact_route_post",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "post()"
     },
     {
@@ -450,8 +450,8 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "app_api_studio_auth_forgot_route_post",
-      "community": 66,
-      "community_name": "forgot/route.ts",
+      "community": 57,
+      "community_name": "src/lib/email/templates.ts",
       "norm_label": "post()"
     },
     {
@@ -846,8 +846,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "app_contact_page",
-      "community": 66,
-      "community_name": "forgot/route.ts",
+      "community": 41,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "app/contact/page.tsx"
     },
     {
@@ -857,8 +857,8 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "app_contact_page_metadata",
-      "community": 66,
-      "community_name": "forgot/route.ts",
+      "community": 41,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "metadata"
     },
     {
@@ -868,8 +868,8 @@
       "source_location": "L13",
       "_origin": "ast",
       "id": "app_contact_page_contactpage",
-      "community": 66,
-      "community_name": "forgot/route.ts",
+      "community": 41,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "contactpage()"
     },
     {
@@ -1206,7 +1206,7 @@
       "label": "RootLayout()",
       "file_type": "code",
       "source_file": "app/layout.tsx",
-      "source_location": "L77",
+      "source_location": "L91",
       "_origin": "ast",
       "id": "app_layout_rootlayout",
       "community": 65,
@@ -5202,8 +5202,8 @@
       "source_location": "L29",
       "_origin": "ast",
       "id": "src_lib_email_sender_from_cliente",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 82,
+      "community_name": "src/components/shared/ContactForm.tsx",
       "norm_label": "from_cliente"
     },
     {
@@ -5367,8 +5367,8 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "src_lib_email_templates_testimonioadminhtml",
-      "community": 57,
-      "community_name": "src/lib/email/templates.ts",
+      "community": 79,
+      "community_name": "app/api/testimonio/route.ts",
       "norm_label": "testimonioadminhtml()"
     },
     {
@@ -5378,8 +5378,8 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_lib_leads",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "src/lib/leads.ts"
     },
     {
@@ -5400,8 +5400,8 @@
       "source_location": "L16",
       "_origin": "ast",
       "id": "src_lib_leads_leads_file",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "leads_file"
     },
     {
@@ -5411,8 +5411,8 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_lib_leads_readleads",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "readleads()"
     },
     {
@@ -5422,8 +5422,8 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_lib_leads_savelead",
-      "community": 41,
-      "community_name": "app/api/contact/route.ts",
+      "community": 61,
+      "community_name": "app/admin/dashboard/page.tsx",
       "norm_label": "savelead()"
     },
     {
@@ -5653,8 +5653,8 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "src_lib_sanity_queries_getcontactinfo",
-      "community": 66,
-      "community_name": "forgot/route.ts",
+      "community": 41,
+      "community_name": "app/api/contact/route.ts",
       "norm_label": "getcontactinfo()"
     },
     {
@@ -18587,7 +18587,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "app/layout.tsx",
-      "source_location": "L77",
+      "source_location": "L91",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_layout",
@@ -18816,7 +18816,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/layout.tsx",
-      "source_location": "L83",
+      "source_location": "L97",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_layout_rootlayout",
@@ -18828,7 +18828,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/layout.tsx",
-      "source_location": "L83",
+      "source_location": "L97",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_layout_rootlayout",
@@ -18840,7 +18840,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "app/layout.tsx",
-      "source_location": "L118",
+      "source_location": "L132",
       "weight": 1.0,
       "_origin": "ast",
       "source": "app_layout_rootlayout",
@@ -37084,5 +37084,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "8faeffb40a1287b18d7889fc3005bc1adaf795e7"
+  "built_at_commit": "b391bea137126fb9bf9d842c577e0dc91406ad86"
 }

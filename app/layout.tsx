@@ -33,6 +33,20 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.mx';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  /**
+   * Cada página se declara canónica de sí misma.
+   *
+   * Hace falta porque el sitio va a existir en dos direcciones a la vez —el
+   * dominio propio y la de Vercel— y sin canónica Google puede indexar las dos
+   * y hacerlas competir entre sí por el mismo contenido.
+   *
+   * El valor es './' y no '/' a propósito: '/' apuntaría TODAS las páginas a la
+   * portada, que es peor que no tener canónica. La forma relativa se resuelve
+   * contra la ruta actual.
+   */
+  alternates: {
+    canonical: './',
+  },
   verification: {
     google: process.env.NEXT_PUBLIC_GSC_VERIFICATION,
   },
