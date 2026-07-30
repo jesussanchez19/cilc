@@ -2,8 +2,8 @@
 ## (Actualizado — estructura real del código fuente)
 
 ## Estadísticas generales
-- Archivos analizados: 123 archivos TypeScript/TSX
-- Nodos en el grafo: 123
+- Archivos analizados: 109 archivos TypeScript/TSX
+- Nodos en el grafo: 109
 - Aristas (dependencias internas): 135
 - Dependencias externas: next (76), react (30), sanity (22), resend (6), zod (5)
 
@@ -38,7 +38,7 @@ Las 6 páginas de programa estáticas (`app/idiomas/`, `app/au-pair/`, etc.) fue
 ### 2. Sanity CMS (blog, testimonios, destinos, programas, configuración)
 `queries.ts` (grado 19) es el nuevo centro del sistema.
 9 schemas: blogPost, testimonial, programa, destino, configuracion, socio, teamMember, solicitudTestimonio, tokenTestimonio.
-3 plugins de Studio: ctrlSPublish, eliminarAction, generarTokenAction.
+2 plugins de Studio: ctrlSPublish, eliminarAction.
 
 ### 3. Sistema de autenticación (nuevo)
 `middleware.ts` → protege rutas de admin y studio.
@@ -98,14 +98,14 @@ Indica una refactorización visual global de las páginas de contenido.
 
 | Grupo | Archivos | Color |
 |-------|----------|-------|
-| Páginas (app/) | 29 | Azul |
-| Componentes (src/components/) | 28 | Verde |
-| Lib / Datos (src/lib/) | 21 | Amarillo |
+| Páginas (app/) | 30 | Azul |
+| Componentes (src/components/) | 30 | Verde |
+| Lib / Datos (src/lib/) | 23 | Amarillo |
 | API Routes (app/api/) | 11 | Rojo |
 | Sanity Schemas | 10 | Cian |
-| Sanity (lib/sanity, sanity.config) | 8 | Cian oscuro |
-| Admin | 6 | Naranja |
-| Sanity Plugins | 3 | Cian claro |
+| Sanity (lib/sanity, sanity.config) | 5 | Cian oscuro |
+| Admin | 2 | Naranja |
+| Sanity Plugins | 2 | Cian claro |
 
 ---
 
@@ -116,9 +116,29 @@ Indica una refactorización visual global de las páginas de contenido.
 - **Token testimonios**: app/api/verificar-token/, app/api/admin/generar-token/, TokenGate.tsx, GenerarToken.tsx, tokenTestimonio.ts
 - **Ruta dinámica programas**: app/programas/[slug]/page.tsx
 - **Sanity schemas nuevos**: programa.ts, destino.ts, configuracion.ts
-- **Sanity plugins**: ctrlSPublish.ts, eliminarAction.tsx, generarTokenAction.ts
+- **Sanity plugins**: ctrlSPublish.ts, eliminarAction.tsx
 - **Otros**: middleware.ts, AnimateIn.tsx, DestinosStats.tsx, StudioExitButton.tsx, IdleRefresh.tsx, GaleriaGrid.tsx, utils.ts, app/api/revalidate/
 
 ### Archivos ELIMINADOS (10)
 - Páginas estáticas de programa: app/idiomas/, app/au-pair/, app/anos-academicos/, app/estudia-trabaja/, app/formacion-corporativa/, app/idiomas-en-linea/
 - app/idiomas/program-opengraph-image.tsx, next-env.d.ts, next.config.ts, tests/e2e/cilc.spec.ts
+
+---
+
+## Limpieza de código muerto (30 de julio de 2026)
+
+Se retiraron 17 archivos y 8 exports que nada ejecutaba. Los que aparecían en
+este informe y ya no existen:
+
+| Retirado | Por qué |
+|---|---|
+| `sanity/plugins/generarTokenAction.ts` | Nunca se registró en `sanity.config.ts`. Los tokens se generan desde el panel de administración |
+| `app/countries/` y `CountryDetail.tsx` | `/countries` y `/countries/:id` redirigen de forma permanente a `/destinos` |
+| `app/root-opengraph-image.tsx` | El nombre no es una convención de Next, así que nunca se ejecutó |
+| `lib/blog.ts`, `lib/data/blog.ts` | El blog se sirve desde Sanity |
+| `lib/structured-data.ts` | Duplicado inerte de `lib/seo/schemas.ts`, que es el que se usa |
+| `PhotoGallery`, `Rating`, `Skeleton`, `lib/data/{testimonials,categories,faqs}.ts`, `lib/analytics/events.ts`, `sanity/actions/importarDesdeUrl.ts`, `types/gtag.d.ts` | Sin ningún importador |
+
+Siguen en el repositorio, aunque nada los lea, los tres `.mdx` de
+`content/blog/`: son la única copia de esos artículos, que nunca se migraron al
+CMS.
