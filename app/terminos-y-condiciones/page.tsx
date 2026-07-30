@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 export const metadata = {
   title: 'Términos y Condiciones | CILC',
@@ -7,7 +8,11 @@ export const metadata = {
 
 const FECHA = '11 de julio de 2026';
 
-export default function TerminosPage() {
+export default async function TerminosPage() {
+  // Igual que en el aviso de privacidad: el correo se gestiona desde
+  // "Email de contacto" en Configuración del sitio, nunca el de seguridad.
+  const { emailAdmin } = await getContactInfo();
+
   return (
     <main className="bg-white min-h-screen">
 
@@ -143,7 +148,7 @@ export default function TerminosPage() {
           <h2 className="text-lg font-bold text-slate-900 mb-3">11. Contacto</h2>
           <p>
             Para cualquier duda relacionada con estos términos, puede contactarnos en:{' '}
-            <a href="mailto:contacto@cilc.mx" className="text-blue-600 hover:underline">contacto@cilc.mx</a>
+            <a href={`mailto:${emailAdmin}`} className="text-blue-600 hover:underline">{emailAdmin}</a>
             {' '}o llamarnos al <a href="tel:+525518944494" className="text-blue-600 hover:underline">55 1894 4494</a>.
           </p>
         </section>
