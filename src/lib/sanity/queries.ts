@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { client, cdnClient } from './client';
+import { client } from './client';
 import { SITE_PAGES, type SearchDoc } from '@/lib/search';
 import { writeClient } from './writeClient';
 
@@ -94,15 +94,6 @@ export async function getAllDestinos(): Promise<SanityDestino[]> {
 }
 
 // ── Tokens de uso único ───────────────────────────────────────────────────────
-
-export async function verificarToken(token: string): Promise<{ _id: string; usado: boolean } | null> {
-  const results: { _id: string; usado: boolean }[] = await cdnClient.fetch(
-    `*[_type == "tokenTestimonio" && token == $t][0...1]{ _id, usado }`,
-    { t: token },
-    { next: { revalidate: 0 } },
-  );
-  return results[0] ?? null;
-}
 
 export async function marcarTokenUsado(token: string): Promise<void> {
   const doc: { _id: string } | null = await writeClient.fetch(
@@ -311,24 +302,6 @@ export async function getProgramaData(slug: string): Promise<SanityPrograma | nu
     );
   } catch {
     return null;
-  }
-}
-
-// ── Miembros del equipo ───────────────────────────────────────────────────────
-
-export interface SanityMember {
-  _id: string;
-  nombre: string;
-  cargo: string;
-  foto: { asset: { _ref: string } };
-  bio: string;
-}
-
-export async function getTeamMembers(): Promise<SanityMember[]> {
-  try {
-    return await client.fetch(`*[_type == "teamMember"] | order(_createdAt asc)`);
-  } catch {
-    return [];
   }
 }
 

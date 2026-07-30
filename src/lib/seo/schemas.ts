@@ -28,41 +28,6 @@ export function organizationSchema() {
   };
 }
 
-export function articleSchema(article: {
-  slug: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  date: string;
-}) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    image: article.image.startsWith('http')
-      ? article.image
-      : `${BASE_URL}${article.image}`,
-    datePublished: article.date,
-    dateModified: article.date,
-    url: `${BASE_URL}/blog/${article.slug}`,
-    author: {
-      '@type': 'Organization',
-      name: ORG_NAME,
-      url: BASE_URL,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: ORG_NAME,
-      url: BASE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${BASE_URL}/images/logo.png`,
-      },
-    },
-  };
-}
-
 export function programSchema(program: {
   id: string;
   title: string;

@@ -13,9 +13,6 @@
  */
 const DOMINIO = process.env.EMAIL_FROM_DOMAIN?.trim();
 
-/** True cuando seguimos con el dominio de pruebas y el envío externo fallará. */
-export const usandoDominioDePruebas = !DOMINIO;
-
 function remitente(usuario: string, nombre: string): string {
   return DOMINIO
     ? `${nombre} <${usuario}@${DOMINIO}>`
