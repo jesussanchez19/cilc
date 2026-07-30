@@ -3,9 +3,17 @@
 
 ## Estadísticas generales
 - Archivos analizados: 109 archivos TypeScript/TSX
-- Nodos en el grafo: 109
-- Aristas (dependencias internas): 135
+- Nodos en el grafo: 557 — un nodo por archivo y otro por cada función, componente
+  o tipo exportado, no uno por archivo como decían las versiones anteriores
+- Aristas: 894
 - Dependencias externas: next (76), react (30), sanity (22), resend (6), zod (5)
+
+> Las cifras salen de la reconstrucción completa del 30 de julio de 2026. Hasta
+> entonces el grafo arrastraba 33 archivos que ya no existían —las seis páginas
+> de programa migradas a ruta dinámica, `api/subscribe`, `api/feedback`,
+> `useSearch.ts` y los retirados en la limpieza—, porque `graphify update` añade
+> y actualiza nodos pero no elimina los de archivos borrados. Si el grafo vuelve
+> a desviarse, la reconstrucción completa está descrita en `CLAUDE.md`.
 
 ## Cambio arquitectónico principal vs. versión anterior
 Las 6 páginas de programa estáticas (`app/idiomas/`, `app/au-pair/`, etc.) fueron **migradas a una ruta dinámica**: `app/programas/[slug]/page.tsx` alimentada por Sanity CMS. Los programas y destinos ya no son datos estáticos en TypeScript — son contenido gestionado en Sanity.
