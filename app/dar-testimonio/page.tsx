@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import TestimonioForm from '@/components/shared/TestimonioForm';
 import TokenGate from '@/components/shared/TokenGate';
-import { getAllDestinos } from '@/lib/sanity/queries';
+import { getAllDestinos, getWhatsAppPrincipal } from '@/lib/sanity/queries';
 
 interface Props {
   searchParams: Promise<{ acceso?: string }>;
@@ -22,6 +22,8 @@ export default async function DarTestimonioPage({ searchParams }: Props) {
   const { acceso } = await searchParams;
 
   if (!acceso) notFound();
+
+  const waPrincipal = await getWhatsAppPrincipal();
 
   const esMasterToken = acceso === process.env.TESTIMONIAL_ACCESS_TOKEN;
 
@@ -58,11 +60,11 @@ export default async function DarTestimonioPage({ searchParams }: Props) {
               </p>
             </div>
             <div className="premium-card p-8">
-              <TestimonioForm paisesPorPrograma={paisesPorPrograma} />
+              <TestimonioForm paisesPorPrograma={paisesPorPrograma} waPrincipal={waPrincipal} />
             </div>
           </>
         ) : (
-          <TokenGate token={acceso} paisesPorPrograma={paisesPorPrograma} />
+          <TokenGate token={acceso} paisesPorPrograma={paisesPorPrograma} waPrincipal={waPrincipal} />
         )}
       </div>
     </main>

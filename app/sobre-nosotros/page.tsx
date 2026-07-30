@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getWhatsAppPrincipal } from '@/lib/sanity/queries';
 import AnimateIn from '@/components/shared/AnimateIn';
 
 const YEAR = new Date().getFullYear();
@@ -110,7 +111,10 @@ const HITOS = [
   { año: '2026', texto: 'Nuevo sitio web, nuevas herramientas digitales y el mismo compromiso de siempre: transformar futuros.' },
 ];
 
-export default function SobreNosotrosPage() {
+export default async function SobreNosotrosPage() {
+  // El WhatsApp sale del numero marcado como principal en el Studio.
+  const waPrincipal = await getWhatsAppPrincipal();
+
   return (
     <div>
 
@@ -356,7 +360,7 @@ export default function SobreNosotrosPage() {
                 Contactar Ahora
               </Link>
               <a
-                href="https://wa.me/525518944494?text=Hola%2C%20quiero%20saber%20más%20sobre%20CILC"
+                href={`https://wa.me/${waPrincipal}?text=Hola%2C%20quiero%20saber%20más%20sobre%20CILC`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"

@@ -10,7 +10,7 @@ import ArticleCard from '@/components/blog/ArticleCard';
 import TestimonialsCarousel from '@/components/shared/TestimonialsCarousel';
 import LazySection from '@/components/shared/LazySection';
 import AnimateIn from '@/components/shared/AnimateIn';
-import { getSocios, getTestimoniosAprobados, getLatestPosts } from '@/lib/sanity/queries';
+import { getSocios, getTestimoniosAprobados, getLatestPosts, getWhatsAppPrincipal } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
@@ -86,10 +86,11 @@ const VALUE_PROPS = [
 ];
 
 export default async function Home() {
-  const [ultimosArticulos, socios, testimoniosRaw] = await Promise.all([
+  const [ultimosArticulos, socios, testimoniosRaw, waPrincipal] = await Promise.all([
     getLatestPosts(3),
     getSocios(),
     getTestimoniosAprobados(),
+    getWhatsAppPrincipal(),
   ]);
 
   const conCalificacion = testimoniosRaw.filter((t) => t.calificacion);
@@ -118,7 +119,7 @@ export default async function Home() {
             Consulta gratuita — Agenda tu Diagnóstico Internacional Estratégico hoy mismo
           </p>
           <a
-            href="https://wa.me/525518944494?text=Hola%2C%20quiero%20agendar%20mi%20consulta%20gratuita"
+            href={`https://wa.me/${waPrincipal}?text=Hola%2C%20quiero%20agendar%20mi%20consulta%20gratuita`}
             target="_blank"
             rel="noopener noreferrer"
             className="shrink-0 px-3.5 py-1.5 rounded-lg text-[12px] font-bold text-white whitespace-nowrap transition-all duration-200 hover:scale-105"
@@ -303,7 +304,7 @@ export default async function Home() {
                 Contactar Ahora
               </Link>
               <a
-                href="https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero"
+                href={`https://wa.me/${waPrincipal}?text=Hola%2C%20me%20interesa%20información%20sobre%20estudios%20en%20el%20extranjero`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"

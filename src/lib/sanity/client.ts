@@ -16,4 +16,3 @@ const base = {
 export const client = createClient({ ...base, useCdn: false });
 
 // Cliente CDN para lecturas rápidas (edge cache, ~50 ms)
-export const cdnClient = createClient({ ...base, useCdn: true });

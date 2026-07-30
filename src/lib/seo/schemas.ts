@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://cilc.mx';
+import { SITE_URL as BASE_URL } from '@/lib/siteUrl';
 const ORG_NAME = 'CILC — Canadian & International Language Centers';
 
 export function organizationSchema() {
@@ -25,41 +25,6 @@ export function organizationSchema() {
       availableLanguage: 'Spanish',
     },
     sameAs: [],
-  };
-}
-
-export function articleSchema(article: {
-  slug: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  date: string;
-}) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: article.title,
-    description: article.excerpt,
-    image: article.image.startsWith('http')
-      ? article.image
-      : `${BASE_URL}${article.image}`,
-    datePublished: article.date,
-    dateModified: article.date,
-    url: `${BASE_URL}/blog/${article.slug}`,
-    author: {
-      '@type': 'Organization',
-      name: ORG_NAME,
-      url: BASE_URL,
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: ORG_NAME,
-      url: BASE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${BASE_URL}/images/logo.png`,
-      },
-    },
   };
 }
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { getContactInfo } from '@/lib/sanity/queries';
 
 export const metadata = {
   title: 'Aviso de Privacidad | CILC',
@@ -7,7 +8,21 @@ export const metadata = {
 
 const FECHA = '11 de julio de 2026';
 
-export default function AvisoPrivacidadPage() {
+export default async function AvisoPrivacidadPage() {
+  /**
+   * El correo sale de "Email de contacto" en Configuración del sitio, para que
+   * se pueda cambiar desde el Studio sin tocar código.
+   *
+   * Antes estaba escrito a mano y apuntaba a un dominio de otra empresa, así que
+   * las solicitudes de derechos de datos que exige la LFPDPPP no llegaban a
+   * nadie.
+   *
+   * Nunca el "Email de seguridad": ese recibe los enlaces de recuperación de la
+   * contraseña del Studio, y publicarlo diría a un atacante a qué buzón apuntar
+   * para tomar el control del panel.
+   */
+  const { emailAdmin } = await getContactInfo();
+
   return (
     <main className="bg-white min-h-screen">
 
@@ -34,7 +49,7 @@ export default function AvisoPrivacidadPage() {
           </p>
           <p className="mt-2">
             Contacto de privacidad:{' '}
-            <a href="mailto:contacto@cilc.mx" className="text-blue-600 hover:underline">contacto@cilc.mx</a>
+            <a href={`mailto:${emailAdmin}`} className="text-blue-600 hover:underline">{emailAdmin}</a>
           </p>
         </section>
 
@@ -69,7 +84,7 @@ export default function AvisoPrivacidadPage() {
           <p className="mt-3 text-sm text-slate-500">
             Si no desea que sus datos sean utilizados para las finalidades secundarias, puede manifestarlo
             enviando un correo a{' '}
-            <a href="mailto:contacto@cilc.mx" className="text-blue-600 hover:underline">contacto@cilc.mx</a>.
+            <a href={`mailto:${emailAdmin}`} className="text-blue-600 hover:underline">{emailAdmin}</a>.
           </p>
         </section>
 
@@ -95,7 +110,7 @@ export default function AvisoPrivacidadPage() {
           </p>
           <p className="mt-2">
             Para ejercer sus derechos, envíe una solicitud a{' '}
-            <a href="mailto:contacto@cilc.mx" className="text-blue-600 hover:underline">contacto@cilc.mx</a>{' '}
+            <a href={`mailto:${emailAdmin}`} className="text-blue-600 hover:underline">{emailAdmin}</a>{' '}
             indicando: nombre completo, descripción clara del derecho que desea ejercer y copia de
             identificación oficial. Responderemos en un plazo máximo de 20 días hábiles.
           </p>

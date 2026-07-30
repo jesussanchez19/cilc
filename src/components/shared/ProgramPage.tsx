@@ -155,6 +155,12 @@ interface ProgramPageProps {
   program: Program;
   testimoniosSanity?: SanityTestimonial[];
   destinosSanity?: string[];
+  /**
+   * Numero de WhatsApp en formato wa.me. Llega como prop porque este es un
+   * componente de cliente y no puede consultar Sanity: lo resuelve la pagina
+   * que lo renderiza.
+   */
+  waPrincipal: string;
 }
 
 function getProgramImages(slug: string) {
@@ -237,7 +243,7 @@ function useSection(threshold = 0.15) {
   return { ref, visible };
 }
 
-export default function ProgramPage({ program, testimoniosSanity = [], destinosSanity }: ProgramPageProps) {
+export default function ProgramPage({ program, testimoniosSanity = [], destinosSanity, waPrincipal }: ProgramPageProps) {
   const destinosResolved = destinosSanity
     ? destinosSanity.map((id) => countries.find((c) => c.id === id)).filter(Boolean)
     : null;
@@ -291,7 +297,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               <Link href="/contact" className="btn-ghost">
                 Solicitar Información
               </Link>
-              <a href="https://wa.me/525518944494" target="_blank" rel="noopener noreferrer"
+              <a href={`https://wa.me/${waPrincipal}`} target="_blank" rel="noopener noreferrer"
                 className="btn-ghost"
                 style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.3)', background: 'rgba(74,222,128,0.08)' }}>
                 WhatsApp
@@ -528,7 +534,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               <Link href="/contact" className="btn-ghost">
                 Solicitar Información
               </Link>
-              <a href={`https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20el%20programa%20de%20${encodeURIComponent(program.title)}`}
+              <a href={`https://wa.me/${waPrincipal}?text=Hola%2C%20me%20interesa%20el%20programa%20de%20${encodeURIComponent(program.title)}`}
                 target="_blank" rel="noopener noreferrer"
                 className="btn-ghost"
                 style={{ color: '#4ade80', borderColor: 'rgba(74,222,128,0.3)', background: 'rgba(74,222,128,0.08)' }}>

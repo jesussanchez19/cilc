@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { countries } from '@/lib/data/countries';
-import { getDestinoData } from '@/lib/sanity/queries';
+import { getDestinoData, getWhatsAppPrincipal } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 function isoToFlag(code: string) {
   return code.toUpperCase().split('').map((c) => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('');
@@ -49,9 +49,10 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function CountryPage({ params }: PageProps) {
   const { id } = await params;
 
-  const [hardcoded, sanity] = await Promise.all([
+  const [hardcoded, sanity, waPrincipal] = await Promise.all([
     Promise.resolve(countries.find((c) => c.id === id) ?? null),
     getDestinoData(id),
+    getWhatsAppPrincipal(),
   ]);
 
   if (!hardcoded && !sanity) notFound();
@@ -180,7 +181,7 @@ export default async function CountryPage({ params }: PageProps) {
                 Solicitar Información
               </Link>
               <a
-                href={`https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20estudiar%20en%20${encodeURIComponent(nombre)}`}
+                href={`https://wa.me/${waPrincipal}?text=Hola%2C%20me%20interesa%20estudiar%20en%20${encodeURIComponent(nombre)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-ghost"
@@ -391,7 +392,7 @@ export default async function CountryPage({ params }: PageProps) {
                     Contactar Ahora
                   </Link>
                   <a
-                    href={`https://wa.me/525518944494?text=Hola%2C%20me%20interesa%20estudiar%20en%20${encodeURIComponent(nombre)}`}
+                    href={`https://wa.me/${waPrincipal}?text=Hola%2C%20me%20interesa%20estudiar%20en%20${encodeURIComponent(nombre)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-ghost"

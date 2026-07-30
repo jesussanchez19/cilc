@@ -8,9 +8,12 @@ type Status = 'checking' | 'valid' | 'used' | 'invalid' | 'error';
 export default function TokenGate({
   token,
   paisesPorPrograma,
+  waPrincipal,
 }: {
   token: string;
   paisesPorPrograma: Record<string, string[]>;
+  /** Numero wa.me, que se reenvia al formulario. */
+  waPrincipal: string;
 }) {
   const [status, setStatus] = useState<Status>('checking');
   const [submitted, setSubmitted] = useState(false);
@@ -48,7 +51,7 @@ export default function TokenGate({
           </p>
         </div>
         <a
-          href="https://wa.me/525518944494"
+          href={`https://wa.me/${waPrincipal}`}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white"
@@ -105,6 +108,7 @@ export default function TokenGate({
       <div className="premium-card p-8">
         <TestimonioForm
           paisesPorPrograma={paisesPorPrograma}
+          waPrincipal={waPrincipal}
           tokenUsoUnico={token}
           onSuccess={() => setSubmitted(true)}
         />

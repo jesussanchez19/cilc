@@ -7,7 +7,7 @@ import { sileo } from 'sileo';
 
 const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
-export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void }) {
+export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess, waPrincipal }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void; /** Numero wa.me: llega como prop porque este componente es de cliente. */ waPrincipal: string }) {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
   const [foto, setFoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -110,7 +110,7 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
         <div className="w-full pt-2 border-t border-slate-100">
           <p className="text-xs text-slate-400 mb-3">¿Conoces a alguien más que quiera compartir su experiencia?</p>
           <a
-            href="https://wa.me/525518944494"
+            href={`https://wa.me/${waPrincipal}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white"
