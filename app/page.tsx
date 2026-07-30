@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 import HeroBanner from '@/components/home/HeroBanner';
@@ -12,6 +13,22 @@ import LazySection from '@/components/shared/LazySection';
 import AnimateIn from '@/components/shared/AnimateIn';
 import { getSocios, getTestimoniosAprobados, getLatestPosts, getWhatsAppPrincipal } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
+
+/**
+ * La portada declara su URL canónica de forma explícita.
+ *
+ * El layout usa la forma relativa `'./'`, que resuelve bien en todas las rutas
+ * menos en esta: la raíz no tiene segmento contra el que resolver, y en Vercel
+ * salía `https://…/index` mientras que en local salía la raíz. Ese canonical le
+ * decía al buscador que indexara `/index` —que sirve exactamente lo mismo— en
+ * lugar de la portada a la que apuntan el sitemap y todos los enlaces.
+ *
+ * Solo se fija `alternates`; el título, la descripción y las etiquetas de
+ * compartir siguen heredándose del layout.
+ */
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 import type { Testimonial } from '@/components/shared/TestimonialsCarousel';
 
 
