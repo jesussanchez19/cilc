@@ -289,7 +289,10 @@ function userLayout(opts: {
 
 export function contactAdminHtml(data: {
   name: string;
-  email: string;
+  /** Falta en los leads del chat de WhatsApp, que solo piden nombre y teléfono. */
+  email?: string;
+  /** Solo lo traen los leads del chat de WhatsApp. */
+  phone?: string;
   subject: string;
   message: string;
 }): string {
@@ -299,7 +302,14 @@ export function contactAdminHtml(data: {
     subtitle: `Recibido a las ${new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })} · ${new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
     rows: [
       dataRow('Nombre',  data.name,    false),
-      dataRow('Email',   `<a href="mailto:${data.email}" style="color:${BLUE};text-decoration:none;">${data.email}</a>`, true),
+      data.email
+        ? dataRow('Email', `<a href="mailto:${data.email}" style="color:${BLUE};text-decoration:none;">${data.email}</a>`, true)
+        : '',
+      // Es el único dato de contacto que dejan los leads de WhatsApp, así que
+      // va enlazado para poder escribirles con un toque desde el móvil.
+      data.phone
+        ? dataRow('Teléfono', `<a href="https://wa.me/${data.phone.replace(/\D/g, '')}" style="color:${BLUE};text-decoration:none;">${data.phone}</a>`, !data.email)
+        : '',
       dataRow('Asunto',  data.subject, false),
     ].join(''),
     note: data.message,

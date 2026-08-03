@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 import { FROM_CLIENTE, FROM_WEB } from '@/lib/email/sender';
-import { contactSchema } from '@/lib/validations/contact';
+import { contactSchema, whatsappLeadSchema } from '@/lib/validations/contact';
 import { saveLead } from '@/lib/leads';
 import { contactAdminHtml, contactUserHtml } from '@/lib/email/templates';
 import { getContactInfo } from '@/lib/sanity/queries';
@@ -36,7 +36,16 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const result = contactSchema.safeParse(body);
+
+  /**
+   * Por aquí entran dos formularios: el de contacto, que pide correo, y el chat
+   * flotante de WhatsApp, que solo pide nombre y teléfono. Se distinguen por
+   * `origen` para no tener que relajar la validación del primero.
+   */
+  const esWhatsApp = body?.origen === 'whatsapp';
+  const result = esWhatsApp
+    ? whatsappLeadSchema.safeParse(body)
+    : contactSchema.safeParse(body);
 
   if (!result.success) {
     return NextResponse.json(
@@ -45,35 +54,54 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { name, email, subject, message } = result.data;
+  const { name } = result.data;
+  const email   = 'email'   in result.data ? result.data.email   : undefined;
+  const phone   = 'phone'   in result.data ? result.data.phone   : undefined;
+  const subject = 'subject' in result.data ? result.data.subject : 'Contacto rápido vía WhatsApp';
+  const message = 'message' in result.data
+    ? result.data.message
+    : `Pide que le contacten por WhatsApp al ${phone}.`;
 
   const [, contactInfo] = await Promise.all([
-    saveLead({ type: 'contact', name, email, subject, message }),
+    saveLead({ type: 'contact', name, email, phone, subject, message }),
     getContactInfo(),
   ]);
 
-  const [adminResult, userResult] = await Promise.all([
+  const envios = [
     resend.emails.send({
       from: FROM_WEB,
       to: contactInfo.emailAdmin,
-      replyTo: email,
+      // Sin correo del interesado no hay a quién responder: dejar aquí una
+      // dirección inventada haría que el botón de responder escribiera a
+      // cualquiera menos a él. El teléfono va en el cuerpo del aviso.
+      ...(email ? { replyTo: email } : {}),
       subject: `[CILC Web] ${subject} — ${name}`,
-      html: contactAdminHtml({ name, email, subject, message }),
+      html: contactAdminHtml({ name, email, phone, subject, message }),
     }),
-    resend.emails.send({
-      from: FROM_CLIENTE,
-      to: email,
-      subject: 'Recibimos tu mensaje — CILC',
-      html: contactUserHtml(name, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
-    }),
-  ]);
+  ];
+
+  // La confirmación al cliente solo tiene sentido si dejó un correo. Los leads
+  // del chat de WhatsApp no dejan ninguno, y se les responde por WhatsApp.
+  if (email) {
+    envios.push(
+      resend.emails.send({
+        from: FROM_CLIENTE,
+        to: email,
+        subject: 'Recibimos tu mensaje — CILC',
+        html: contactUserHtml(name, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
+      }),
+    );
+  }
+
+  const [adminResult, userResult] = await Promise.all(envios);
 
   // Solo el aviso al administrador es crítico: si ese falla, el negocio no se
   // entera de la solicitud. La confirmación al cliente es cortesía, y hacer
   // fallar toda la petición por ella tiene un efecto peor — el lead YA quedó
   // guardado y el administrador YA fue avisado, pero el usuario ve un error y
   // reenvía, generando duplicados. Se registra y se sigue.
-  if (userResult.error) {
+  // `userResult` no existe cuando el lead vino sin correo y no se envió nada.
+  if (userResult?.error) {
     console.error('[contact] no se pudo enviar la confirmación al cliente:', userResult.error);
   }
 

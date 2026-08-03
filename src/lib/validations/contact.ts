@@ -30,3 +30,31 @@ export const contactSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactSchema>;
+
+/**
+ * El chat flotante de WhatsApp entra por la misma ruta que el formulario de
+ * contacto, pero solo pide nombre y teléfono.
+ *
+ * Antes rellenaba el hueco del correo con `lead@wa.cilc.mx`, una dirección
+ * inventada sobre un dominio que pertenece a otra empresa. La ruta la trataba
+ * como buena: le mandaba la confirmación del cliente y la ponía de `reply-to`
+ * del aviso al administrador, así que responder a un lead de WhatsApp escribía
+ * a un tercero en vez de al interesado, cuyo teléfono estaba enterrado en el
+ * texto del mensaje.
+ *
+ * `origen` es lo que permite a la ruta distinguir los dos formularios sin
+ * relajar la validación del de contacto, donde el correo sí es obligatorio.
+ */
+export const whatsappLeadSchema = z.object({
+  origen: z.literal('whatsapp'),
+  name: z
+    .string()
+    .trim()
+    .min(2, 'El nombre debe tener al menos 2 caracteres')
+    .max(100, 'El nombre no puede superar los 100 caracteres'),
+  phone: z
+    .string()
+    .trim()
+    .min(8, 'Ingresa un teléfono válido')
+    .max(30, 'El teléfono no puede superar los 30 caracteres'),
+});
