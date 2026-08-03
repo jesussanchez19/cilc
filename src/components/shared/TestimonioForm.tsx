@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { sileo } from 'sileo';
+import { trackTestimonialSubmit } from '@/lib/analytics';
 
-const PROGRAMAS = ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
+const PROGRAMAS =['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
 export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess, waPrincipal }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void; /** Numero wa.me: llega como prop porque este componente es de cliente. */ waPrincipal: string }) {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
@@ -74,6 +75,7 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
 
       const res = await fetch('/api/testimonio', { method: 'POST', body: fd });
       if (res.ok) {
+        trackTestimonialSubmit();
         setNombreEnviado(form.nombre);
         setStatus('success');
         onSuccess?.();

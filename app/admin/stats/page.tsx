@@ -1,23 +1,11 @@
 import type { Metadata } from 'next';
-import { promises as fs } from 'fs';
-import path from 'path';
-import type { Lead } from '@/lib/leads';
+import { getLeads } from '@/lib/leads';
 
 export const metadata: Metadata = {
   title: 'Estadísticas | Admin CILC',
 };
 
 export const dynamic = 'force-dynamic';
-
-async function getLeads(): Promise<Lead[]> {
-  try {
-    const file = path.join(process.cwd(), 'data', 'leads.json');
-    const content = await fs.readFile(file, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return [];
-  }
-}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-MX', {

@@ -22,8 +22,9 @@ const HIDDEN     = ['testimonial', 'teamMember'];
  *   programa      → lista cerrada de 6, con ids fijos
  *   testimonial / teamMember → ya ocultos en la barra lateral
  *   tokenTestimonio → los genera el servidor, con su token y su URL
+ *   lead            → los crean /api/contact y /api/quote al recibir un envío
  */
-const NO_CREABLES = ['configuracion', 'programa', 'testimonial', 'teamMember', 'tokenTestimonio'];
+const NO_CREABLES = ['configuracion', 'programa', 'testimonial', 'teamMember', 'tokenTestimonio', 'lead'];
 
 /**
  * Renombra el botón de publicar a "Guardar y publicar".

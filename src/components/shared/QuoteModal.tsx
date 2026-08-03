@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { sileo } from 'sileo';
 import { quoteSchema } from '@/lib/validations/quote';
+import { trackLead } from '@/lib/analytics';
 
 type FieldErrors = Partial<Record<'nombre' | 'email' | 'telefono' | 'programa', string>>;
 
@@ -93,6 +94,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
 
       if (!res.ok) throw new Error('Error del servidor');
       setStatus('idle');
+      trackLead('cotizacion', { program: programa });
       sileo.success({ title: '¡Solicitud enviada!', description: 'Nos pondremos en contacto contigo muy pronto.', fill: '#1B67E8' });
       setNombre(''); setEmail(''); setTelefono('');
       setPrograma(programaInicial); setMensaje('');

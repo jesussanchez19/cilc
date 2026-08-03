@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { promises as fs } from 'fs';
-import path from 'path';
-import type { Lead } from '@/lib/leads';
+import { getLeads } from '@/lib/leads';
 import GenerarToken from '@/components/admin/GenerarToken';
 
 export const metadata: Metadata = {
@@ -10,16 +8,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
-
-async function getLeads(): Promise<Lead[]> {
-  try {
-    const file = path.join(process.cwd(), 'data', 'leads.json');
-    const content = await fs.readFile(file, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return [];
-  }
-}
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
@@ -111,9 +99,14 @@ export default async function DashboardPage() {
               </div>
             </Link>
 
+            {/* El enlace es a la portada de GA4, no a la propiedad concreta.
+                Antes construía `#/p${GA_ID}`, pero ahí GA espera el ID NUMÉRICO
+                de la propiedad y `GA_ID` es el de medición (`G-…`): el enlace
+                llevaba a un `#/pG-1ZXH…` que Google no resuelve. La portada
+                abre la última propiedad usada, que es la correcta. */}
             {GA_ID && (
               <a
-                href={`https://analytics.google.com/analytics/web/#/p${GA_ID}/reports/intelligenthome`}
+                href="https://analytics.google.com/analytics/web/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50 transition"

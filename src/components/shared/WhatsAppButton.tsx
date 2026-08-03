@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { sileo } from 'sileo';
 import { useFloatingChromeVisible } from '@/hooks/useFloatingChromeVisible';
+import { trackLead, trackWhatsAppOpen } from '@/lib/analytics';
 
 const WHATSAPP_ICON = (
   <path d="M16.003 2.667C8.638 2.667 2.667 8.638 2.667 16c0 2.354.618 4.663 1.793 6.695L2.667 29.333l6.82-1.778A13.264 13.264 0 0016.003 29.333c7.365 0 13.33-5.97 13.33-13.333 0-7.362-5.965-13.333-13.33-13.333zm0 24.267a11.022 11.022 0 01-5.614-1.533l-.403-.238-4.047 1.056 1.08-3.94-.264-.416A10.98 10.98 0 015.003 16c0-6.065 4.935-11 11-11s11 4.935 11 11-4.935 11-11 11zm6.03-8.237c-.33-.165-1.953-.963-2.256-1.073-.303-.11-.524-.165-.744.165-.22.33-.854 1.073-1.047 1.293-.193.22-.385.248-.716.083-.33-.165-1.394-.514-2.655-1.638-.981-.875-1.643-1.956-1.836-2.286-.193-.33-.021-.508.145-.672.15-.148.33-.385.496-.578.165-.193.22-.33.33-.55.11-.22.055-.413-.028-.578-.083-.165-.744-1.793-1.02-2.454-.268-.644-.54-.557-.744-.567l-.633-.012c-.22 0-.578.083-.881.413-.303.33-1.155 1.128-1.155 2.75s1.183 3.19 1.348 3.41c.165.22 2.328 3.555 5.642 4.988.789.34 1.404.544 1.884.696.791.252 1.511.216 2.08.131.635-.094 1.953-.798 2.228-1.569.275-.77.275-1.43.193-1.569-.083-.138-.303-.22-.633-.385z" />
@@ -55,7 +56,7 @@ export default function WhatsAppButton() {
     setErrors({});
     setLoading(true);
     try {
-      await fetch('/api/contact', {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -65,6 +66,10 @@ export default function WhatsAppButton() {
           message: `WhatsApp / Teléfono: ${telefono}`,
         }),
       });
+      // Solo cuenta como lead si el servidor lo aceptó. El aviso de éxito de
+      // abajo se muestra igualmente —comportamiento que ya venía de antes—,
+      // así que no sirve como señal de que la petición salió bien.
+      if (res.ok) trackLead('whatsapp');
       sileo.success({
         title: '¡Listo! Te contactamos pronto',
         description: 'Un asesor de CILC te escribirá en breve.',
@@ -194,7 +199,12 @@ export default function WhatsAppButton() {
       {/* Botón flotante — mismo diseño original */}
       <div className="flex items-center gap-3">
         <button
-          onClick={() => setOpen((o) => !o)}
+          onClick={() => {
+            // Fuera del actualizador de estado a propósito: React puede
+            // ejecutar ese callback dos veces y el evento saldría duplicado.
+            if (!open) trackWhatsAppOpen();
+            setOpen((o) => !o);
+          }}
           onMouseEnter={() => setHovered(true)}
           onMouseLeave={() => setHovered(false)}
           aria-label="Chatear con CILC"

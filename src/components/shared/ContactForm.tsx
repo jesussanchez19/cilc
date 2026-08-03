@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { contactSchema, ContactFormData } from '@/lib/validations/contact';
+import { trackLead } from '@/lib/analytics';
 import { sileo } from 'sileo';
 
 type FieldErrors = Partial<Record<keyof ContactFormData, string[]>>;
@@ -67,6 +68,7 @@ export default function ContactForm() {
         return;
       }
 
+      trackLead('contacto', { subject: formData.subject });
       sileo.success({ title: '¡Mensaje enviado!', description: 'Te contactaremos en menos de 24 horas.', fill: '#1B67E8' });
       setFormData(INITIAL);
       setStatus('idle');

@@ -30,6 +30,13 @@ Los remitentes se construyen solos a partir de esa variable: `web@`, `hola@` y
 administrador recibe su aviso y el fallo del correo al cliente queda en el log.
 Pero el cliente se queda sin su confirmación.
 
+> **Esto no se puede resolver con `cilc.vercel.app`.** Verificar un dominio en
+> Resend exige añadir registros DNS, y el DNS de `vercel.app` es de Vercel: no
+> hay dónde ponerlos. Hasta que exista un dominio propio, el único destinatario
+> que recibe correo es la dirección con la que se registró la cuenta de Resend.
+> Para una demo, usar esa dirección en el formulario sí muestra los dos correos
+> llegando.
+
 ---
 
 ## 2. Variables de entorno
@@ -40,13 +47,13 @@ completa y comentada está en [`.env.example`](.env.example).
 | Variable | Si falta |
 |---|---|
 | `SANITY_API_READ_TOKEN` | **El sitio sale sin nada de contenido.** El dataset es privado |
-| `SANITY_API_WRITE_TOKEN` | Fallan testimonios, tokens y cambio de contraseña |
+| `SANITY_API_WRITE_TOKEN` | Fallan testimonios, tokens, cambio de contraseña y el guardado de solicitudes |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | No hay conexión con el CMS |
 | `NEXT_PUBLIC_SANITY_DATASET` | Igual que la anterior |
 | `STUDIO_SESSION_TOKEN` | **Nadie puede entrar al Studio**: sin clave no se firman las sesiones |
 | `RESEND_API_KEY` | No sale ningún correo |
 | `EMAIL_FROM_DOMAIN` | Los clientes no reciben confirmación (ver paso 1) |
-| `NEXT_PUBLIC_SITE_URL` | Sitemap, robots y Open Graph apuntan a `cilc.mx`, que hoy es el WordPress antiguo |
+| `NEXT_PUBLIC_SITE_URL` | Se asume `https://cilc.vercel.app`. Hoy es correcto, pero conviene fijarla para que el día que haya dominio propio no dependa de un valor por defecto |
 | `TESTIMONIAL_ACCESS_TOKEN` | No se pueden generar enlaces de testimonio |
 
 `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_GSC_VERIFICATION`, `SANITY_WEBHOOK_SECRET`,
@@ -73,7 +80,7 @@ completa y comentada está en [`.env.example`](.env.example).
 
 ```bash
 npm run build      # debe terminar sin errores
-npm run test:e2e   # 20 tests, contra la build de producción
+npm run test:e2e   # 22 tests, contra la build de producción
 ```
 
 Los tests e2e levantan su propio servidor de producción, así que no hace falta
@@ -90,7 +97,32 @@ Comprueba a mano:
 - [ ] `/admin/dashboard` redirige al login **sin** sesión
 - [ ] Enviar el formulario de contacto y confirmar que llegan **los dos**
       correos: el del administrador y el del cliente
+- [ ] Ese mismo envío aparece en el Studio, en **Solicitudes recibidas**, y en
+      `/admin/stats`
 - [ ] `/sitemap.xml` lista los destinos y usa el dominio correcto
+- [ ] En GA4 → Informes → **Tiempo real**, enviar un formulario y ver llegar
+      `generate_lead`
+
+---
+
+## Analítica
+
+Con `NEXT_PUBLIC_GA_ID` definida, el layout monta el script de GA4 y el sitio
+reporta, además de las páginas vistas automáticas, estos eventos
+([`src/lib/analytics.ts`](src/lib/analytics.ts)):
+
+| Evento | Cuándo | Parámetros |
+|---|---|---|
+| `generate_lead` | Un formulario de captación se envió **y el servidor respondió bien** | `form_name`: `contacto`, `cotizacion` o `whatsapp`; más `subject` o `program` |
+| `whatsapp_open` | Se abrió el chat flotante | — |
+| `testimonial_submit` | Un alumno mandó su testimonio | — |
+
+`generate_lead` es un evento recomendado de GA4, así que sale solo en los
+informes. Para que cuente como conversión hay que marcarlo una vez en
+**Administrar → Eventos clave**.
+
+Sin la variable de entorno no se monta nada: ni script, ni eventos, ni cookies
+de Google. Es la forma de apagar la analítica en un entorno de pruebas.
 
 ---
 
