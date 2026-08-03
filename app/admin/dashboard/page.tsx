@@ -111,9 +111,14 @@ export default async function DashboardPage() {
               </div>
             </Link>
 
+            {/* El enlace es a la portada de GA4, no a la propiedad concreta.
+                Antes construía `#/p${GA_ID}`, pero ahí GA espera el ID NUMÉRICO
+                de la propiedad y `GA_ID` es el de medición (`G-…`): el enlace
+                llevaba a un `#/pG-1ZXH…` que Google no resuelve. La portada
+                abre la última propiedad usada, que es la correcta. */}
             {GA_ID && (
               <a
-                href={`https://analytics.google.com/analytics/web/#/p${GA_ID}/reports/intelligenthome`}
+                href="https://analytics.google.com/analytics/web/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-4 py-3 hover:bg-gray-50 transition"

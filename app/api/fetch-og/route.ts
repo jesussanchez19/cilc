@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+import { SITE_URL } from '@/lib/siteUrl';
+
 function getMeta(html: string, ...names: string[]): string {
   for (const name of names) {
     const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -78,7 +80,10 @@ async function safeFetch(start: URL): Promise<Response> {
   for (let hop = 0; hop < 4; hop++) {
     const res: Response = await fetch(current, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; CILCBot/1.0; +https://cilc.mx)',
+        // La URL del User-Agent identifica al bot ante quien lo reciba, así que
+        // tiene que ser la nuestra. Estaba fija en `cilc.mx`, que es de otra
+        // empresa: cada petición le atribuía este rastreador a un tercero.
+        'User-Agent': `Mozilla/5.0 (compatible; CILCBot/1.0; +${SITE_URL})`,
         Accept: 'text/html',
       },
       redirect: 'manual',

@@ -16,7 +16,12 @@ export default defineConfig({
   // aunque la página esté bien. No enmascara fallos reales — esos fallan en
   // los dos intentos.
   retries: process.env.CI ? 2 : 1,
-  workers: process.env.CI ? 1 : undefined,
+  // En local, `undefined` deja que Playwright abra un worker por núcleo —12 en
+  // esta máquina— y con eso la suite se volvió intermitente: fallaban tres o
+  // cuatro tests por tiempo agotado y a la siguiente ejecución pasaban todos.
+  // Con 6 la suite tarda menos (40 s frente a 1 min) y no ha vuelto a fallar:
+  // los workers de más competían por CPU con el propio servidor de Next.
+  workers: process.env.CI ? 1 : 6,
 
   // Captura de pantalla y video en fallos
   reporter: [
