@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { promises as fs } from 'fs';
-import path from 'path';
-import type { Lead } from '@/lib/leads';
+import { getLeads } from '@/lib/leads';
 import GenerarToken from '@/components/admin/GenerarToken';
 
 export const metadata: Metadata = {
@@ -10,16 +8,6 @@ export const metadata: Metadata = {
 };
 
 export const dynamic = 'force-dynamic';
-
-async function getLeads(): Promise<Lead[]> {
-  try {
-    const file = path.join(process.cwd(), 'data', 'leads.json');
-    const content = await fs.readFile(file, 'utf-8');
-    return JSON.parse(content);
-  } catch {
-    return [];
-  }
-}
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 

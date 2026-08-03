@@ -47,7 +47,7 @@ completa y comentada está en [`.env.example`](.env.example).
 | Variable | Si falta |
 |---|---|
 | `SANITY_API_READ_TOKEN` | **El sitio sale sin nada de contenido.** El dataset es privado |
-| `SANITY_API_WRITE_TOKEN` | Fallan testimonios, tokens y cambio de contraseña |
+| `SANITY_API_WRITE_TOKEN` | Fallan testimonios, tokens, cambio de contraseña y el guardado de solicitudes |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | No hay conexión con el CMS |
 | `NEXT_PUBLIC_SANITY_DATASET` | Igual que la anterior |
 | `STUDIO_SESSION_TOKEN` | **Nadie puede entrar al Studio**: sin clave no se firman las sesiones |
@@ -97,6 +97,8 @@ Comprueba a mano:
 - [ ] `/admin/dashboard` redirige al login **sin** sesión
 - [ ] Enviar el formulario de contacto y confirmar que llegan **los dos**
       correos: el del administrador y el del cliente
+- [ ] Ese mismo envío aparece en el Studio, en **Solicitudes recibidas**, y en
+      `/admin/stats`
 - [ ] `/sitemap.xml` lista los destinos y usa el dominio correcto
 - [ ] En GA4 → Informes → **Tiempo real**, enviar un formulario y ver llegar
       `generate_lead`
