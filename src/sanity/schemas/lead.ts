@@ -31,9 +31,11 @@ export const leadSchema = defineType({
       },
       validation: (r) => r.required(),
     }),
-    defineField({ name: 'name',    title: 'Nombre',   type: 'string', readOnly: true, validation: (r) => r.required() }),
-    defineField({ name: 'email',   title: 'Email',    type: 'string', readOnly: true, validation: (r) => r.required() }),
-    defineField({ name: 'phone',   title: 'Teléfono', type: 'string', readOnly: true }),
+    defineField({ name: 'name',  title: 'Nombre', type: 'string', readOnly: true, validation: (r) => r.required() }),
+    // Sin `required`: los leads del chat de WhatsApp solo dejan nombre y
+    // teléfono, y no se les inventa una dirección.
+    defineField({ name: 'email', title: 'Email',  type: 'string', readOnly: true }),
+    defineField({ name: 'phone', title: 'Teléfono', type: 'string', readOnly: true }),
     defineField({ name: 'program', title: 'Programa', type: 'string', readOnly: true }),
     defineField({ name: 'subject', title: 'Asunto',   type: 'string', readOnly: true }),
     defineField({ name: 'message', title: 'Mensaje',  type: 'text',   readOnly: true }),

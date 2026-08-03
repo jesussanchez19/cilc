@@ -18,7 +18,8 @@ export interface Lead {
   id: string;
   type: 'contact' | 'quote';
   name: string;
-  email: string;
+  /** Falta en los leads del chat de WhatsApp, que solo piden nombre y teléfono. */
+  email?: string;
   phone?: string;
   program?: string;
   subject?: string;

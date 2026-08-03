@@ -59,12 +59,10 @@ export default function WhatsAppButton() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: nombre,
-          email: 'lead@wa.cilc.mx',
-          subject: 'Contacto rápido vía WhatsApp',
-          message: `WhatsApp / Teléfono: ${telefono}`,
-        }),
+        // `origen` le dice a la ruta que este lead no trae correo. Antes se
+        // enviaba `email: 'lead@wa.cilc.mx'`, un buzón inventado en un dominio
+        // ajeno al que iban a parar la confirmación y el reply-to del aviso.
+        body: JSON.stringify({ origen: 'whatsapp', name: nombre, phone: telefono }),
       });
       // Solo cuenta como lead si el servidor lo aceptó. El aviso de éxito de
       // abajo se muestra igualmente —comportamiento que ya venía de antes—,

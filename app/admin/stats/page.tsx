@@ -89,7 +89,8 @@ export default async function StatsPage() {
                 {recent.map((lead) => (
                   <tr key={lead.id} className="bg-white hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium text-gray-900">{lead.name}</td>
-                    <td className="px-4 py-3 text-gray-600">{lead.email}</td>
+                    {/* Los leads del chat de WhatsApp no dejan correo, solo teléfono. */}
+                    <td className="px-4 py-3 text-gray-600">{lead.email ?? lead.phone ?? '—'}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                         lead.type === 'contact'

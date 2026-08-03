@@ -72,7 +72,8 @@ export default async function DashboardPage() {
               <div key={lead.id} className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-4 py-3">
                 <div>
                   <p className="text-sm font-medium text-gray-900">{lead.name}</p>
-                  <p className="text-xs text-gray-500">{lead.email}</p>
+                  {/* Los leads del chat de WhatsApp no dejan correo, solo teléfono. */}
+                  <p className="text-xs text-gray-500">{lead.email ?? lead.phone ?? '—'}</p>
                 </div>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                   lead.type === 'contact' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700'
