@@ -99,13 +99,35 @@ dirección prestada.
 `cilc.mx` **no sirve**: pertenece a otra empresa que comparte las siglas.
 Cualquier configuración que apunte ahí le atribuye el contenido a un tercero.
 
-Mientras no haya dominio propio hay una consecuencia concreta:
+Mientras no haya dominio propio hay dos consecuencias concretas.
 
-> **Los clientes no reciben el correo de confirmación** al enviar un formulario.
-> Resend solo entrega a destinatarios arbitrarios desde un dominio verificado
-> con registros DNS, y el DNS de `vercel.app` es de Vercel. El aviso al
-> administrador sí llega y la solicitud sí queda guardada; lo que falta es el
-> acuse de recibo al interesado.
+### a) Los clientes no reciben confirmación
+
+Quien rellena un formulario **no recibe el correo de acuse de recibo**. Resend
+solo entrega a destinatarios arbitrarios desde un dominio verificado con
+registros DNS, y el DNS de `vercel.app` es de Vercel. La solicitud sí queda
+guardada y el administrador sí recibe su aviso.
+
+### b) El aviso al administrador funciona por una coincidencia
+
+⚠️ **Esto hay que leerlo antes de tocar la configuración.**
+
+Sin dominio verificado, el sistema envía desde `onboarding@resend.dev`, el
+dominio de pruebas de Resend, que **solo puede escribir a la dirección con la
+que se registró la cuenta de Resend**. A cualquier otra responde 403.
+
+Hoy el aviso llega porque el campo *Email de contacto* de Sanity coincide
+exactamente con esa dirección. En cuanto se cambie por el correo de CILC —lo
+más natural al recibir el sitio— los avisos dejarán de entregarse.
+
+Las solicitudes **no se pierden**: siguen guardándose en Sanity y se ven en
+`/admin/stats` y en el Studio, y los formularios siguen respondiendo bien al
+visitante. Pero nadie recibirá el correo de aviso, y solo se sabrá mirando el
+panel.
+
+Así que, hasta que haya dominio: **no cambies el *Email de contacto* ni el
+*Email de seguridad* del Studio**, o hazlo sabiendo que los avisos por correo
+quedan en pausa hasta verificar el dominio en Resend.
 
 Cuando CILC tenga dominio, los pasos están en [`DESPLIEGUE.md`](DESPLIEGUE.md):
 verificarlo en Resend, definir `EMAIL_FROM_DOMAIN` y `NEXT_PUBLIC_SITE_URL`, y

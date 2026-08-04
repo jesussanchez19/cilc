@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
   const { name, email, phone, program, message } = result.data;
 
-  const [, contactInfo] = await Promise.all([
+  const [leadGuardado, contactInfo] = await Promise.all([
     saveLead({ type: 'quote', name, email, phone, program, message: message ?? '' }),
     getContactInfo(),
   ]);
@@ -68,18 +68,23 @@ export async function POST(req: NextRequest) {
     }),
   ]);
 
-  // Solo el aviso al administrador es crítico: si ese falla, el negocio no se
-  // entera de la solicitud. La confirmación al cliente es cortesía, y hacer
-  // fallar toda la petición por ella tiene un efecto peor — el lead YA quedó
-  // guardado y el administrador YA fue avisado, pero el usuario ve un error y
-  // reenvía, generando duplicados. Se registra y se sigue.
   if (userResult.error) {
     console.error('[quote] no se pudo enviar la confirmación al cliente:', userResult.error);
   }
 
+  /**
+   * Mismo criterio que en /api/contact: la solicitud ya queda guardada en
+   * Sanity, así que un fallo del correo no debe hacer que el visitante vea un
+   * error. Solo se falla si no quedó guardada NI se pudo avisar, que es cuando
+   * de verdad no queda rastro. Ver el comentario largo en esa ruta.
+   */
   if (adminResult.error) {
     console.error('[quote] no se pudo avisar al administrador:', adminResult.error);
-    return NextResponse.json({ error: 'Error al enviar la solicitud.' }, { status: 500 });
+
+    if (!leadGuardado) {
+      console.error('[quote] la solicitud no quedó guardada y tampoco se avisó: se pierde');
+      return NextResponse.json({ error: 'Error al enviar la solicitud.' }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ success: true });
