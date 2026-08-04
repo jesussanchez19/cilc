@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     ? result.data.message
     : `Pide que le contacten por WhatsApp al ${phone}.`;
 
-  const [, contactInfo] = await Promise.all([
+  const [leadGuardado, contactInfo] = await Promise.all([
     saveLead({ type: 'contact', name, email, phone, subject, message }),
     getContactInfo(),
   ]);
@@ -95,19 +95,36 @@ export async function POST(req: NextRequest) {
 
   const [adminResult, userResult] = await Promise.all(envios);
 
-  // Solo el aviso al administrador es crítico: si ese falla, el negocio no se
-  // entera de la solicitud. La confirmación al cliente es cortesía, y hacer
-  // fallar toda la petición por ella tiene un efecto peor — el lead YA quedó
-  // guardado y el administrador YA fue avisado, pero el usuario ve un error y
-  // reenvía, generando duplicados. Se registra y se sigue.
   // `userResult` no existe cuando el lead vino sin correo y no se envió nada.
   if (userResult?.error) {
     console.error('[contact] no se pudo enviar la confirmación al cliente:', userResult.error);
   }
 
+  /**
+   * Que falle el correo ya no tumba la petición, siempre que la solicitud haya
+   * quedado guardada.
+   *
+   * Antes, un fallo al avisar al administrador devolvía 500 y el visitante veía
+   * "Error al enviar" aunque sus datos estuvieran a salvo. Eso era una bomba de
+   * relojería mientras no haya dominio propio verificado en Resend: hoy el
+   * aviso llega solo porque la dirección del administrador coincide con la
+   * cuenta con la que se registró Resend, que es la única a la que el dominio
+   * de pruebas puede escribir. El día que se cambie esa dirección por otra
+   * —lo primero que hará quien reciba el sitio— Resend responderá 403 y TODOS
+   * los formularios empezarían a dar error al visitante.
+   *
+   * Ahora la solicitud queda en Sanity y se puede consultar en /admin/stats y
+   * en el Studio, así que el correo es un aviso, no el registro. Solo se
+   * devuelve error cuando no quedó guardada NI se pudo avisar: ahí sí no hay
+   * rastro de la solicitud en ninguna parte y el visitante debe saberlo.
+   */
   if (adminResult.error) {
     console.error('[contact] no se pudo avisar al administrador:', adminResult.error);
-    return NextResponse.json({ error: 'Error al enviar el mensaje.' }, { status: 500 });
+
+    if (!leadGuardado) {
+      console.error('[contact] la solicitud no quedó guardada y tampoco se avisó: se pierde');
+      return NextResponse.json({ error: 'Error al enviar el mensaje.' }, { status: 500 });
+    }
   }
 
   return NextResponse.json({ success: true });
