@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getLeads, type Lead } from '@/lib/leads';
+import { esDeHoyEnMexico } from '@/lib/fechas';
 import GenerarToken from '@/components/admin/GenerarToken';
 import {
   PaginaAdmin, Kpi, EtiquetaTipo, IconoBandeja, IconoBandejaXL, IconoMensaje,
@@ -119,9 +120,7 @@ export default async function DashboardPage() {
   const contacts = leads.filter((l) => l.type === 'contact').length;
   const quotes = leads.filter((l) => l.type === 'quote').length;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayLeads = leads.filter((l) => new Date(l.createdAt) >= today).length;
+  const todayLeads = leads.filter((l) => esDeHoyEnMexico(l.createdAt)).length;
 
   // getLeads ya devuelve de más reciente a más antiguo.
   const recent = leads.slice(0, 6);

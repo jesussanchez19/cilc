@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getLeads } from '@/lib/leads';
+import { esDeHoyEnMexico } from '@/lib/fechas';
 import {
   PaginaAdmin, Kpi, EtiquetaTipo, IconoBandeja, IconoBandejaXL, IconoMensaje,
   IconoDocumento, IconoReloj, IconoAtras,
@@ -85,9 +86,7 @@ export default async function StatsPage() {
   const contacts = leads.filter((l) => l.type === 'contact').length;
   const quotes = leads.filter((l) => l.type === 'quote').length;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayLeads = leads.filter((l) => new Date(l.createdAt) >= today).length;
+  const todayLeads = leads.filter((l) => esDeHoyEnMexico(l.createdAt)).length;
 
   const programCount: Record<string, number> = {};
   leads.filter((l) => l.program).forEach((l) => {

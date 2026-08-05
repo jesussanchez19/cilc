@@ -11,6 +11,19 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  /**
+   * Sin el indicador flotante de Next.
+   *
+   * Se dibuja en la esquina inferior izquierda, que es justo donde está el
+   * botón de WhatsApp: se le pone encima y se come el clic. Con eso el test de
+   * analítica que abre el chat fallaba de forma intermitente, y en local nadie
+   * podía pulsar ese botón a mano.
+   *
+   * Solo afecta al desarrollo: comprobado que en el sitio publicado el
+   * indicador no se sirve, así que ningún visitante lo ve. Los errores de
+   * compilación y de ejecución se siguen mostrando igual.
+   */
+  devIndicators: false,
   // Permite abrir el dev server desde el celular por IP de red local.
   // Sin esto Next devuelve 403 en /_next/* y la página nunca hidrata.
   allowedDevOrigins: ['192.168.68.*', '192.168.1.*', '192.168.0.*', '10.0.0.*'],
