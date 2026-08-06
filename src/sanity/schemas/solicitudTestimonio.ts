@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import type { ValidationContext } from 'sanity';
 
 /**
  * Estos documentos los crea el formulario público a través de /api/testimonio,
@@ -7,7 +8,30 @@ import { defineField, defineType } from 'sanity';
  * API habría rechazado, y la página acaba mostrando datos que nadie previó.
  *
  * Referencia: `testimonioSchema` en app/api/testimonio/route.ts
+ *
+ * Con UNA excepción a propósito: los testimonios que solo son un vídeo.
+ *
+ * En el sitio anterior de CILC hay testimonios grabados de los que únicamente se
+ * conserva el enlace de YouTube — no hay correo del alumno ni texto escrito, y
+ * no tiene sentido inventarlos para poder guardar. Por eso `email` y `texto`
+ * dejan de ser obligatorios cuando el documento trae `videoUrl`.
+ *
+ * La API no cambia: los testimonios nuevos siguen llegando por el formulario
+ * con todos sus datos. La excepción existe solo para cargar a mano lo antiguo.
  */
+
+/**
+ * ¿Este documento es un testimonio que consiste solo en el vídeo?
+ *
+ * `ValidationContext.document` es un `SanityDocument` genérico, sin los campos
+ * de este esquema, así que hay que estrecharlo a mano para leer `videoUrl`.
+ */
+function tieneVideo(contexto: ValidationContext): boolean {
+  const doc = contexto.document as { videoUrl?: unknown } | undefined;
+  return Boolean(doc?.videoUrl);
+}
+
+const SOLO_SI_NO_HAY_VIDEO = 'Obligatorio, salvo en los testimonios que son solo un vídeo';
 export const solicitudTestimonioSchema = defineType({
   name: 'solicitudTestimonio',
   title: 'Solicitudes de Testimonio',
@@ -23,8 +47,13 @@ export const solicitudTestimonioSchema = defineType({
       name: 'email',
       title: 'Email (privado)',
       type: 'string',
-      description: 'No se publica. Sirve para contactar al alumno si hace falta.',
-      validation: (r) => r.required().email().max(200),
+      description:
+        'No se publica. Sirve para contactar al alumno si hace falta. ' +
+        'Puede quedar vacío si el testimonio es solo un vídeo.',
+      validation: (r) =>
+        r.email().max(200).custom((valor, ctx) =>
+          valor || tieneVideo(ctx) ? true : SOLO_SI_NO_HAY_VIDEO,
+        ),
     }),
     defineField({
       name: 'programa', title: 'Programa', type: 'string',
@@ -39,11 +68,22 @@ export const solicitudTestimonioSchema = defineType({
     }),
     defineField({
       name: 'bandera',
-      title: 'Bandera (emoji)',
+      title: 'Código de país',
       type: 'string',
-      description: 'Ej: 🇨🇦 🇮🇪 🇬🇧 🇦🇺 🇺🇸 🇫🇷',
-      // Una bandera son dos caracteres indicadores regionales, de ahí el margen.
-      validation: (r) => r.max(8).warning('Se espera un solo emoji de bandera'),
+      /**
+       * Pedía un emoji, y era falso: el sitio usa este valor para construir
+       * `https://flagcdn.com/w20/{valor}.png`. Con un emoji dentro esa URL da
+       * 404 y en la página sale una imagen rota. Lo que guarda la API es el
+       * código ISO en minúsculas, resuelto a partir del país.
+       */
+      description:
+        'Dos letras en minúscula, del país: ca (Canadá), us (Estados Unidos), ' +
+        'gb (Reino Unido), ie (Irlanda), au (Australia), fr (Francia), de (Alemania). ' +
+        'Se rellena solo cuando el testimonio llega por el formulario.',
+      validation: (r) =>
+        r.lowercase().length(2).regex(/^[a-z]{2}$/, {
+          name: 'código ISO de dos letras',
+        }),
     }),
     defineField({ name: 'foto', title: 'Fotografía', type: 'image', options: { hotspot: true } }),
     defineField({
@@ -51,7 +91,11 @@ export const solicitudTestimonioSchema = defineType({
       title: 'Testimonio',
       type: 'text',
       rows: 4,
-      validation: (r) => r.required().min(10).max(2000),
+      description: 'Puede quedar vacío si el testimonio es solo un vídeo.',
+      validation: (r) =>
+        r.min(10).max(2000).custom((valor, ctx) =>
+          valor || tieneVideo(ctx) ? true : SOLO_SI_NO_HAY_VIDEO,
+        ),
     }),
     defineField({
       name: 'calificacion', title: 'Calificación', type: 'number',
