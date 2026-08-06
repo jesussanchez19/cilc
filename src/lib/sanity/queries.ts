@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { client } from './client';
 import { SITE_PAGES, type SearchDoc } from '@/lib/search';
+import { DIRECCION_POR_DEFECTO } from '@/lib/ubicacion';
 import { writeClient } from './writeClient';
 
 // ── Testimonios ───────────────────────────────────────────────────────────────
@@ -132,7 +133,7 @@ const CONTACT_FALLBACK: SanityContactInfo = {
     { display: '55 7278 5966', wa: '525572785966' },
     { display: '55 1218 2442', wa: '525512182442' },
   ],
-  direccion: 'Av. Insurgentes Sur 863, Piso 7\nCol. Nápoles, C.P. 03810\nCDMX, México',
+  direccion: DIRECCION_POR_DEFECTO,
 };
 
 /**

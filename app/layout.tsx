@@ -129,7 +129,15 @@ export default async function RootLayout({
         )}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema()) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(
+              organizationSchema({
+                direccion: contact.direccion,
+                // El principal, en el formato internacional que espera schema.org.
+                telefono: mainPhone ? `+${mainPhone}` : undefined,
+              }),
+            ),
+          }}
         />
         <SiteChrome>
           <Header searchIndex={searchIndex} />

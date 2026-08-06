@@ -1,3 +1,5 @@
+import { DIRECCION_POR_DEFECTO, direccionEnLinea } from '@/lib/ubicacion';
+
 /**
  * Paleta de marca para correo.
  *
@@ -104,6 +106,17 @@ function dataRow(label: string, value: string, shade = false): string {
   </tr>`;
 }
 
+/**
+ * La dirección del pie de los correos, en una línea y escapada para HTML.
+ *
+ * Estaba escrita a mano en las dos plantillas. Ahora llega desde el Studio; el
+ * respaldo solo actúa si Sanity no respondió cuando se compuso el correo.
+ */
+function pieDireccion(direccion?: string): string {
+  const texto = direccionEnLinea(direccion) || direccionEnLinea(DIRECCION_POR_DEFECTO);
+  return texto.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function adminLayout(opts: {
   badge: string;
   badgeColor?: string;
@@ -114,6 +127,8 @@ function adminLayout(opts: {
   noteLabel?: string;
   ctaUrl?: string;
   ctaLabel?: string;
+  /** Sale del Studio. Si falta, se usa el respaldo compartido. */
+  direccion?: string;
 }): string {
   const accent = opts.badgeColor ?? BLUE;
   return `<!DOCTYPE html>
@@ -189,7 +204,7 @@ function adminLayout(opts: {
   <tr>
     <td style="background:${C.surface3};padding:16px 28px;border:1px solid ${C.border};border-top:none;border-radius:0 0 14px 14px;">
       <p style="margin:0;font-size:11px;color:${C.textSubtle};text-align:center;">
-        &copy; ${YEAR} CILC &nbsp;&bull;&nbsp; Av. Insurgentes Sur 863, Piso 7, CDMX, M&eacute;xico
+        &copy; ${YEAR} CILC &nbsp;&bull;&nbsp; ${pieDireccion(opts.direccion)}
       </p>
     </td>
   </tr>
@@ -205,6 +220,8 @@ function userLayout(opts: {
   title: string;
   body: string;
   whatsapp?: string;
+  /** Sale del Studio. Si falta, se usa el respaldo compartido. */
+  direccion?: string;
 }): string {
   const phone = opts.whatsapp ?? '525518944494';
   return `<!DOCTYPE html>
@@ -273,7 +290,7 @@ function userLayout(opts: {
   <tr>
     <td style="background:${C.surface3};padding:16px 32px;border:1px solid ${C.border};border-top:none;border-radius:0 0 14px 14px;">
       <p style="margin:0;font-size:11px;color:${C.textSubtle};text-align:center;">
-        &copy; ${YEAR} CILC &nbsp;&bull;&nbsp; Av. Insurgentes Sur 863, Piso 7, CDMX, M&eacute;xico
+        &copy; ${YEAR} CILC &nbsp;&bull;&nbsp; ${pieDireccion(opts.direccion)}
       </p>
     </td>
   </tr>
@@ -288,6 +305,8 @@ function userLayout(opts: {
 // ── Exported templates ────────────────────────────────────────────────────────
 
 export function contactAdminHtml(data: {
+  /** Domicilio para el pie. Sale del Studio. */
+  direccion?: string;
   name: string;
   /** Falta en los leads del chat de WhatsApp, que solo piden nombre y teléfono. */
   email?: string;
@@ -297,6 +316,7 @@ export function contactAdminHtml(data: {
   message: string;
 }): string {
   return adminLayout({
+    direccion: data.direccion,
     badge: 'Nuevo Contacto',
     title: 'Mensaje de contacto',
     subtitle: `Recibido a las ${new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })} · ${new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`,
@@ -317,8 +337,9 @@ export function contactAdminHtml(data: {
   });
 }
 
-export function contactUserHtml(name: string, whatsapp?: string): string {
+export function contactUserHtml(name: string, whatsapp?: string, direccion?: string): string {
   return userLayout({
+    direccion,
     title: 'Recibimos tu mensaje',
     whatsapp,
     body: `
@@ -334,6 +355,8 @@ export function contactUserHtml(name: string, whatsapp?: string): string {
 }
 
 export function quoteAdminHtml(data: {
+  /** Domicilio para el pie. Sale del Studio. */
+  direccion?: string;
   name: string;
   email: string;
   /** Opcional en el formulario de cotización: la fila se omite si no viene. */
@@ -356,6 +379,7 @@ export function quoteAdminHtml(data: {
   celdas.push(['Programa', `<strong>${data.program}</strong>`]);
 
   return adminLayout({
+    direccion: data.direccion,
     badge: 'Cotización',
     badgeColor: ACCENT.cotizacion,
     title: 'Nueva solicitud de cotización',
@@ -366,8 +390,9 @@ export function quoteAdminHtml(data: {
   });
 }
 
-export function quoteUserHtml(name: string, program: string, whatsapp?: string): string {
+export function quoteUserHtml(name: string, program: string, whatsapp?: string, direccion?: string): string {
   return userLayout({
+    direccion,
     title: 'Solicitud recibida',
     whatsapp,
     body: `
@@ -388,6 +413,8 @@ export function quoteUserHtml(name: string, program: string, whatsapp?: string):
 }
 
 export function testimonioAdminHtml(data: {
+  /** Domicilio para el pie. Sale del Studio. */
+  direccion?: string;
   nombre: string;
   email: string;
   programa: string;
@@ -401,6 +428,7 @@ export function testimonioAdminHtml(data: {
     ? '★'.repeat(data.calificacion) + '☆'.repeat(5 - data.calificacion)
     : '—';
   return adminLayout({
+    direccion: data.direccion,
     badge: 'Testimonio',
     badgeColor: ACCENT.testimonio,
     title: 'Nueva solicitud de testimonio',

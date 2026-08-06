@@ -58,13 +58,13 @@ export async function POST(req: NextRequest) {
       to: contactInfo.emailAdmin,
       replyTo: email,
       subject: `[CILC Cotización] ${program} — ${name}`,
-      html: quoteAdminHtml({ name, email, phone, program, message }),
+      html: quoteAdminHtml({ name, email, phone, program, message, direccion: contactInfo.direccion }),
     }),
     resend.emails.send({
       from: FROM_CLIENTE,
       to: email,
       subject: `Tu solicitud sobre ${program} — CILC`,
-      html: quoteUserHtml(name, program, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
+      html: quoteUserHtml(name, program, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa, contactInfo.direccion),
     }),
   ]);
 

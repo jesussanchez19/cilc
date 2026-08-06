@@ -13,6 +13,28 @@
  * veces, el Studio ofrece un botón que la copia de la URL al campo.
  */
 
+/**
+ * El único lugar del código donde la dirección está escrita a mano.
+ *
+ * Estaba copiada en seis sitios —pie de página, aviso de privacidad, términos,
+ * dos plantillas de correo y el respaldo de las consultas—, así que una mudanza
+ * obligaba a encontrarlos todos. Solo se usa como respaldo: en cuanto Sanity
+ * responde, manda el campo "Dirección de la oficina".
+ */
+export const DIRECCION_POR_DEFECTO =
+  'Av. Insurgentes Sur 863, Piso 7\nCol. Nápoles, C.P. 03810\nCDMX, México';
+
+/**
+ * La dirección en una sola línea, para meterla dentro de una frase.
+ *
+ * En el pie va en varias líneas, pero en el aviso de privacidad y en los
+ * términos aparece en mitad de un párrafo, donde un salto de línea corta la
+ * frase por la mitad.
+ */
+export function direccionEnLinea(direccion?: string): string {
+  return (direccion ?? '').split('\n').map((l) => l.trim()).filter(Boolean).join(', ');
+}
+
 export interface Ubicacion {
   /** El texto que se muestra. Siempre el mismo en todo el sitio. */
   direccion: string;

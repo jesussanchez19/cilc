@@ -176,6 +176,7 @@ export async function POST(req: NextRequest) {
         tieneFoto: !!(fotoFile && fotoFile.size > 0),
         calificacion,
         studioUrl: `/studio`,
+        direccion: contactInfo.direccion,
       }),
     });
   } catch (err) {
