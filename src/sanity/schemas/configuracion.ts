@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { UrlMapaInput } from '../components/UrlMapaInput';
 
 export const configuracionSchema = defineType({
   name: 'configuracion',
@@ -98,7 +99,12 @@ export const configuracionSchema = defineType({
       title: 'Ubicación en Google Maps',
       type: 'string',
       group: 'contacto',
-      description: 'Abre Google Maps, busca la ubicación y copia la URL que aparece en la barra del navegador. El texto de la tarjeta y el mapa se generan solos.',
+      components: { input: UrlMapaInput },
+      description:
+        'Abre Google Maps, busca la ubicación y copia la URL de la barra del navegador. ' +
+        'Sitúa el mapa de la página de contacto. Debajo aparece un botón para copiar esa ' +
+        'dirección al campo de arriba y que no digan cosas distintas. ' +
+        'Si lo dejas vacío, el mapa se construye con la dirección escrita.',
       // La página extrae la dirección y el mapa de esta URL; si no es de Maps
       // el parseo no encuentra nada y la tarjeta sale vacía.
       validation: (r) =>
