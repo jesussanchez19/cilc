@@ -12,6 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    /**
+     * Herramientas del asistente, no código del sitio.
+     *
+     * Son scripts CommonJS (`.cjs`) que usan `require()` legítimamente, pero la
+     * configuración de Next los juzga con las reglas de un módulo ES y los
+     * marcaba con 15 errores de `no-require-imports`. Eran casi la mitad del
+     * total y no hay nada que arreglar en ellos: no se despliegan, no entran en
+     * el bundle y no son nuestros.
+     */
+    ".claude/**",
   ]),
 ]);
 

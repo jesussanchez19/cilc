@@ -28,7 +28,7 @@ export default async function DarTestimonioPage({ searchParams }: Props) {
   const esMasterToken = acceso === process.env.TESTIMONIAL_ACCESS_TOKEN;
 
   // Cargar países en paralelo — si falla, los selects quedan vacíos (no crítico)
-  let paisesPorPrograma: Record<string, string[]> = {};
+  const paisesPorPrograma: Record<string, string[]> = {};
   try {
     const destinos = await getAllDestinos();
     for (const destino of destinos) {

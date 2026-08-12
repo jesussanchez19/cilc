@@ -45,6 +45,12 @@ export default function Navigation() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  /**
+   * Cerrar el menú móvil al navegar. La alternativa —cerrarlo en el onClick de
+   * cada enlace— habría que repetirla en todos y se olvidaría en el siguiente
+   * que se añada; reaccionar a la ruta cubre también el botón atrás.
+   */
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   // El ocultamiento en /studio lo gestiona SiteChrome, en el layout raíz.

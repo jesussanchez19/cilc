@@ -256,12 +256,19 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
     .filter((t) => t.foto?.asset?._ref)
     .map((t) => urlFor(t.foto!).width(760).height(427).fit('crop').url());
 
-  const stats  = useSection(0.25);
-  const hl     = useSection(0.25);
-  const incl   = useSection(0.25);
-  const badges = useSection(0.2);
-  const sect   = useSection(0.15);
-  const test   = useSection(0.2);
+  /**
+   * Se desestructura en vez de guardar el objeto y leer `statsRef` dentro del
+   * JSX. Acceder a un ref por propiedad durante el render es lo que marcaba
+   * `react-hooks/refs`: el compilador de React no puede saber que ese `.ref` es
+   * el objeto y no una lectura de `.current`, que sí seria un error de verdad.
+   * El comportamiento es identico; solo cambia dónde se desempaqueta.
+   */
+  const { ref: statsRef,  visible: statsVisible  } = useSection(0.25);
+  const { ref: hlRef,     visible: hlVisible     } = useSection(0.25);
+  const { ref: inclRef,   visible: inclVisible   } = useSection(0.25);
+  const { ref: badgesRef, visible: badgesVisible } = useSection(0.2);
+  const { ref: sectRef,   visible: sectVisible   } = useSection(0.15);
+  const { ref: testRef,   visible: testVisible   } = useSection(0.2);
 
   const programaNombre: Record<string, string> = {
     'idiomas': 'Idiomas', 'au-pair': 'Au Pair', 'anos-academicos': 'Años Académicos',
@@ -310,7 +317,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         {/* Stats — scale in with stagger */}
-        <div ref={stats.ref} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
+        <div ref={statsRef} className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
           {[
             { value: program.duration,                  label: 'Duración' },
             { value: program.ageRange,                  label: 'Rango de edad' },
@@ -318,7 +325,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           ].map(({ value, label }, i) => (
             <div
               key={label}
-              className={`premium-card p-6 text-center reveal-scale ${stats.visible ? 'is-visible' : ''}`}
+              className={`premium-card p-6 text-center reveal-scale ${statsVisible ? 'is-visible' : ''}`}
               style={{ transitionDelay: `${i * 110}ms` }}
             >
               <div className={`text-2xl font-extrabold ${colors.text} mb-1`}>{value}</div>
@@ -333,11 +340,11 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               Modalidades disponibles
             </h2>
-            <div ref={sect.ref} className="flex flex-wrap justify-center gap-5">
+            <div ref={sectRef} className="flex flex-wrap justify-center gap-5">
               {program.sections.map((s: ProgramSection, i: number) => (
                 <div
                   key={s.title}
-                  className={`rounded-2xl p-6 reveal-scale ${sect.visible ? 'is-visible' : ''} w-full sm:w-[calc(50%-10px)] xl:w-[calc(33.333%-14px)]`}
+                  className={`rounded-2xl p-6 reveal-scale ${sectVisible ? 'is-visible' : ''} w-full sm:w-[calc(50%-10px)] xl:w-[calc(33.333%-14px)]`}
                   style={{
                     transitionDelay: `${i * 70}ms`,
                     background: 'var(--surface-2)',
@@ -373,7 +380,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
         {(program.highlights.length > 0 || program.includes.length > 0) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
           {program.highlights.length > 0 && (
-          <div ref={hl.ref}>
+          <div ref={hlRef}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               Puntos clave
             </h2>
@@ -381,7 +388,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               {program.highlights.map((h, i) => (
                 <li
                   key={h}
-                  className={`flex items-start gap-3 reveal-left ${hl.visible ? 'is-visible' : ''}`}
+                  className={`flex items-start gap-3 reveal-left ${hlVisible ? 'is-visible' : ''}`}
                   style={{ transitionDelay: `${i * 60}ms` }}
                 >
                   <span className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
@@ -397,7 +404,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           </div>
           )}
           {program.includes.length > 0 && (
-          <div ref={incl.ref}>
+          <div ref={inclRef}>
             <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
               ¿Qué incluye?
             </h2>
@@ -405,7 +412,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               {program.includes.map((item, i) => (
                 <li
                   key={item}
-                  className={`flex items-start gap-3 reveal-right ${incl.visible ? 'is-visible' : ''}`}
+                  className={`flex items-start gap-3 reveal-right ${inclVisible ? 'is-visible' : ''}`}
                   style={{ transitionDelay: `${i * 60}ms` }}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -435,13 +442,13 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           <h2 className="text-2xl font-extrabold text-slate-900 mb-5" style={{ letterSpacing: '-0.02em' }}>
             Destinos disponibles
           </h2>
-          <div ref={badges.ref} className="flex flex-wrap gap-2">
+          <div ref={badgesRef} className="flex flex-wrap gap-2">
             {(destinosResolved
               ? destinosResolved.map((c, i) => (
                   <Link
                     key={c!.id}
                     href={`/destinos/${c!.id}`}
-                    className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''} hover:opacity-80 transition-opacity`}
+                    className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badgesVisible ? 'is-visible' : ''} hover:opacity-80 transition-opacity`}
                     style={{ transitionDelay: `${i * 45}ms` }}
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -452,7 +459,7 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
               : program.countries.map((c, i) => (
                 <span
                   key={c}
-                  className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badges.visible ? 'is-visible' : ''}`}
+                  className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badgesVisible ? 'is-visible' : ''}`}
                   style={{ transitionDelay: `${i * 45}ms` }}
                 >
                   {c}
@@ -476,11 +483,11 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
             <h2 className="text-2xl font-extrabold text-slate-900 mb-8 text-center" style={{ letterSpacing: '-0.02em' }}>
               Lo que dicen nuestros estudiantes
             </h2>
-            <div ref={test.ref} className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div ref={testRef} className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {testimoniosSanity.map((t, i) => (
                 <div
                   key={t._id}
-                  className={`premium-card p-6 flex flex-col gap-3 reveal-blur ${test.visible ? 'is-visible' : ''}`}
+                  className={`premium-card p-6 flex flex-col gap-3 reveal-blur ${testVisible ? 'is-visible' : ''}`}
                   style={{ transitionDelay: `${i * 130}ms` }}
                 >
                   <p className="font-bold text-slate-900 text-sm">{t.nombre}</p>
