@@ -85,8 +85,14 @@ export default async function ArticlePage({ params }: Props) {
           Volver al blog
         </Link>
 
+        {/* `contenido-articulo` y no `prose prose-slate prose-lg`: esas venían de
+            @tailwindcss/typography, que no está instalado, así que no generaban
+            nada y el artículo salía como un muro de texto plano —los encabezados
+            del mismo tamaño que los párrafos y las listas sin viñetas—. No se
+            notó antes porque el blog estuvo vacío. Los estilos están ahora en
+            globals.css, escritos con los tokens del sitio. */}
         {post.content && (
-          <div className="prose prose-slate prose-lg max-w-none">
+          <div className="contenido-articulo max-w-none">
             <PortableText value={post.content as Parameters<typeof PortableText>[0]['value']} />
           </div>
         )}
