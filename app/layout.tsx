@@ -111,7 +111,20 @@ export default async function RootLayout({
     _id: c._id,
     nombre: c.nombre,
     url: c.url,
-    imagenUrl: urlFor(c.imagen).width(192).height(192).fit('max').url(),
+    /**
+     * Solo se pide el ancho, nunca ancho y alto a la vez.
+     *
+     * Con los dos, Sanity entiende que quieres esa proporción exacta y recorta
+     * para conseguirla: al sello de ICEF, que es 650×762, le metía un
+     * `rect=0,56,650,650` que le cortaba 56 px por arriba y 56 por abajo y se
+     * comía el "TRUSTED AGENCY" de la parte inferior. Con una sola medida
+     * conserva la proporción original, y del encuadre final ya se ocupa el
+     * `object-contain` de la caja.
+     *
+     * 256 y no 96: el sello se ve a 96 px, que en una pantalla retina son 192
+     * reales, y así queda margen.
+     */
+    imagenUrl: urlFor(c.imagen).width(256).fit('max').url(),
   }));
   return (
     <html
