@@ -441,8 +441,10 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
                     className={`px-4 py-2 ${colors.light} ${colors.text} rounded-full font-semibold text-sm border ${colors.border} reveal-scale ${badgesVisible ? 'is-visible' : ''} hover:opacity-80 transition-opacity`}
                     style={{ transitionDelay: `${i * 45}ms` }}
                   >
+                    {/* w80 y no w40: la bandera se ve a 24 px de alto, que en
+                        una pantalla retina son 48 reales. */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`https://flagcdn.com/w40/${c!.code.toLowerCase()}.png`} alt="" width={20} className="inline h-4 w-auto rounded-sm mr-1.5 align-middle" />
+                    <img src={`https://flagcdn.com/w80/${c!.code.toLowerCase()}.png`} alt="" width={32} height={24} className="inline h-6 w-auto rounded-sm mr-2 align-middle" />
                     {c!.name}
                   </Link>
                 ))
