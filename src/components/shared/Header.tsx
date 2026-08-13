@@ -64,12 +64,18 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
 
           {/* Logo */}
           <Link href="/" onClick={handleLogoClick} className="flex items-center shrink-0 group">
+            {/* Las medidas declaradas eran 120×40, una proporción de 3:1 que no
+                es la del archivo: logo.png es 1006×799, o sea 1.26:1. No se
+                deformaba porque `object-contain` lo corrige, pero Next generaba
+                la versión optimizada a partir de un tamaño equivocado. Ahora
+                van en la proporción real y con holgura para pantallas retina. */}
             <Image
               src="/logo.png"
               alt="CILC Logo"
-              width={120}
-              height={40}
-              className="h-10 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
+              width={202}
+              height={160}
+              priority
+              className="h-12 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
 

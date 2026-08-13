@@ -86,12 +86,14 @@ export default function Footer({
           {/* Brand col */}
           <AnimateIn animation="left" threshold={0.05} className="md:col-span-4">
             <Link href="/" className="inline-block mb-4">
+              {/* Misma corrección de proporción que en la cabecera: el archivo
+                  es 1006×799, no 3:1. */}
               <Image
                 src="/logo.png"
                 alt="CILC Logo"
-                width={110}
-                height={38}
-                className="h-10 w-auto object-contain"
+                width={202}
+                height={160}
+                className="h-14 w-auto object-contain"
               />
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
