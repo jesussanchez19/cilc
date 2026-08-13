@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AnimateIn from '@/components/shared/AnimateIn';
 import { DIRECCION_POR_DEFECTO } from '@/lib/ubicacion';
+import Certificaciones, { type CertificacionVisible } from '@/components/shared/Certificaciones';
 
 interface SocialLinks {
   facebook?:  string;
@@ -19,6 +20,7 @@ interface FooterProps {
   mainPhone?: string;
   address?: string;
   socialLinks?: SocialLinks;
+  certificaciones?: CertificacionVisible[];
 }
 
 const NAV_COLS = [
@@ -66,6 +68,7 @@ export default function Footer({
   mainPhone = '525518944494',
   address = DIRECCION_POR_DEFECTO,
   socialLinks = {},
+  certificaciones = [],
 }: FooterProps) {
   const hasSocials = Object.values(socialLinks).some(Boolean);
 
@@ -221,21 +224,10 @@ export default function Footer({
         {/* Bottom bar */}
         <div className="pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-            <a
-              href="https://www.icef.com/agency/0012000000UPyYyAAL"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="ICEF Trusted Agency #3797 — verificar acreditación"
-              className="shrink-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
-            >
-              <Image
-                src="/images/logos/icef-badge.png"
-                alt="ICEF Accredited Trusted Agency #3797"
-                width={80}
-                height={80}
-                className="w-16 h-16 object-contain"
-              />
-            </a>
+            {/* Antes había un solo sello, el de ICEF, con su imagen y su enlace
+                escritos aquí: añadir otro exigía tocar código. Ahora salen del
+                Studio y se van turnando. */}
+            <Certificaciones certificaciones={certificaciones} />
 
             <p className="text-slate-600 text-xs text-center">
               © {new Date().getFullYear()} Canadian &amp; International Language Centers. Todos los derechos reservados.

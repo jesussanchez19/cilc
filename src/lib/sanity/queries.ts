@@ -259,6 +259,31 @@ export async function getSocios(): Promise<SanityPartner[]> {
   }
 }
 
+// ── Certificaciones ───────────────────────────────────────────────────────────
+
+export interface SanityCertificacion {
+  _id: string;
+  nombre: string;
+  imagen: { asset: { _ref: string } };
+  url?: string;
+}
+
+/**
+ * Las acreditaciones del pie, en el orden que marque el Studio.
+ *
+ * `cache` porque el pie sale en todas las páginas: sin él, cada render que
+ * incluya el layout repetiría la consulta.
+ */
+export const getCertificaciones = cache(async (): Promise<SanityCertificacion[]> => {
+  try {
+    return await client.fetch(
+      `*[_type == "certificacion" && defined(imagen)] | order(orden asc, nombre asc){ _id, nombre, imagen, url }`,
+    );
+  } catch {
+    return [];
+  }
+});
+
 // ── Programas ─────────────────────────────────────────────────────────────────
 
 export interface SanitySeccion {

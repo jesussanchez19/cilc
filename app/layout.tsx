@@ -17,7 +17,8 @@ import { Toaster } from 'sileo';
 
 import { GA_ID } from '@/lib/analytics';
 import { organizationSchema } from '@/lib/seo/schemas';
-import { getContactInfo, getSearchIndex } from '@/lib/sanity/queries';
+import { getContactInfo, getSearchIndex, getCertificaciones } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
  
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -94,8 +95,24 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Las dos consultas en paralelo: son independientes entre sí.
-  const [contact, searchIndex] = await Promise.all([getContactInfo(), getSearchIndex()]);
+  const [contact, searchIndex, certificacionesSanity] = await Promise.all([
+    getContactInfo(),
+    getSearchIndex(),
+    getCertificaciones(),
+  ]);
   const mainPhone = (contact.telefonos?.find((p) => p.esPrincipal) ?? contact.telefonos?.[0])?.wa;
+
+  /**
+   * Las imágenes se resuelven a URL aquí, en el servidor. El componente que las
+   * rota es de cliente, y pasarle el objeto de Sanity obligaría a arrastrar el
+   * constructor de URLs al navegador para nada.
+   */
+  const certificaciones = certificacionesSanity.map((c) => ({
+    _id: c._id,
+    nombre: c.nombre,
+    url: c.url,
+    imagenUrl: urlFor(c.imagen).width(192).height(192).fit('max').url(),
+  }));
   return (
     <html
       lang="es"
@@ -153,6 +170,7 @@ export default async function RootLayout({
             phones={contact.telefonos}
             mainPhone={mainPhone}
             address={contact.direccion}
+            certificaciones={certificaciones}
             socialLinks={{
               facebook:  contact.facebook,
               instagram: contact.instagram,
