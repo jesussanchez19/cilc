@@ -3,32 +3,30 @@ import { Resend } from 'resend';
 import { FROM_CLIENTE, FROM_WEB } from '@/lib/email/sender';
 import { contactSchema, whatsappLeadSchema } from '@/lib/validations/contact';
 import { saveLead } from '@/lib/leads';
+import { clientIp, isRateLimited } from '@/lib/auth/rateLimit';
 import { contactAdminHtml, contactUserHtml } from '@/lib/email/templates';
 import { getContactInfo } from '@/lib/sanity/queries';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const RATE_LIMIT = new Map<string, { count: number; resetAt: number }>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const entry = RATE_LIMIT.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    RATE_LIMIT.set(ip, { count: 1, resetAt: now + 60 * 60 * 1000 });
-    return false;
-  }
-
-  if (entry.count >= 5) return true;
-
-  entry.count += 1;
-  return false;
-}
+/**
+ * 5 envíos por hora y por IP.
+ *
+ * Antes cada ruta llevaba su propia copia de este limitador —el mismo Map y la
+ * misma función, duplicados— mientras en `lib/auth/rateLimit` ya existía uno
+ * compartido que el login sí usaba. Además de repetir código, las copias
+ * extraían la IP peor: se quedaban con la cabecera `x-forwarded-for` entera, y
+ * cuando hay varios proxies esa cabecera es una lista separada por comas, así
+ * que la clave del cubo cambiaba y el límite se podía esquivar.
+ *
+ * El prefijo mantiene las cuotas separadas: agotar el formulario de contacto no
+ * consume la de cotizaciones, que es como se comportaba con los Map sueltos.
+ */
+const LIMITE = 5;
+const VENTANA_MS = 60 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for') ?? 'unknown';
-
-  if (isRateLimited(ip)) {
+  if (isRateLimited(`contacto:${clientIp(req)}`, LIMITE, VENTANA_MS)) {
     return NextResponse.json(
       { error: 'Demasiados intentos. Intenta de nuevo en una hora.' },
       { status: 429 }

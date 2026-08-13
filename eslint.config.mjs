@@ -22,6 +22,14 @@ const eslintConfig = defineConfig([
      * el bundle y no son nuestros.
      */
     ".claude/**",
+    /**
+     * Salida de Playwright. Ya está en .gitignore, pero el linter no lo lee: si
+     * se pasaba `npm run lint` después de `npm run test:e2e`, el informe HTML
+     * con su JavaScript empaquetado disparaba más de 3.000 avisos y enterraba
+     * los del proyecto.
+     */
+    "playwright-report/**",
+    "test-results/**",
   ]),
 ]);
 
