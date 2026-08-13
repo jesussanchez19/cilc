@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
+import BotonSubir from './BotonSubir';
 import type { SearchDoc } from '@/lib/search';
 
 export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[] }) {
@@ -118,6 +119,8 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
           <div className="hidden sm:block w-64 search-dark shrink-0">
             <SearchBar dark index={searchIndex} />
           </div>
+
+          <BotonSubir />
 
         </div>
       </div>
