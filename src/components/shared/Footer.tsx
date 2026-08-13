@@ -93,7 +93,7 @@ export default function Footer({
                 alt="CILC Logo"
                 width={202}
                 height={160}
-                className="h-14 w-auto object-contain"
+                className="h-20 w-auto object-contain"
               />
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">

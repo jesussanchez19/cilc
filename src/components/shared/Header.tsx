@@ -60,7 +60,10 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
 
       {/* Contenido */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex items-center h-16 gap-4">
+        {/* La barra sube de 64 a 80 px: con el logo a 64 no cabía sin rozar los
+            bordes, y es lo único que fija esta altura — nada más calcula
+            desplazamientos a partir de ella. */}
+        <div className="flex items-center h-20 gap-4">
 
           {/* Logo */}
           <Link href="/" onClick={handleLogoClick} className="flex items-center shrink-0 group">
@@ -75,7 +78,7 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
               width={202}
               height={160}
               priority
-              className="h-12 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
+              className="h-16 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
 
