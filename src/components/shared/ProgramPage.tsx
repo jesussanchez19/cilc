@@ -427,16 +427,6 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
         </div>
         )}
 
-        {/* Gallery — solo si hay fotos de testimonios */}
-        {galleryImages.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
-              Galería del programa
-            </h2>
-            <Carrusel images={galleryImages} accentColor={colors.text.includes('blue') ? '#3b82f6' : '#8b5cf6'} />
-          </div>
-        )}
-
         {/* Destinations — pop in with stagger */}
         <div className="mb-16">
           <h2 className="text-2xl font-extrabold text-slate-900 mb-5" style={{ letterSpacing: '-0.02em' }}>
@@ -476,6 +466,16 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
           </h2>
           <p className="text-slate-600 text-[15px] leading-relaxed">{program.idealFor}</p>
         </div>
+
+        {/* Gallery — solo si hay fotos de testimonios */}
+        {galleryImages.length > 0 && (
+          <div className="mb-16">
+            <h2 className="text-2xl font-extrabold text-slate-900 mb-6" style={{ letterSpacing: '-0.02em' }}>
+              Galería del programa
+            </h2>
+            <Carrusel images={galleryImages} accentColor={colors.text.includes('blue') ? '#3b82f6' : '#8b5cf6'} />
+          </div>
+        )}
 
         {/* Testimonials — blur in with stagger */}
         {testimoniosSanity.length > 0 && (
