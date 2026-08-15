@@ -1,5 +1,6 @@
 @AGENTS.md
-@GRAPH_REPORT.md
+@graphify-out/GRAPH_REPORT.md
+@FLORES_REPORTE_PROGRESS.md
 
 ## Graphify (knowledge graph)
 
