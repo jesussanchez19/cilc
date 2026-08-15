@@ -117,6 +117,32 @@ export const configuracionSchema = defineType({
         }),
     }),
 
+    defineField({
+      name: 'urlQR',
+      title: 'Enlace del código QR',
+      type: 'url',
+      group: 'contacto',
+      /**
+       * El QR se dibuja a partir de esta dirección cada vez que se pinta la
+       * página, en lugar de subir una imagen ya hecha. Así se ve nítido a
+       * cualquier tamaño y, sobre todo, si el formulario cambia de dirección
+       * basta con editar aquí: una imagen subida se quedaría apuntando para
+       * siempre a la dirección vieja.
+       */
+      description:
+        'La página a la que lleva el código QR — normalmente el formulario de ' +
+        'diagnóstico. Si se deja vacío, el código no aparece en ninguna parte.',
+      validation: (r) => r.uri({ scheme: ['https'] }),
+    }),
+    defineField({
+      name: 'textoQR',
+      title: 'Texto junto al código QR',
+      type: 'string',
+      group: 'contacto',
+      description: 'Ej: "Escanea y descubre tu destino ideal". Si se deja vacío se usa uno por defecto.',
+      validation: (r) => r.max(90),
+    }),
+
     // ── Redes sociales ─────────────────────────────────────────────────────────
     defineField({
       name: 'facebook',
