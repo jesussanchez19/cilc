@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import createMDX from '@next/mdx';
+import { programs } from './src/lib/data/programs';
 
 const securityHeaders = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
@@ -45,12 +46,14 @@ const nextConfig: NextConfig = {
     return [
       { source: '/countries',    destination: '/destinos',    permanent: true },
       { source: '/countries/:id',destination: '/destinos/:id',permanent: true },
-      { source: '/idiomas',               destination: '/programas/idiomas',               permanent: true },
-      { source: '/au-pair',               destination: '/programas/au-pair',               permanent: true },
-      { source: '/anos-academicos',       destination: '/programas/anos-academicos',       permanent: true },
-      { source: '/estudia-trabaja',       destination: '/programas/estudia-trabaja',       permanent: true },
-      { source: '/formacion-corporativa', destination: '/programas/formacion-corporativa', permanent: true },
-      { source: '/idiomas-en-linea',      destination: '/programas/idiomas-en-linea',      permanent: true },
+      /* Las rutas antiguas de cada programa, sin `/programas`. Se derivan de la
+         misma lista que todo lo demás para que un programa nuevo traiga su
+         redirección sin que haya que acordarse de añadirla. */
+      ...programs.map((p) => ({
+        source: `/${p.slug}`,
+        destination: `/programas/${p.slug}`,
+        permanent: true,
+      })),
     ];
   },
 };

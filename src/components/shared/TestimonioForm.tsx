@@ -5,8 +5,8 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { sileo } from 'sileo';
 import { trackTestimonialSubmit } from '@/lib/analytics';
+import { PROGRAM_NAMES } from '@/lib/data/programs';
 
-const PROGRAMAS =['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
 export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess, waPrincipal }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void; /** Numero wa.me: llega como prop porque este componente es de cliente. */ waPrincipal: string }) {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
@@ -161,7 +161,7 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
           <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
           <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
             <option value="">Selecciona un programa</option>
-            {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+            {PROGRAM_NAMES.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
       ) : (
@@ -170,7 +170,7 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
             <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
               <option value="">Selecciona un programa</option>
-              {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+              {PROGRAM_NAMES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </div>
           {form.programa && (

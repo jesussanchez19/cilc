@@ -4,17 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { sileo } from 'sileo';
 import { quoteSchema } from '@/lib/validations/quote';
 import { trackLead } from '@/lib/analytics';
+import { PROGRAM_NAMES } from '@/lib/data/programs';
 
 type FieldErrors = Partial<Record<'nombre' | 'email' | 'telefono' | 'programa', string>>;
 
-const PROGRAMAS = [
-  'Idiomas',
-  'Au Pair',
-  'Años Académicos',
-  'Estudia y Trabaja',
-  'Formación Corporativa',
-  'Idiomas en Línea',
-];
 
 type Status = 'idle' | 'loading';
 
@@ -171,7 +164,7 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
                   className={`input-field ${errors.programa ? 'border-red-400 focus:ring-red-300' : ''}`}
                 >
                   <option value="">Selecciona un programa</option>
-                  {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+                  {PROGRAM_NAMES.map((p) => <option key={p} value={p}>{p}</option>)}
                 </select>
                 {errors.programa && <p className="mt-1.5 text-xs text-red-500">{errors.programa}</p>}
               </div>

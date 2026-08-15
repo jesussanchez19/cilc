@@ -1,13 +1,5 @@
 import { defineField, defineType } from 'sanity';
-
-const PROGRAMAS = [
-  { title: 'Idiomas',               value: 'idiomas' },
-  { title: 'Au Pair',               value: 'au-pair' },
-  { title: 'Años Académicos',       value: 'anos-academicos' },
-  { title: 'Estudia y Trabaja',     value: 'estudia-trabaja' },
-  { title: 'Formación Corporativa', value: 'formacion-corporativa' },
-  { title: 'Idiomas en Línea',      value: 'idiomas-en-linea' },
-];
+import { PROGRAM_OPTIONS as PROGRAMAS } from '@/lib/data/programs';
 
 export const destinoSchema = defineType({
   name: 'destino',

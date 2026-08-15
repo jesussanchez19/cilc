@@ -4,16 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useFloatingChromeVisible } from '@/hooks/useFloatingChromeVisible';
+import { PROGRAM_LINKS } from '@/lib/data/programs';
 
+/** Los programas salen de la lista central; solo se rodean de Inicio y Contacto. */
 const NAV_LINKS = [
-  { href: '/',                               label: 'Inicio' },
-  { href: '/programas/idiomas',               label: 'Idiomas' },
-  { href: '/programas/au-pair',               label: 'Au Pair' },
-  { href: '/programas/anos-academicos',       label: 'Años Académicos' },
-  { href: '/programas/estudia-trabaja',       label: 'Estudia y Trabaja' },
-  { href: '/programas/formacion-corporativa', label: 'Formación Corporativa' },
-  { href: '/programas/idiomas-en-linea',      label: 'Idiomas en Línea' },
-  { href: '/contact',                         label: 'Contacto' },
+  { href: '/', label: 'Inicio' },
+  ...PROGRAM_LINKS,
+  { href: '/contact', label: 'Contacto' },
 ];
 
 export default function Navigation() {

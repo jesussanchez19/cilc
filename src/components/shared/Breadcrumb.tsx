@@ -2,14 +2,11 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { PROGRAM_LABELS, PROGRAM_LEGACY_PATHS } from '@/lib/data/programs';
 
 const LABELS: Record<string, string> = {
-  'idiomas':               'Idiomas',
-  'au-pair':               'Au Pair',
-  'anos-academicos':       'Años Académicos',
-  'estudia-trabaja':       'Estudia y Trabaja',
-  'formacion-corporativa': 'Formación Corporativa',
-  'idiomas-en-linea':      'Idiomas en Línea',
+  // Los programas, desde la lista central.
+  ...PROGRAM_LABELS,
   'countries':             'Destinos',
   'destinos':              'Destinos',
   'universities':          'Universidades',
@@ -19,8 +16,7 @@ const LABELS: Record<string, string> = {
 };
 
 const VISIBLE_PREFIXES = [
-  '/idiomas', '/au-pair', '/anos-academicos', '/estudia-trabaja',
-  '/formacion-corporativa', '/idiomas-en-linea',
+  ...PROGRAM_LEGACY_PATHS,
   '/countries', '/destinos', '/universities', '/contact', '/blog', '/buscar',
 ];
 

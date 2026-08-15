@@ -1,4 +1,5 @@
 import { defineField, defineType } from 'sanity';
+import { PROGRAM_NAMES } from '@/lib/data/programs';
 
 export const testimonialSchema = defineType({
   name: 'testimonial',
@@ -9,7 +10,7 @@ export const testimonialSchema = defineType({
     defineField({ name: 'foto', title: 'Foto', type: 'image', options: { hotspot: true } }),
     defineField({
       name: 'programa', title: 'Programa', type: 'string',
-      options: { list: ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'] },
+      options: { list: PROGRAM_NAMES },
       validation: (r) => r.required(),
     }),
     defineField({ name: 'pais', title: 'País', type: 'string', validation: (r) => r.required() }),

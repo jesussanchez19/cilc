@@ -457,6 +457,59 @@ export const programs: Program[] = [
       },
     ],
   },
+  {
+    id: 'cursos',
+    slug: 'cursos',
+    title: 'Cursos',
+    subtitle: 'Cursos cortos y especializados en el extranjero para sumar una habilidad concreta',
+    description:
+      'Programas breves y enfocados para quien no busca un año académico ni un curso de idioma general, sino una formación concreta: una certificación, una especialidad o una habilidad profesional, cursada fuera de México y con reconocimiento internacional.',
+    icon: '📚',
+    color: 'orange',
+    countries: ['Canadá', 'Estados Unidos', 'Inglaterra', 'Irlanda', 'Australia', 'España'],
+    duration: 'De 1 a 12 semanas',
+    ageRange: '18 años en adelante',
+    highlights: [
+      'Programas cortos, de una a doce semanas',
+      'Instituciones acreditadas internacionalmente',
+      'Certificado o constancia oficial al terminar',
+      'Compatibles con vacaciones o periodos entre ciclos',
+      'Opción de combinarlos con un curso de idioma',
+      'Sin requisito de año académico completo',
+    ],
+    includes: [
+      'Asesoría para elegir el curso según tu objetivo',
+      'Inscripción ante la institución',
+      'Gestión de visa cuando el programa la requiere',
+      'Opciones de alojamiento',
+      'Seguro médico internacional',
+      'Acompañamiento antes, durante y después del viaje',
+    ],
+    idealFor:
+      'Profesionistas que quieren sumar una certificación internacional, estudiantes universitarios que buscan aprovechar un periodo vacacional, y quienes desean probar la experiencia en el extranjero antes de comprometerse con un programa largo.',
+    whatsappMessage:
+      'Hola, me interesan los Cursos cortos en el extranjero de CILC. ¿Qué opciones hay y cuánto duran?',
+    sections: [
+      {
+        title: 'Qué tipo de cursos',
+        description: 'La oferta varía por destino e institución. Estas son las áreas más solicitadas.',
+        items: [
+          'Certificaciones profesionales',
+          'Cursos de especialidad académica',
+          'Programas de verano en universidad',
+          'Talleres y cursos técnicos',
+        ],
+      },
+      {
+        title: 'Cómo se combina con otros programas',
+        items: [
+          'Curso de idioma antes del curso de especialidad',
+          'Curso corto como antesala de un año académico',
+          'Formato intensivo en periodo vacacional',
+        ],
+      },
+    ],
+  },
 ];
 
 export const programColorMap: Record<string, { bg: string; text: string; light: string; border: string }> = {
@@ -467,3 +520,37 @@ export const programColorMap: Record<string, { bg: string; text: string; light: 
   orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200' },
   teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200' },
 };
+
+/* ── Listas derivadas ─────────────────────────────────────────────────────────
+   Antes cada sitio que necesitaba "la lista de programas" escribía la suya:
+   los dos formularios, tres esquemas de Sanity, la navegación, el pie, las
+   migas y la estructura del Studio. Once copias que había que recordar tocar a
+   la vez, y bastaba olvidar una para que un programa existiera en el menú pero
+   no en el desplegable de cotización.
+
+   Ahora salen todas de `programs`, que es la única lista de verdad. Añadir un
+   programa es añadirlo ahí y ya. */
+
+/** Los nombres, para los desplegables de los formularios y las opciones del CMS. */
+export const PROGRAM_NAMES: string[] = programs.map((p) => p.title);
+
+/** Enlace y etiqueta, para la navegación y el pie. */
+export const PROGRAM_LINKS: { href: string; label: string }[] = programs.map((p) => ({
+  href: `/programas/${p.slug}`,
+  label: p.title,
+}));
+
+/** `slug → título`, para que las migas muestren un nombre legible. */
+export const PROGRAM_LABELS: Record<string, string> = Object.fromEntries(
+  programs.map((p) => [p.slug, p.title]),
+);
+
+/** Las rutas antiguas, sin `/programas`, que siguen redirigiendo. */
+export const PROGRAM_LEGACY_PATHS: string[] = programs.map((p) => `/${p.slug}`);
+
+/** `{ title, value }` con el slug como valor, para los desplegables del Studio
+ *  que guardan el identificador y no el nombre. */
+export const PROGRAM_OPTIONS: { title: string; value: string }[] = programs.map((p) => ({
+  title: p.title,
+  value: p.slug,
+}));
