@@ -11,7 +11,10 @@ import {
   getTestimoniosPorPrograma,
   getDestinosPorPrograma,
   getWhatsAppPrincipal,
+  getContactInfo,
 } from '@/lib/sanity/queries';
+import QrFlotante from '@/components/shared/QrFlotante';
+import { generarQrSvg } from '@/lib/qr';
 import { urlFor } from '@/lib/sanity/image';
 
 interface Props {
@@ -37,11 +40,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ProgramaPage({ params }: Props) {
   const { slug } = await params;
 
-  const [sanity, destinos, waPrincipal] = await Promise.all([
+  const [sanity, destinos, waPrincipal, contacto] = await Promise.all([
     getProgramaData(slug),
     getDestinosPorPrograma(slug),
     getWhatsAppPrincipal(),
+    getContactInfo(),
   ]);
+
+  // El QR se dibuja aquí, en el servidor, y viaja como marcado ya hecho: así el
+  // navegador no descarga la librería que lo genera.
+  const qrSvg = await generarQrSvg(contacto.urlQR);
 
   const base = programs.find((p) => p.slug === slug);
   if (!base && !sanity) notFound();
@@ -102,6 +110,14 @@ export default async function ProgramaPage({ params }: Props) {
         testimoniosSanity={testimonios}
         destinosSanity={destinos.length ? destinos : undefined}
       />
+
+      {qrSvg && contacto.urlQR && (
+        <QrFlotante
+          svg={qrSvg}
+          url={contacto.urlQR}
+          texto={contacto.textoQR ?? 'Escanea y descubre tu destino ideal'}
+        />
+      )}
     </>
   );
 }

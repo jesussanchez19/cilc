@@ -119,6 +119,8 @@ export interface SanityContactInfo {
   telefonos?: { display: string; wa: string; esPrincipal?: boolean }[];
   direccion?: string;
   urlMapa?: string;
+  urlQR?: string;
+  textoQR?: string;
   facebook?: string;
   instagram?: string;
   linkedin?: string;
@@ -152,7 +154,7 @@ export const getContactInfo = cache(async (): Promise<SanityContactInfo> => {
   try {
     const result = await client.fetch<SanityContactInfo | null>(
       `*[_type == "configuracion" && _id == "configuracion-singleton"][0]{
-        emailAdmin, emailSeguridad, telefonos, direccion, urlMapa,
+        emailAdmin, emailSeguridad, telefonos, direccion, urlMapa, urlQR, textoQR,
         facebook, instagram, linkedin, youtube, tiktok
       }`,
     );
