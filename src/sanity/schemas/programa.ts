@@ -1,13 +1,5 @@
 import { defineField, defineType } from 'sanity';
-
-const COLORES = [
-  { title: 'Azul',     value: 'blue'   },
-  { title: 'Rosa',     value: 'pink'   },
-  { title: 'Morado',   value: 'purple' },
-  { title: 'Verde',    value: 'green'  },
-  { title: 'Naranja',  value: 'orange' },
-  { title: 'Teal',     value: 'teal'   },
-];
+import { COLOR_OPTIONS as COLORES } from '@/lib/data/programs';
 
 /**
  * Los límites de longitud están puestos según lo que soporta el diseño de la
