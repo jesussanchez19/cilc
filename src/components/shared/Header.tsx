@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import SearchBar from './SearchBar';
+import BotonSubir from './BotonSubir';
 import type { SearchDoc } from '@/lib/search';
 
 export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[] }) {
@@ -60,16 +61,28 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
 
       {/* Contenido */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="flex items-center h-16 gap-4">
+        {/* 96 px de barra para un logo de 64.
+            Con 80 el logo no llegaba a cortarse —quedaban 8 px arriba y abajo—
+            pero llenaba tanto la barra que parecía recortado: la punta del
+            avión casi tocaba el borde. Con 96 quedan 16 px por lado y el
+            dibujo respira. Es lo único que fija esta altura; nada más calcula
+            desplazamientos a partir de ella. */}
+        <div className="flex items-center h-24 gap-4">
 
           {/* Logo */}
           <Link href="/" onClick={handleLogoClick} className="flex items-center shrink-0 group">
+            {/* Las medidas declaradas eran 120×40, una proporción de 3:1 que no
+                es la del archivo: logo.png es 1006×799, o sea 1.26:1. No se
+                deformaba porque `object-contain` lo corrige, pero Next generaba
+                la versión optimizada a partir de un tamaño equivocado. Ahora
+                van en la proporción real y con holgura para pantallas retina. */}
             <Image
               src="/logo.png"
               alt="CILC Logo"
-              width={120}
-              height={40}
-              className="h-10 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
+              width={202}
+              height={160}
+              priority
+              className="h-16 w-auto object-contain transition-opacity duration-200 group-hover:opacity-80"
             />
           </Link>
 
@@ -106,6 +119,8 @@ export default function Header({ searchIndex = [] }: { searchIndex?: SearchDoc[]
           <div className="hidden sm:block w-64 search-dark shrink-0">
             <SearchBar dark index={searchIndex} />
           </div>
+
+          <BotonSubir />
 
         </div>
       </div>

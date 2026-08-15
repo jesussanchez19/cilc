@@ -34,6 +34,13 @@ export default function QuoteModal({ isOpen, onClose, programaInicial = '' }: Qu
   const [errors,   setErrors]   = useState<FieldErrors>({});
   const overlayRef = useRef<HTMLDivElement>(null);
 
+  /**
+   * El modal se abre desde distintas páginas de programa y conserva su estado
+   * entre aperturas, así que hay que resincronizar el programa preseleccionado
+   * cuando cambia la prop. Sin esto, abrirlo desde "Au Pair" después de haberlo
+   * abierto desde "Idiomas" mostraría Idiomas.
+   */
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setPrograma(programaInicial); }, [programaInicial]);
 
   useEffect(() => {

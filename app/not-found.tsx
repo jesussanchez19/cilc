@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function NotFound() {
   return (
     <div className="py-32 text-center">
@@ -7,12 +9,14 @@ export default function NotFound() {
         <p className="text-gray-600 mb-8">
           Lo sentimos, la página que buscas no existe.
         </p>
-        <a
+        {/* `Link` y no `<a>`: con `<a>` el navegador recarga la aplicación
+            entera para volver a la portada, perdiendo el enrutado del cliente. */}
+        <Link
           href="/"
           className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700 transition"
         >
           Volver al Inicio
-        </a>
+        </Link>
       </div>
     </div>
   );

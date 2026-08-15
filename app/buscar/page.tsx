@@ -87,7 +87,7 @@ export default async function BuscarPage({ searchParams }: BuscarPageProps) {
 
         {totalResults === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center border border-gray-100">
-            <p className="text-lg text-gray-500 font-medium mb-1">No encontramos resultados para "{q}"</p>
+            <p className="text-lg text-gray-500 font-medium mb-1">No encontramos resultados para &ldquo;{q}&rdquo;</p>
             <p className="text-gray-400 text-sm">Intenta con otra palabra clave o revisa la ortografía.</p>
           </div>
         ) : (

@@ -17,7 +17,8 @@ import { Toaster } from 'sileo';
 
 import { GA_ID } from '@/lib/analytics';
 import { organizationSchema } from '@/lib/seo/schemas';
-import { getContactInfo, getSearchIndex } from '@/lib/sanity/queries';
+import { getContactInfo, getSearchIndex, getCertificaciones } from '@/lib/sanity/queries';
+import { urlFor } from '@/lib/sanity/image';
  
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -94,8 +95,37 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   // Las dos consultas en paralelo: son independientes entre sí.
-  const [contact, searchIndex] = await Promise.all([getContactInfo(), getSearchIndex()]);
+  const [contact, searchIndex, certificacionesSanity] = await Promise.all([
+    getContactInfo(),
+    getSearchIndex(),
+    getCertificaciones(),
+  ]);
   const mainPhone = (contact.telefonos?.find((p) => p.esPrincipal) ?? contact.telefonos?.[0])?.wa;
+
+  /**
+   * Las imágenes se resuelven a URL aquí, en el servidor. El componente que las
+   * rota es de cliente, y pasarle el objeto de Sanity obligaría a arrastrar el
+   * constructor de URLs al navegador para nada.
+   */
+  const certificaciones = certificacionesSanity.map((c) => ({
+    _id: c._id,
+    nombre: c.nombre,
+    url: c.url,
+    /**
+     * Solo se pide el ancho, nunca ancho y alto a la vez.
+     *
+     * Con los dos, Sanity entiende que quieres esa proporción exacta y recorta
+     * para conseguirla: al sello de ICEF, que es 650×762, le metía un
+     * `rect=0,56,650,650` que le cortaba 56 px por arriba y 56 por abajo y se
+     * comía el "TRUSTED AGENCY" de la parte inferior. Con una sola medida
+     * conserva la proporción original, y del encuadre final ya se ocupa el
+     * `object-contain` de la caja.
+     *
+     * 256 y no 96: el sello se ve a 96 px, que en una pantalla retina son 192
+     * reales, y así queda margen.
+     */
+    imagenUrl: urlFor(c.imagen).width(256).fit('max').url(),
+  }));
   return (
     <html
       lang="es"
@@ -153,6 +183,7 @@ export default async function RootLayout({
             phones={contact.telefonos}
             mainPhone={mainPhone}
             address={contact.direccion}
+            certificaciones={certificaciones}
             socialLinks={{
               facebook:  contact.facebook,
               instagram: contact.instagram,

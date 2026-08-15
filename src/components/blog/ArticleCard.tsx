@@ -4,12 +4,22 @@ import Link from 'next/link';
 import type { SanityPost } from '@/lib/sanity/queries';
 import { urlFor } from '@/lib/sanity/image';
 
-const FALLBACK = '/images/blog/placeholder.png';
-
-function getImageSrc(post: SanityPost): string {
-  if (post.tipo === 'externo') return post.imagenUrl || FALLBACK;
+/**
+ * La URL de la portada, o null si el artículo no tiene ninguna.
+ *
+ * Antes esto devolvía siempre algo: a falta de imagen, la ruta
+ * `/images/blog/placeholder.png`. Pero ese archivo no existe —la carpeta
+ * `public/images/blog/` tampoco—, así que la petición daba 404, el `onError`
+ * reintentaba la MISMA ruta rota y la tarjeta acababa enseñando el icono de
+ * imagen partida con el título encima. Con el blog vacío nunca se vio.
+ *
+ * Ahora, sin imagen se devuelve null y la tarjeta dibuja un marcador propio:
+ * ni peticiones fallidas ni archivo que mantener.
+ */
+function getImageSrc(post: SanityPost): string | null {
+  if (post.tipo === 'externo') return post.imagenUrl || null;
   if (post.image) return urlFor(post.image).width(800).height(400).fit('crop').url();
-  return FALLBACK;
+  return null;
 }
 
 export default function ArticleCard({ post }: { post: SanityPost }) {
@@ -35,13 +45,30 @@ export default function ArticleCard({ post }: { post: SanityPost }) {
 
         {/* Image */}
         <div className="relative h-52 overflow-hidden shrink-0 bg-slate-100">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={imgSrc}
-            alt={post.title}
-            onError={(e) => { (e.currentTarget as HTMLImageElement).src = FALLBACK; }}
-            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-          />
+          {imgSrc ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              src={imgSrc}
+              alt={post.title}
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            />
+          ) : (
+            /* Marcador para artículos sin portada. Decorativo, así que va
+               `aria-hidden`: el título ya está en el texto de la tarjeta y
+               repetirlo aquí solo haría que un lector de pantalla lo dijera
+               dos veces. */
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, var(--blue-900) 0%, var(--blue-600) 100%)' }}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={1.25}
+                strokeLinecap="round" strokeLinejoin="round" className="w-12 h-12">
+                <path d="M4 5h16v14H4zM4 15l4.5-4.5 3.5 3.5 3-3L20 16" />
+                <circle cx="9" cy="9" r="1.5" />
+              </svg>
+            </div>
+          )}
           <div className="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
           <div className="absolute top-3 left-3 flex gap-1.5">

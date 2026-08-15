@@ -28,13 +28,26 @@ export default function GaleriaGrid({ fotos }: { fotos: FotoGaleria[] }) {
     [filtro, fotos],
   );
 
+  /**
+   * Poner `false` y volver a `true` reinicia la animación escalonada de la
+   * rejilla al cambiar el filtro. La regla avisa del render en cascada, pero
+   * aquí es justo el efecto buscado: sin el paso por `false`, las tarjetas
+   * nuevas aparecen de golpe porque el CSS ya las considera reveladas.
+   * Es un render extra por cambio de filtro, no por fotograma.
+   */
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGridVisible(false);
     const t = setTimeout(() => setGridVisible(true), 40);
     return () => clearTimeout(t);
   }, [fotosFiltradas]);
 
+  /**
+   * Revelado al montar. No puede ser el estado inicial: si la rejilla naciera
+   * visible, el CSS no tendría de dónde animar y las fotos aparecerían secas.
+   */
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGridVisible(true);
   }, []);
 

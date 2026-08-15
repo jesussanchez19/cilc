@@ -221,9 +221,15 @@ export async function getPosts(): Promise<SanityPost[]> {
 
 export async function getLatestPosts(count: number): Promise<SanityPost[]> {
   try {
+    /**
+     * `[0...n]` en GROQ es exclusivo por arriba: `[0...3]` devuelve los índices
+     * 0, 1 y 2, o sea tres elementos. Aquí se pasaba `count - 1`, así que pedir
+     * 3 artículos traía 2 y la portada enseñaba una fila coja en una rejilla de
+     * tres columnas. No se había notado porque el blog estuvo vacío.
+     */
     return await client.fetch(
       `*[_type == "blogPost" && visible != false] | order(date desc) [0...$count]`,
-      { count: count - 1 },
+      { count },
     );
   } catch {
     return [];
@@ -258,6 +264,31 @@ export async function getSocios(): Promise<SanityPartner[]> {
     return [];
   }
 }
+
+// ── Certificaciones ───────────────────────────────────────────────────────────
+
+export interface SanityCertificacion {
+  _id: string;
+  nombre: string;
+  imagen: { asset: { _ref: string } };
+  url?: string;
+}
+
+/**
+ * Las acreditaciones del pie, en el orden que marque el Studio.
+ *
+ * `cache` porque el pie sale en todas las páginas: sin él, cada render que
+ * incluya el layout repetiría la consulta.
+ */
+export const getCertificaciones = cache(async (): Promise<SanityCertificacion[]> => {
+  try {
+    return await client.fetch(
+      `*[_type == "certificacion" && defined(imagen)] | order(orden asc, nombre asc){ _id, nombre, imagen, url }`,
+    );
+  } catch {
+    return [];
+  }
+});
 
 // ── Programas ─────────────────────────────────────────────────────────────────
 

@@ -125,7 +125,7 @@ export default async function TerminosPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-3">8. Uso del sitio web</h2>
           <p>
-            El sitio web se proporciona "tal como está". CILC no garantiza disponibilidad ininterrumpida ni
+            El sitio web se proporciona &ldquo;tal como está&rdquo;. CILC no garantiza disponibilidad ininterrumpida ni
             ausencia de errores. Nos reservamos el derecho de modificar, suspender o discontinuar cualquier
             parte del sitio sin previo aviso.
           </p>

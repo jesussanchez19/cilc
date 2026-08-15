@@ -37,7 +37,15 @@ export default function CountryGrid({ countries, columns = 3 }: CountryGridProps
   [countries, regionFilter, langFilter]);
 
   // Re-trigger stagger animation whenever the filtered list changes
+  /**
+   * Poner `false` y volver a `true` reinicia la animación escalonada de la
+   * rejilla al cambiar el filtro. La regla avisa del render en cascada, pero
+   * aquí es justo el efecto buscado: sin el paso por `false`, las tarjetas
+   * nuevas aparecen de golpe porque el CSS ya las considera reveladas.
+   * Es un render extra por cambio de filtro, no por fotograma.
+   */
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setGridVisible(false);
     const t = setTimeout(() => setGridVisible(true), 40);
     return () => clearTimeout(t);
