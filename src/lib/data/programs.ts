@@ -465,7 +465,7 @@ export const programs: Program[] = [
     description:
       'Cursos cortos en Canadá para quien no busca un año académico ni un curso de idioma general, sino una habilidad concreta: marketing digital, inteligencia artificial, servicio al cliente o inglés de negocios. Formación aplicada, en semanas y no en años, con certificado al terminar.',
     icon: '📚',
-    color: 'orange',
+    color: 'fuchsia',
     countries: ['Canadá'],
     duration: 'De 1 a 12 semanas',
     ageRange: '18 años en adelante',
@@ -519,6 +519,12 @@ export const programColorMap: Record<string, { bg: string; text: string; light: 
   green:  { bg: 'bg-green-600',  text: 'text-green-600',  light: 'bg-green-50',  border: 'border-green-200' },
   orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200' },
   teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200' },
+  /* Fucsia se eligió midiendo, no a ojo: de los colores libres es el que más
+     se aleja de los seis ya usados (ΔE 9.7 con el morado, su vecino más
+     cercano) entre los que además pasan el 4.5:1 de contraste que necesita el
+     texto. Amarillo y cielo se separaban más pero se quedaban en 2.94:1 y
+     4.10:1, y el gris parece un programa desactivado. */
+  fuchsia:{ bg: 'bg-fuchsia-600', text: 'text-fuchsia-600', light: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
 };
 
 /* ── Listas derivadas ─────────────────────────────────────────────────────────
