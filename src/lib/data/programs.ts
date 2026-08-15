@@ -461,21 +461,21 @@ export const programs: Program[] = [
     id: 'cursos',
     slug: 'cursos',
     title: 'Cursos',
-    subtitle: 'Cursos cortos y especializados en el extranjero para sumar una habilidad concreta',
+    subtitle: 'Cursos cortos en Canadá para sumar una habilidad concreta a tu perfil',
     description:
-      'Programas breves y enfocados para quien no busca un año académico ni un curso de idioma general, sino una formación concreta: una certificación, una especialidad o una habilidad profesional, cursada fuera de México y con reconocimiento internacional.',
+      'Cursos cortos en Canadá para quien no busca un año académico ni un curso de idioma general, sino una habilidad concreta: marketing digital, inteligencia artificial, servicio al cliente o inglés de negocios. Formación aplicada, en semanas y no en años, con certificado al terminar.',
     icon: '📚',
     color: 'orange',
-    countries: ['Canadá', 'Estados Unidos', 'Inglaterra', 'Irlanda', 'Australia', 'España'],
+    countries: ['Canadá'],
     duration: 'De 1 a 12 semanas',
     ageRange: '18 años en adelante',
     highlights: [
+      'Marketing Digital, Inteligencia Artificial, Servicio al Cliente e Inglés de Negocios',
       'Programas cortos, de una a doce semanas',
-      'Instituciones acreditadas internacionalmente',
-      'Certificado o constancia oficial al terminar',
+      'Instituciones canadienses acreditadas',
+      'Certificado oficial al terminar',
       'Compatibles con vacaciones o periodos entre ciclos',
       'Opción de combinarlos con un curso de idioma',
-      'Sin requisito de año académico completo',
     ],
     includes: [
       'Asesoría para elegir el curso según tu objetivo',
@@ -486,18 +486,18 @@ export const programs: Program[] = [
       'Acompañamiento antes, durante y después del viaje',
     ],
     idealFor:
-      'Profesionistas que quieren sumar una certificación internacional, estudiantes universitarios que buscan aprovechar un periodo vacacional, y quienes desean probar la experiencia en el extranjero antes de comprometerse con un programa largo.',
+      'Profesionistas que quieren sumar una habilidad concreta —marketing digital, IA, atención a clientes o inglés de negocios— con certificado internacional; estudiantes universitarios que aprovechan un periodo vacacional; y quienes quieren probar la experiencia en Canadá antes de comprometerse con un programa largo.',
     whatsappMessage:
-      'Hola, me interesan los Cursos cortos en el extranjero de CILC. ¿Qué opciones hay y cuánto duran?',
+      'Hola, me interesan los Cursos cortos en Canadá de CILC (Marketing Digital, IA, Servicio al Cliente o Inglés de Negocios). ¿Qué opciones hay y cuánto duran?',
     sections: [
       {
-        title: 'Qué tipo de cursos',
-        description: 'La oferta varía por destino e institución. Estas son las áreas más solicitadas.',
+        title: 'Cursos cortos disponibles en Canadá',
+        description: 'Cuatro áreas, todas con enfoque práctico y certificado al terminar.',
         items: [
-          'Certificaciones profesionales',
-          'Cursos de especialidad académica',
-          'Programas de verano en universidad',
-          'Talleres y cursos técnicos',
+          'Marketing Digital',
+          'Inteligencia Artificial',
+          'Servicio al Cliente',
+          'Inglés de Negocios',
         ],
       },
       {
