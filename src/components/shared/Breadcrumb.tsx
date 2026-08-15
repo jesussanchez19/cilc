@@ -7,6 +7,7 @@ import { PROGRAM_LABELS, PROGRAM_LEGACY_PATHS } from '@/lib/data/programs';
 const LABELS: Record<string, string> = {
   // Los programas, desde la lista central.
   ...PROGRAM_LABELS,
+  'programas':             'Programas',
   'countries':             'Destinos',
   'destinos':              'Destinos',
   'universities':          'Universidades',
@@ -15,12 +16,24 @@ const LABELS: Record<string, string> = {
   'buscar':                'Resultados',
 };
 
+/**
+ * Dónde se muestran las migas.
+ *
+ * Faltaba `/programas`, así que las migas llevaban tiempo sin aparecer en
+ * ninguna página de programa: la lista solo tenía las rutas antiguas
+ * —`/idiomas`, `/au-pair`…— y `'/programas/idiomas'.startsWith('/idiomas')` es
+ * falso. Las rutas viejas se conservan porque siguen redirigiendo.
+ */
 const VISIBLE_PREFIXES = [
+  '/programas',
   ...PROGRAM_LEGACY_PATHS,
   '/countries', '/destinos', '/universities', '/contact', '/blog', '/buscar',
 ];
 
-const SITE_URL = 'https://www.cilc.com.mx';
+/* Estaba escrito a mano y apuntaba a `cilc.com.mx`, un dominio que no es de
+   CILC. Iba dentro de los datos estructurados de las migas, así que a Google le
+   estábamos declarando rutas de otro sitio. */
+import { SITE_URL } from '@/lib/siteUrl';
 
 export default function Breadcrumb() {
   const pathname = usePathname();

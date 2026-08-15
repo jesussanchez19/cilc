@@ -2,14 +2,9 @@ import Link from 'next/link';
 import { programs, programColorMap } from '@/lib/data/programs';
 import AnimateIn from '@/components/shared/AnimateIn';
 
-const programImages: Record<string, string> = {
-  'idiomas':               '/images/programs/idiomas.png',
-  'au-pair':               '/images/programs/au-pair.png',
-  'anos-academicos':       '/images/programs/anos-academicos.png',
-  'estudia-trabaja':       '/images/programs/estudia-trabaja.png',
-  'formacion-corporativa': '/images/programs/formacion-corporativa.png',
-  'idiomas-en-linea':      '/images/programs/idiomas-en-linea.png',
-};
+/* La ruta siempre era `/images/programs/<slug>.png`, así que el mapa solo
+   repetía el slug seis veces. Se calcula. */
+const imagenDePrograma = (slug: string) => `/images/programs/${slug}.png`;
 
 export default function FeaturedPrograms() {
   return (
@@ -37,7 +32,7 @@ export default function FeaturedPrograms() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {programs.map((program, i) => {
             const colors = programColorMap[program.color];
-            const imgSrc = programImages[program.slug] ?? '';
+            const imgSrc = imagenDePrograma(program.slug);
 
             return (
               <AnimateIn key={program.id} animation="scale" delay={i * 90} className="h-full">

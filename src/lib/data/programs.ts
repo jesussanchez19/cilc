@@ -512,19 +512,21 @@ export const programs: Program[] = [
   },
 ];
 
-export const programColorMap: Record<string, { bg: string; text: string; light: string; border: string }> = {
-  blue:   { bg: 'bg-blue-600',   text: 'text-blue-600',   light: 'bg-blue-50',   border: 'border-blue-200' },
-  pink:   { bg: 'bg-pink-500',   text: 'text-pink-600',   light: 'bg-pink-50',   border: 'border-pink-200' },
-  purple: { bg: 'bg-purple-600', text: 'text-purple-600', light: 'bg-purple-50', border: 'border-purple-200' },
-  green:  { bg: 'bg-green-600',  text: 'text-green-600',  light: 'bg-green-50',  border: 'border-green-200' },
-  orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200' },
-  teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200' },
+/** `hex` es el mismo color en crudo, para donde no se pueden usar clases de
+ *  Tailwind — la página de destino lo pinta en un estilo en línea. */
+export const programColorMap: Record<string, { bg: string; text: string; light: string; border: string; hex: string }> = {
+  blue:   { bg: 'bg-blue-600',   text: 'text-blue-600',   light: 'bg-blue-50',   border: 'border-blue-200',   hex: '#1B67E8' },
+  pink:   { bg: 'bg-pink-500',   text: 'text-pink-600',   light: 'bg-pink-50',   border: 'border-pink-200',   hex: '#ec4899' },
+  purple: { bg: 'bg-purple-600', text: 'text-purple-600', light: 'bg-purple-50', border: 'border-purple-200', hex: '#8b5cf6' },
+  green:  { bg: 'bg-green-600',  text: 'text-green-600',  light: 'bg-green-50',  border: 'border-green-200',  hex: '#10b981' },
+  orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200', hex: '#f59e0b' },
+  teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200',   hex: '#06b6d4' },
   /* Fucsia se eligió midiendo, no a ojo: de los colores libres es el que más
      se aleja de los seis ya usados (ΔE 9.7 con el morado, su vecino más
      cercano) entre los que además pasan el 4.5:1 de contraste que necesita el
      texto. Amarillo y cielo se separaban más pero se quedaban en 2.94:1 y
      4.10:1, y el gris parece un programa desactivado. */
-  fuchsia:{ bg: 'bg-fuchsia-600', text: 'text-fuchsia-600', light: 'bg-fuchsia-50', border: 'border-fuchsia-200' },
+  fuchsia:{ bg: 'bg-fuchsia-600', text: 'text-fuchsia-600', light: 'bg-fuchsia-50', border: 'border-fuchsia-200', hex: '#d946ef' },
 };
 
 /* ── Listas derivadas ─────────────────────────────────────────────────────────
@@ -560,3 +562,18 @@ export const PROGRAM_OPTIONS: { title: string; value: string }[] = programs.map(
   title: p.title,
   value: p.slug,
 }));
+
+/** Etiqueta, enlace, icono y color de cada programa, indexado por slug.
+ *  Lo usa la página de destino para pintar las tarjetas de "Estudia en X". */
+export const PROGRAM_INFO: Record<string, { label: string; href: string; icon: string; color: string }> =
+  Object.fromEntries(
+    programs.map((p) => [
+      p.slug,
+      {
+        label: p.title,
+        href: `/programas/${p.slug}`,
+        icon: p.icon,
+        color: programColorMap[p.color]?.hex ?? '#1B67E8',
+      },
+    ]),
+  );

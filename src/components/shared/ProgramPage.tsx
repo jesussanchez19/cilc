@@ -270,11 +270,11 @@ export default function ProgramPage({ program, testimoniosSanity = [], destinosS
   const { ref: sectRef,   visible: sectVisible   } = useSection(0.15);
   const { ref: testRef,   visible: testVisible   } = useSection(0.2);
 
-  const programaNombre: Record<string, string> = {
-    'idiomas': 'Idiomas', 'au-pair': 'Au Pair', 'anos-academicos': 'Años Académicos',
-    'estudia-trabaja': 'Estudia y Trabaja', 'formacion-corporativa': 'Formación Corporativa', 'idiomas-en-linea': 'Idiomas en Línea',
-  };
-  const programaParaModal = programaNombre[program.slug] ?? program.title;
+  /* Era otro mapa `slug → título` escrito a mano, y encima redundante: lo que
+     devolvía para los seis programas es exactamente `program.title`, que ya
+     viene en el objeto. Un programa nuevo caía en el `?? program.title`, así
+     que funcionaba de casualidad. */
+  const programaParaModal = program.title;
 
   return (
     <div>
