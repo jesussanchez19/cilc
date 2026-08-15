@@ -23,6 +23,15 @@ export interface Program {
   heroImageUrl?: string;
   highlightTooltips?: Record<string, string>;
   includeTooltips?: Record<string, string>;
+  /**
+   * Qué preguntar en el formulario de testimonio en lugar del país.
+   *
+   * Hay programas que no se definen por dónde se hicieron sino por cuál se
+   * eligió: en Cursos, todos son en Canadá y lo que distingue una experiencia
+   * de otra es la especialidad. Cuando esto existe, el formulario cambia esa
+   * pregunta; cuando no, sigue preguntando el país.
+   */
+  enLugarDePais?: { etiqueta: string; marcador: string; opciones: string[] };
 }
 
 export const programs: Program[] = [
@@ -489,6 +498,16 @@ export const programs: Program[] = [
       'Profesionistas que quieren sumar una habilidad concreta —marketing digital, IA, atención a clientes o inglés de negocios— con certificado internacional; estudiantes universitarios que aprovechan un periodo vacacional; y quienes quieren probar la experiencia en Canadá antes de comprometerse con un programa largo.',
     whatsappMessage:
       'Hola, me interesan los Cursos cortos en Canadá de CILC (Marketing Digital, IA, Servicio al Cliente o Inglés de Negocios). ¿Qué opciones hay y cuánto duran?',
+    enLugarDePais: {
+      etiqueta: '¿Cuál curso tomaste?',
+      marcador: 'Selecciona un curso',
+      opciones: [
+        'Marketing Digital',
+        'Inteligencia Artificial',
+        'Servicio al Cliente',
+        'Inglés de Negocios',
+      ],
+    },
     sections: [
       {
         title: 'Cursos cortos disponibles en Canadá',
@@ -576,4 +595,10 @@ export const PROGRAM_INFO: Record<string, { label: string; href: string; icon: s
         color: programColorMap[p.color]?.hex ?? '#1B67E8',
       },
     ]),
+  );
+
+/** Los programas que preguntan otra cosa en vez del país, por título. */
+export const PROGRAM_EN_LUGAR_DE_PAIS: Record<string, { etiqueta: string; marcador: string; opciones: string[] }> =
+  Object.fromEntries(
+    programs.filter((p) => p.enLugarDePais).map((p) => [p.title, p.enLugarDePais!]),
   );

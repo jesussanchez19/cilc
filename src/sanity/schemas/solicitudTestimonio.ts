@@ -63,8 +63,12 @@ export const solicitudTestimonioSchema = defineType({
     }),
     defineField({
       name: 'pais',
-      title: 'País/Ciudad',
+      title: 'País o curso',
       type: 'string',
+      description:
+        'Dónde vivió la experiencia. En los programas que no se distinguen por ' +
+        'destino —como Cursos, que siempre es en Canadá— aquí llega la ' +
+        'especialidad que eligió.',
       validation: (r) => r.max(100),
     }),
     defineField({
