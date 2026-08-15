@@ -5,6 +5,7 @@ import ContactForm from '@/components/shared/ContactForm';
 import AnimateIn from '@/components/shared/AnimateIn';
 import { getContactInfo } from '@/lib/sanity/queries';
 import { resolverUbicacion } from '@/lib/ubicacion';
+import { generarQrSvg } from '@/lib/qr';
 
 export const metadata: Metadata = {
   title: 'Contacto | CILC',
@@ -23,6 +24,10 @@ export default async function ContactPage() {
    * Maps y el pie de página usaba el campo escrito, así que el sitio enseñaba
    * dos direcciones distintas a la vez. Ahora las dos leen lo mismo.
    */
+  // El QR se dibuja en el servidor: llega como marcado ya hecho y el navegador
+  // no descarga la librería que lo genera.
+  const qrSvg = await generarQrSvg(contact.urlQR);
+
   const { direccion: displayAddress, embedSrc: mapEmbedSrc, enlace: mapsLink } =
     resolverUbicacion(contact.direccion, contact.urlMapa);
   const addressLines = displayAddress.split(/,\s*|\n/).filter(Boolean);
@@ -206,6 +211,59 @@ export default async function ContactPage() {
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Ubicación de la oficina CILC"
               />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── Código QR ──
+          Va antes del formulario largo a propósito: quien prefiera resolverlo
+          desde el móvil lo ve primero y no tiene que rellenar dos campos para
+          descubrir que había un atajo. */}
+      {qrSvg && contact.urlQR && (
+        <section className="py-16 bg-white">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+              className="rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-6 sm:gap-8"
+              style={{ background: 'var(--surface-2)', border: '1px solid rgba(15,23,42,0.08)' }}
+            >
+              <a
+                href={contact.urlQR}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir el formulario de diagnóstico"
+                className="shrink-0 w-36 h-36 rounded-xl overflow-hidden bg-white p-2
+                           transition-transform duration-200 hover:scale-105
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+                           focus-visible:ring-(--blue-600)"
+                style={{ border: '1px solid rgba(15,23,42,0.08)' }}
+                dangerouslySetInnerHTML={{ __html: qrSvg }}
+              />
+
+              <div className="text-center sm:text-left">
+                <h2 className="text-xl font-extrabold text-slate-900 mb-2" style={{ letterSpacing: '-0.02em' }}>
+                  {contact.textoQR ?? 'Escanea y descubre tu destino ideal'}
+                </h2>
+                <p className="text-slate-500 text-[15px] leading-relaxed mb-4">
+                  Escanéalo con la cámara de tu teléfono y responde unas preguntas rápidas.
+                  Al terminar te ponemos en contacto con un asesor por WhatsApp.
+                </p>
+                {/* Enlace aparte: en el móvil no se puede escanear el código que
+                    muestra la propia pantalla. */}
+                <a
+                  href={contact.urlQR}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
+                  style={{ color: 'var(--blue-600)' }}
+                >
+                  Abrirlo aquí mismo
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
         </section>

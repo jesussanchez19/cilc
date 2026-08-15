@@ -51,7 +51,11 @@ export default function BotonSubir() {
       // llegaría a un botón invisible.
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className="hidden sm:flex items-center justify-center w-10 h-10 rounded-xl shrink-0
+      /* También en móvil. Al principio se ocultó por debajo de `sm` suponiendo
+         que la esquina ya estaba llena con la lupa, pero ahí caben los dos: a
+         375 px el botón de "Cotizar gratis" no se muestra, así que sobra
+         espacio entre el logo y la búsqueda. */
+      className="flex items-center justify-center w-10 h-10 rounded-xl shrink-0
                  transition-all duration-200 hover:brightness-125
                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
                  focus-visible:ring-(--blue-600)"

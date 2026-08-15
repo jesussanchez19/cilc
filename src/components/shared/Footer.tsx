@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AnimateIn from '@/components/shared/AnimateIn';
 import { DIRECCION_POR_DEFECTO } from '@/lib/ubicacion';
+import { PROGRAM_LINKS } from '@/lib/data/programs';
 import Certificaciones, { type CertificacionVisible } from '@/components/shared/Certificaciones';
 
 interface SocialLinks {
@@ -26,14 +27,7 @@ interface FooterProps {
 const NAV_COLS = [
   {
     title: 'Programas',
-    links: [
-      { href: '/programas/idiomas',               label: 'Idiomas en el Extranjero' },
-      { href: '/programas/au-pair',               label: 'Au Pair' },
-      { href: '/programas/anos-academicos',       label: 'Años Académicos' },
-      { href: '/programas/estudia-trabaja',       label: 'Estudia y Trabaja' },
-      { href: '/programas/formacion-corporativa', label: 'Formación Corporativa' },
-      { href: '/programas/idiomas-en-linea',      label: 'Idiomas en Línea' },
-    ],
+    links: PROGRAM_LINKS,
   },
   {
     title: 'Explorar',

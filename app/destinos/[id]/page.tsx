@@ -11,14 +11,11 @@ import LazySection from '@/components/shared/LazySection';
 
 export const dynamic = 'force-dynamic';
 
-const PROGRAMA_INFO: Record<string, { label: string; href: string; icon: string; color: string }> = {
-  'idiomas':               { label: 'Idiomas',               href: '/programas/idiomas',               icon: '🗣️', color: '#1B67E8' },
-  'au-pair':               { label: 'Au Pair',               href: '/programas/au-pair',               icon: '👧', color: '#ec4899' },
-  'anos-academicos':       { label: 'Años Académicos',       href: '/programas/anos-academicos',       icon: '🎓', color: '#8b5cf6' },
-  'estudia-trabaja':       { label: 'Estudia y Trabaja',     href: '/programas/estudia-trabaja',       icon: '💼', color: '#10b981' },
-  'formacion-corporativa': { label: 'Formación Corporativa', href: '/programas/formacion-corporativa', icon: '🏢', color: '#f59e0b' },
-  'idiomas-en-linea':      { label: 'Idiomas en Línea',      href: '/programas/idiomas-en-linea',      icon: '💻', color: '#06b6d4' },
-};
+/* Antes esta era otra copia de la lista de programas, la duodécima. Como no
+   tenía el programa nuevo, su tarjeta simplemente no se pintaba en la página
+   del destino: `PROGRAMA_INFO[pid]` daba undefined y el bucle la saltaba en
+   silencio, sin error ni hueco visible. */
+import { PROGRAM_INFO as PROGRAMA_INFO } from '@/lib/data/programs';
 
 const RAZONES = [
   { icon: '🎓', texto: 'Universidades reconocidas a nivel mundial' },

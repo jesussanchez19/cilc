@@ -7,16 +7,12 @@ interface Props {
   searchParams: Promise<{ acceso?: string }>;
 }
 
+import { PROGRAM_LABELS } from '@/lib/data/programs';
+
 export const metadata = { robots: 'noindex, nofollow' };
 
-const PROGRAMA_LABEL: Record<string, string> = {
-  'idiomas':               'Idiomas',
-  'au-pair':               'Au Pair',
-  'anos-academicos':       'Años Académicos',
-  'estudia-trabaja':       'Estudia y Trabaja',
-  'formacion-corporativa': 'Formación Corporativa',
-  'idiomas-en-linea':      'Idiomas en Línea',
-};
+/* Otra copia del mismo `slug → título`. Se usa la derivada. */
+const PROGRAMA_LABEL = PROGRAM_LABELS;
 
 export default async function DarTestimonioPage({ searchParams }: Props) {
   const { acceso } = await searchParams;

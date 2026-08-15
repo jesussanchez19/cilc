@@ -5,6 +5,7 @@ import { visionTool } from '@sanity/vision';
 import { schemas } from './src/sanity/schemas';
 import EliminarAction from './src/sanity/plugins/eliminarAction';
 import CtrlSPublishAction from './src/sanity/plugins/ctrlSPublish';
+import { programs } from './src/lib/data/programs';
 
 const SINGLETONS = ['configuracion'];
 const HIDDEN     = ['testimonial', 'teamMember'];
@@ -19,7 +20,7 @@ const HIDDEN     = ['testimonial', 'teamMember'];
  * fijo.
  *
  *   configuracion → documento único con id fijo
- *   programa      → lista cerrada de 6, con ids fijos
+ *   programa      → lista cerrada, con ids fijos derivados de programs.ts
  *   testimonial / teamMember → ya ocultos en la barra lateral
  *   tokenTestimonio → los genera el servidor, con su token y su URL
  *   lead            → los crean /api/contact y /api/quote al recibir un envío
@@ -68,27 +69,25 @@ export default defineConfig({
                   .documentId('configuracion-singleton'),
               ),
             S.divider(),
-            // Programas — lista fija de 6, sin botón "+"
+            // Programas — lista cerrada, sin botón "+": se genera desde programs.ts
             S.listItem()
               .title('Programas')
               .id('programa')
               .child(
                 S.list()
                   .title('Programas')
-                  .items([
-                    S.listItem().title('🗣️ Idiomas').id('programa-idiomas')
-                      .child(S.document().schemaType('programa').documentId('programa-idiomas')),
-                    S.listItem().title('👨‍👩‍👧‍👦 Au Pair').id('programa-au-pair')
-                      .child(S.document().schemaType('programa').documentId('programa-au-pair')),
-                    S.listItem().title('🎓 Años Académicos').id('programa-anos-academicos')
-                      .child(S.document().schemaType('programa').documentId('programa-anos-academicos')),
-                    S.listItem().title('💼 Estudia y Trabaja').id('programa-estudia-trabaja')
-                      .child(S.document().schemaType('programa').documentId('programa-estudia-trabaja')),
-                    S.listItem().title('🏢 Formación Corporativa').id('programa-formacion-corporativa')
-                      .child(S.document().schemaType('programa').documentId('programa-formacion-corporativa')),
-                    S.listItem().title('💻 Idiomas en Línea').id('programa-idiomas-en-linea')
-                      .child(S.document().schemaType('programa').documentId('programa-idiomas-en-linea')),
-                  ]),
+                  /* Un ítem por programa, con su id fijo. Se genera desde la
+                     misma lista que usa el sitio: antes estaban los seis
+                     escritos a mano y añadir uno exigía acordarse de este
+                     rincón del Studio. El icono sale del propio programa. */
+                  .items(
+                    programs.map((p) =>
+                      S.listItem()
+                        .title(`${p.icon} ${p.title}`)
+                        .id(`programa-${p.slug}`)
+                        .child(S.document().schemaType('programa').documentId(`programa-${p.slug}`)),
+                    ),
+                  ),
               ),
             ...S.documentTypeListItems().filter(
               (item) =>

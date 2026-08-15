@@ -1,5 +1,6 @@
 import { defineField, defineType } from 'sanity';
 import type { ValidationContext } from 'sanity';
+import { PROGRAM_NAMES } from '@/lib/data/programs';
 
 /**
  * Estos documentos los crea el formulario público a través de /api/testimonio,
@@ -57,13 +58,17 @@ export const solicitudTestimonioSchema = defineType({
     }),
     defineField({
       name: 'programa', title: 'Programa', type: 'string',
-      options: { list: ['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'] },
+      options: { list: PROGRAM_NAMES },
       validation: (r) => r.max(100),
     }),
     defineField({
       name: 'pais',
-      title: 'País/Ciudad',
+      title: 'País o curso',
       type: 'string',
+      description:
+        'Dónde vivió la experiencia. En los programas que no se distinguen por ' +
+        'destino —como Cursos, que siempre es en Canadá— aquí llega la ' +
+        'especialidad que eligió.',
       validation: (r) => r.max(100),
     }),
     defineField({

@@ -23,6 +23,15 @@ export interface Program {
   heroImageUrl?: string;
   highlightTooltips?: Record<string, string>;
   includeTooltips?: Record<string, string>;
+  /**
+   * Qué preguntar en el formulario de testimonio en lugar del país.
+   *
+   * Hay programas que no se definen por dónde se hicieron sino por cuál se
+   * eligió: en Cursos, todos son en Canadá y lo que distingue una experiencia
+   * de otra es la especialidad. Cuando esto existe, el formulario cambia esa
+   * pregunta; cuando no, sigue preguntando el país.
+   */
+  enLugarDePais?: { etiqueta: string; marcador: string; opciones: string[] };
 }
 
 export const programs: Program[] = [
@@ -457,13 +466,139 @@ export const programs: Program[] = [
       },
     ],
   },
+  {
+    id: 'cursos',
+    slug: 'cursos',
+    title: 'Cursos',
+    subtitle: 'Cursos cortos en Canadá para sumar una habilidad concreta a tu perfil',
+    description:
+      'Cursos cortos en Canadá para quien no busca un año académico ni un curso de idioma general, sino una habilidad concreta: marketing digital, inteligencia artificial, servicio al cliente o inglés de negocios. Formación aplicada, en semanas y no en años, con certificado al terminar.',
+    icon: '📚',
+    color: 'fuchsia',
+    countries: ['Canadá'],
+    duration: 'De 1 a 12 semanas',
+    ageRange: '18 años en adelante',
+    highlights: [
+      'Marketing Digital, Inteligencia Artificial, Servicio al Cliente e Inglés de Negocios',
+      'Programas cortos, de una a doce semanas',
+      'Instituciones canadienses acreditadas',
+      'Certificado oficial al terminar',
+      'Compatibles con vacaciones o periodos entre ciclos',
+      'Opción de combinarlos con un curso de idioma',
+    ],
+    includes: [
+      'Asesoría para elegir el curso según tu objetivo',
+      'Inscripción ante la institución',
+      'Gestión de visa cuando el programa la requiere',
+      'Opciones de alojamiento',
+      'Seguro médico internacional',
+      'Acompañamiento antes, durante y después del viaje',
+    ],
+    idealFor:
+      'Profesionistas que quieren sumar una habilidad concreta —marketing digital, IA, atención a clientes o inglés de negocios— con certificado internacional; estudiantes universitarios que aprovechan un periodo vacacional; y quienes quieren probar la experiencia en Canadá antes de comprometerse con un programa largo.',
+    whatsappMessage:
+      'Hola, me interesan los Cursos cortos en Canadá de CILC (Marketing Digital, IA, Servicio al Cliente o Inglés de Negocios). ¿Qué opciones hay y cuánto duran?',
+    enLugarDePais: {
+      etiqueta: '¿Cuál curso tomaste?',
+      marcador: 'Selecciona un curso',
+      opciones: [
+        'Marketing Digital',
+        'Inteligencia Artificial',
+        'Servicio al Cliente',
+        'Inglés de Negocios',
+      ],
+    },
+    sections: [
+      {
+        title: 'Cursos cortos disponibles en Canadá',
+        description: 'Cuatro áreas, todas con enfoque práctico y certificado al terminar.',
+        items: [
+          'Marketing Digital',
+          'Inteligencia Artificial',
+          'Servicio al Cliente',
+          'Inglés de Negocios',
+        ],
+      },
+      {
+        title: 'Cómo se combina con otros programas',
+        items: [
+          'Curso de idioma antes del curso de especialidad',
+          'Curso corto como antesala de un año académico',
+          'Formato intensivo en periodo vacacional',
+        ],
+      },
+    ],
+  },
 ];
 
-export const programColorMap: Record<string, { bg: string; text: string; light: string; border: string }> = {
-  blue:   { bg: 'bg-blue-600',   text: 'text-blue-600',   light: 'bg-blue-50',   border: 'border-blue-200' },
-  pink:   { bg: 'bg-pink-500',   text: 'text-pink-600',   light: 'bg-pink-50',   border: 'border-pink-200' },
-  purple: { bg: 'bg-purple-600', text: 'text-purple-600', light: 'bg-purple-50', border: 'border-purple-200' },
-  green:  { bg: 'bg-green-600',  text: 'text-green-600',  light: 'bg-green-50',  border: 'border-green-200' },
-  orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200' },
-  teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200' },
+/** `hex` es el mismo color en crudo, para donde no se pueden usar clases de
+ *  Tailwind — la página de destino lo pinta en un estilo en línea. */
+export const programColorMap: Record<string, { bg: string; text: string; light: string; border: string; hex: string }> = {
+  blue:   { bg: 'bg-blue-600',   text: 'text-blue-600',   light: 'bg-blue-50',   border: 'border-blue-200',   hex: '#1B67E8' },
+  pink:   { bg: 'bg-pink-500',   text: 'text-pink-600',   light: 'bg-pink-50',   border: 'border-pink-200',   hex: '#ec4899' },
+  purple: { bg: 'bg-purple-600', text: 'text-purple-600', light: 'bg-purple-50', border: 'border-purple-200', hex: '#8b5cf6' },
+  green:  { bg: 'bg-green-600',  text: 'text-green-600',  light: 'bg-green-50',  border: 'border-green-200',  hex: '#10b981' },
+  orange: { bg: 'bg-orange-500', text: 'text-orange-600', light: 'bg-orange-50', border: 'border-orange-200', hex: '#f59e0b' },
+  teal:   { bg: 'bg-teal-600',   text: 'text-teal-600',   light: 'bg-teal-50',   border: 'border-teal-200',   hex: '#06b6d4' },
+  /* Fucsia se eligió midiendo, no a ojo: de los colores libres es el que más
+     se aleja de los seis ya usados (ΔE 9.7 con el morado, su vecino más
+     cercano) entre los que además pasan el 4.5:1 de contraste que necesita el
+     texto. Amarillo y cielo se separaban más pero se quedaban en 2.94:1 y
+     4.10:1, y el gris parece un programa desactivado. */
+  fuchsia:{ bg: 'bg-fuchsia-600', text: 'text-fuchsia-600', light: 'bg-fuchsia-50', border: 'border-fuchsia-200', hex: '#d946ef' },
 };
+
+/* ── Listas derivadas ─────────────────────────────────────────────────────────
+   Antes cada sitio que necesitaba "la lista de programas" escribía la suya:
+   los dos formularios, tres esquemas de Sanity, la navegación, el pie, las
+   migas y la estructura del Studio. Once copias que había que recordar tocar a
+   la vez, y bastaba olvidar una para que un programa existiera en el menú pero
+   no en el desplegable de cotización.
+
+   Ahora salen todas de `programs`, que es la única lista de verdad. Añadir un
+   programa es añadirlo ahí y ya. */
+
+/** Los nombres, para los desplegables de los formularios y las opciones del CMS. */
+export const PROGRAM_NAMES: string[] = programs.map((p) => p.title);
+
+/** Enlace y etiqueta, para la navegación y el pie. */
+export const PROGRAM_LINKS: { href: string; label: string }[] = programs.map((p) => ({
+  href: `/programas/${p.slug}`,
+  label: p.title,
+}));
+
+/** `slug → título`, para que las migas muestren un nombre legible. */
+export const PROGRAM_LABELS: Record<string, string> = Object.fromEntries(
+  programs.map((p) => [p.slug, p.title]),
+);
+
+/** Las rutas antiguas, sin `/programas`, que siguen redirigiendo. */
+export const PROGRAM_LEGACY_PATHS: string[] = programs.map((p) => `/${p.slug}`);
+
+/** `{ title, value }` con el slug como valor, para los desplegables del Studio
+ *  que guardan el identificador y no el nombre. */
+export const PROGRAM_OPTIONS: { title: string; value: string }[] = programs.map((p) => ({
+  title: p.title,
+  value: p.slug,
+}));
+
+/** Etiqueta, enlace, icono y color de cada programa, indexado por slug.
+ *  Lo usa la página de destino para pintar las tarjetas de "Estudia en X". */
+export const PROGRAM_INFO: Record<string, { label: string; href: string; icon: string; color: string }> =
+  Object.fromEntries(
+    programs.map((p) => [
+      p.slug,
+      {
+        label: p.title,
+        href: `/programas/${p.slug}`,
+        icon: p.icon,
+        color: programColorMap[p.color]?.hex ?? '#1B67E8',
+      },
+    ]),
+  );
+
+/** Los programas que preguntan otra cosa en vez del país, por título. */
+export const PROGRAM_EN_LUGAR_DE_PAIS: Record<string, { etiqueta: string; marcador: string; opciones: string[] }> =
+  Object.fromEntries(
+    programs.filter((p) => p.enLugarDePais).map((p) => [p.title, p.enLugarDePais!]),
+  );

@@ -5,8 +5,8 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { sileo } from 'sileo';
 import { trackTestimonialSubmit } from '@/lib/analytics';
+import { PROGRAM_NAMES, PROGRAM_EN_LUGAR_DE_PAIS } from '@/lib/data/programs';
 
-const PROGRAMAS =['Idiomas', 'Au Pair', 'Años Académicos', 'Estudia y Trabaja', 'Formación Corporativa', 'Idiomas en Línea'];
 
 export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuccess, waPrincipal }: { paisesPorPrograma: Record<string, string[]>; tokenUsoUnico?: string; onSuccess?: () => void; /** Numero wa.me: llega como prop porque este componente es de cliente. */ waPrincipal: string }) {
   const [form, setForm] = useState({ nombre: '', email: '', programa: '', pais: '', texto: '' });
@@ -18,6 +18,12 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [nombreEnviado, setNombreEnviado] = useState('');
+
+  /** Si el programa elegido pregunta algo distinto del país. */
+  const enLugarDePais = PROGRAM_EN_LUGAR_DE_PAIS[form.programa];
+  /** Lo que se ofrece en el segundo desplegable: cursos, países, o nada. */
+  const opcionesSegundoCampo = enLugarDePais?.opciones ?? paisesPorPrograma[form.programa] ?? [];
+  const haySegundoCampo = Boolean(form.programa) && opcionesSegundoCampo.length > 1;
 
   const set = (k: string, v: string) => {
     setForm((f) => ({ ...f, [k]: v }));
@@ -67,7 +73,9 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
       fd.append('nombre', form.nombre);
       fd.append('email', form.email);
       fd.append('programa', form.programa);
-      fd.append('pais', form.pais);
+      /* Con una sola opción no se le preguntó, pero el dato se conoce: se
+         envía igual para no perder el país del testimonio. */
+      fd.append('pais', form.pais || (opcionesSegundoCampo.length === 1 ? opcionesSegundoCampo[0] : ''));
       fd.append('texto', form.texto);
       if (calificacion > 0) fd.append('calificacion', String(calificacion));
       if (foto) fd.append('foto', foto);
@@ -156,34 +164,39 @@ export default function TestimonioForm({ paisesPorPrograma, tokenUsoUnico, onSuc
           {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
         </div>
       </div>
-      {form.programa === 'Idiomas en Línea' ? (
-        <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
-          <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
-            <option value="">Selecciona un programa</option>
-            {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
-          </select>
-        </div>
-      ) : (
+      {/* El segundo desplegable solo aparece si de verdad hay algo que elegir.
+          Antes estaba escrito a mano que "Idiomas en Línea" no llevaba país;
+          ahora la regla es general: con una sola opción —o ninguna— no se
+          pregunta, porque la respuesta ya se sabe. Ese valor único se envía
+          igualmente al guardar, así que no se pierde el dato. */}
+      {haySegundoCampo ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
             <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
               <option value="">Selecciona un programa</option>
-              {PROGRAMAS.map((p) => <option key={p} value={p}>{p}</option>)}
+              {PROGRAM_NAMES.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </div>
-          {form.programa && (
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">País</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              {enLugarDePais?.etiqueta ?? 'País'}
+            </label>
             <select className="input-field" value={form.pais} onChange={(e) => set('pais', e.target.value)}>
-              <option value="">Selecciona un país</option>
-              {(paisesPorPrograma[form.programa] ?? []).map((nombre) => (
+              <option value="">{enLugarDePais?.marcador ?? 'Selecciona un país'}</option>
+              {opcionesSegundoCampo.map((nombre) => (
                 <option key={nombre} value={nombre}>{nombre}</option>
               ))}
             </select>
           </div>
-          )}
+        </div>
+      ) : (
+        <div>
+          <label className="block text-sm font-medium text-slate-700 mb-1.5">Programa</label>
+          <select className="input-field" value={form.programa} onChange={(e) => { set('programa', e.target.value); set('pais', ''); }}>
+            <option value="">Selecciona un programa</option>
+            {PROGRAM_NAMES.map((p) => <option key={p} value={p}>{p}</option>)}
+          </select>
         </div>
       )}
 
