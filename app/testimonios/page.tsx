@@ -18,6 +18,16 @@ function StarRating({ value = 5 }: { value?: number }) {
   );
 }
 
+/**
+ * "Canadá · Idiomas", pero sin el punto suelto cuando falta alguna parte.
+ *
+ * Los testimonios en vídeo cargados a mano desde el sitio anterior pueden no
+ * traer país ni programa, y antes se pintaba un " · " colgando solo.
+ */
+function paisYPrograma(pais?: string, programa?: string): string {
+  return [pais, programa].filter(Boolean).join(' · ');
+}
+
 function getYouTubeId(url: string): string | null {
   const match = url.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
@@ -97,7 +107,7 @@ export default async function TestimoniosPage() {
                                   // eslint-disable-next-line @next/next/no-img-element
                                   <img src={`https://flagcdn.com/w20/${t.bandera}.png`} alt={t.pais} width={14} height={10} className="h-3 w-auto rounded-sm inline-block" />
                                 )}
-                                {t.pais} · {t.programa}
+                                {paisYPrograma(t.pais, t.programa)}
                               </p>
                               {t.calificacion && <StarRating value={t.calificacion} />}
                             </div>
@@ -153,7 +163,7 @@ export default async function TestimoniosPage() {
                               // eslint-disable-next-line @next/next/no-img-element
                               <img src={`https://flagcdn.com/w20/${t.bandera}.png`} alt={t.pais} width={14} height={10} className="h-3 w-auto rounded-sm inline-block" />
                             )}
-                            {t.pais} · {t.programa}
+                            {paisYPrograma(t.pais, t.programa)}
                           </p>
                         </div>
                       </div>

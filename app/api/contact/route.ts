@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       // cualquiera menos a él. El teléfono va en el cuerpo del aviso.
       ...(email ? { replyTo: email } : {}),
       subject: `[CILC Web] ${subject} — ${name}`,
-      html: contactAdminHtml({ name, email, phone, subject, message }),
+      html: contactAdminHtml({ name, email, phone, subject, message, direccion: contactInfo.direccion }),
     }),
   ];
 
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
         from: FROM_CLIENTE,
         to: email,
         subject: 'Recibimos tu mensaje — CILC',
-        html: contactUserHtml(name, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa),
+        html: contactUserHtml(name, (contactInfo.telefonos?.find((p) => p.esPrincipal) ?? contactInfo.telefonos?.[0])?.wa, contactInfo.direccion),
       }),
     );
   }

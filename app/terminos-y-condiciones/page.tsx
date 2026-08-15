@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getContactInfo } from '@/lib/sanity/queries';
+import { direccionEnLinea } from '@/lib/ubicacion';
 
 export const metadata = {
   title: 'Términos y Condiciones | CILC',
@@ -11,7 +12,9 @@ const FECHA = '11 de julio de 2026';
 export default async function TerminosPage() {
   // Igual que en el aviso de privacidad: el correo se gestiona desde
   // "Email de contacto" en Configuración del sitio, nunca el de seguridad.
-  const { emailAdmin, telefonos } = await getContactInfo();
+  const { emailAdmin, telefonos, direccion } = await getContactInfo();
+  // En una sola línea: aquí el domicilio va dentro de una frase.
+  const domicilio = direccionEnLinea(direccion);
 
   // Se muestra el número marcado como principal en el Studio. Se necesitan las
   // dos formas: `wa` son solo dígitos, para el enlace `tel:`, y `display` es el
@@ -39,8 +42,8 @@ export default async function TerminosPage() {
           <h2 className="text-lg font-bold text-slate-900 mb-3">1. Aceptación de los términos</h2>
           <p>
             Al acceder y utilizar el sitio web de <strong>Canadian &amp; International Language Centers, S.C.
-            (CILC)</strong>, ubicada en Av. Insurgentes Sur 863, Piso 7, Col. Nápoles, C.P. 03810, CDMX,
-            México, usted acepta quedar sujeto a los presentes Términos y Condiciones. Si no está de acuerdo
+            (CILC)</strong>, ubicada en {domicilio}, usted acepta quedar sujeto a los presentes
+            Términos y Condiciones. Si no está de acuerdo
             con alguno de ellos, le pedimos abstenerse de utilizar nuestros servicios.
           </p>
         </section>

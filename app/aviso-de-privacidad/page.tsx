@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getContactInfo } from '@/lib/sanity/queries';
+import { direccionEnLinea } from '@/lib/ubicacion';
 
 export const metadata = {
   title: 'Aviso de Privacidad | CILC',
@@ -21,7 +22,14 @@ export default async function AvisoPrivacidadPage() {
    * contraseña del Studio, y publicarlo diría a un atacante a qué buzón apuntar
    * para tomar el control del panel.
    */
-  const { emailAdmin } = await getContactInfo();
+  const { emailAdmin, direccion } = await getContactInfo();
+  /**
+   * El domicilio también sale del Studio, y en una sola línea porque aquí va
+   * dentro de una frase. Estaba escrito a mano, así que una mudanza dejaba el
+   * aviso de privacidad declarando una dirección que ya no era la de CILC —
+   * justo el dato que la LFPDPPP exige que sea correcto.
+   */
+  const domicilio = direccionEnLinea(direccion);
 
   return (
     <main className="bg-white min-h-screen">
@@ -41,9 +49,9 @@ export default async function AvisoPrivacidadPage() {
         <section>
           <h2 className="text-lg font-bold text-slate-900 mb-3">1. Responsable del tratamiento</h2>
           <p>
-            <strong>Canadian &amp; International Language Centers, S.C. (CILC)</strong>, con domicilio en
-            Av. Insurgentes Sur 863, Piso 7, Col. Nápoles, C.P. 03810, Ciudad de México, México,
-            es responsable del uso y protección de sus datos personales, en términos de lo dispuesto por la{' '}
+            <strong>Canadian &amp; International Language Centers, S.C. (CILC)</strong>, con domicilio en{' '}
+            {domicilio}, es responsable del uso y protección de sus datos personales,
+            en términos de lo dispuesto por la{' '}
             <em>Ley Federal de Protección de Datos Personales en Posesión de los Particulares</em> (LFPDPPP)
             y su Reglamento.
           </p>

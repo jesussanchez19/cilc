@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import AnimateIn from '@/components/shared/AnimateIn';
+import { DIRECCION_POR_DEFECTO } from '@/lib/ubicacion';
 
 interface SocialLinks {
   facebook?:  string;
@@ -63,7 +64,7 @@ export default function Footer({
     { display: '55 1218 2442', wa: '525512182442' },
   ],
   mainPhone = '525518944494',
-  address = 'Av. Insurgentes Sur 863 Piso 7,\nCol. Nápoles, C.P. 03810\nCDMX, México',
+  address = DIRECCION_POR_DEFECTO,
   socialLinks = {},
 }: FooterProps) {
   const hasSocials = Object.values(socialLinks).some(Boolean);

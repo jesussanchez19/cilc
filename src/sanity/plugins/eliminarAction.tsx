@@ -1,9 +1,23 @@
 import { useState } from 'react';
 import type { DocumentActionComponent } from 'sanity';
+import { usePaneRouter } from 'sanity/structure';
 import { sileo } from 'sileo';
 
+/**
+ * Acción de eliminar del Studio.
+ *
+ * Al borrar hacía `window.location.href = '/studio'`, una navegación completa
+ * del navegador: la pantalla se quedaba en blanco, el Studio entero se volvía a
+ * cargar y encima aparecías en la raíz, no en la lista donde estabas. Borrar
+ * varios documentos seguidos era una sucesión de recargas.
+ *
+ * `closeCurrent()` del router de paneles cierra solo la ficha del documento y
+ * te deja en su lista, dentro de la misma sesión de la aplicación. Sin recarga
+ * y sin perder el sitio.
+ */
 const EliminarAction: DocumentActionComponent = ({ id }) => {
   const [showDialog, setShowDialog] = useState(false);
+  const { closeCurrent } = usePaneRouter();
 
   const doDelete = async () => {
     setShowDialog(false);
@@ -24,7 +38,9 @@ const EliminarAction: DocumentActionComponent = ({ id }) => {
         description: 'El registro fue borrado correctamente.',
         fill: '#1B67E8',
       });
-      setTimeout(() => { window.location.href = '/studio'; }, 800);
+      // Sin espera: el aviso se queda visible por su cuenta y cerrar de
+      // inmediato es justo lo que hace falta cuando se borran varios seguidos.
+      closeCurrent();
     } catch (err: unknown) {
       sileo.error({
         title: 'Error al eliminar',

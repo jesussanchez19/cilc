@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import ContactForm from '@/components/shared/ContactForm';
 import AnimateIn from '@/components/shared/AnimateIn';
 import { getContactInfo } from '@/lib/sanity/queries';
+import { resolverUbicacion } from '@/lib/ubicacion';
 
 export const metadata: Metadata = {
   title: 'Contacto | CILC',
@@ -15,29 +16,15 @@ export default async function ContactPage() {
   const phones = contact.telefonos ?? [];
   const mainPhone = (phones.find((p) => p.esPrincipal) ?? phones[0])?.wa ?? '525518944494';
   const email = contact.emailAdmin;
-  // Extrae dirección legible de la URL del navegador de Google Maps
-  function parseMapsUrl(url: string | undefined): { address: string | null; embedSrc: string | null; link: string | null } {
-    if (!url) return { address: null, embedSrc: null, link: null };
-    try {
-      const placeMatch = url.match(/\/maps\/place\/([^/@?]+)/);
-      if (placeMatch) {
-        const raw = placeMatch[1];
-        const address = decodeURIComponent(raw.replace(/\+/g, ' '));
-        return {
-          address,
-          embedSrc: `https://maps.google.com/maps?q=${raw}&output=embed`,
-          link: url,
-        };
-      }
-      // Si ya es embed URL o formato desconocido, úsala tal cual para embed
-      return { address: null, embedSrc: url, link: null };
-    } catch {
-      return { address: null, embedSrc: null, link: null };
-    }
-  }
-
-  const { address: parsedAddress, embedSrc: mapEmbedSrc, link: mapsLink } = parseMapsUrl(contact.urlMapa);
-  const displayAddress = parsedAddress ?? contact.direccion ?? '';
+  /**
+   * La dirección sale de `resolverUbicacion`, no de la URL del mapa.
+   *
+   * Antes esta página prefería el texto que venía dentro de la URL de Google
+   * Maps y el pie de página usaba el campo escrito, así que el sitio enseñaba
+   * dos direcciones distintas a la vez. Ahora las dos leen lo mismo.
+   */
+  const { direccion: displayAddress, embedSrc: mapEmbedSrc, enlace: mapsLink } =
+    resolverUbicacion(contact.direccion, contact.urlMapa);
   const addressLines = displayAddress.split(/,\s*|\n/).filter(Boolean);
   return (
     <div>
