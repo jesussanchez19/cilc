@@ -54,6 +54,23 @@ const nextConfig: NextConfig = {
         destination: `/programas/${p.slug}`,
         permanent: true,
       })),
+      /* Rutas del sitio anterior, el que vive hoy en
+         estudiosenelextranjero.com.mx sobre Apache. Cuando el dominio apunte
+         aqui, los enlaces que Google ya tiene indexados y los que la gente
+         haya guardado seguirian existiendo pero darian 404.
+
+         Los identificadores `secNNNN` no significan nada por si mismos: se
+         comprobo uno por uno abriendo cada pagina del sitio viejo y leyendo su
+         contenido, no adivinando por el orden del menu. */
+      { source: '/index.php',    destination: '/',                                 permanent: true },
+      { source: '/contacto.php', destination: '/contact',                          permanent: true },
+      { source: '/sec1473',      destination: '/programas/idiomas',                permanent: true },
+      { source: '/sec1474',      destination: '/programas/au-pair',                permanent: true },
+      { source: '/sec1475',      destination: '/programas/anos-academicos',        permanent: true },
+      { source: '/sec1476',      destination: '/programas/estudia-trabaja',        permanent: true },
+      { source: '/sec1477',      destination: '/programas/formacion-corporativa',  permanent: true },
+      { source: '/sec1478',      destination: '/programas/idiomas-en-linea',       permanent: true },
+      { source: '/sec1479',      destination: '/testimonios',                      permanent: true },
     ];
   },
 };
