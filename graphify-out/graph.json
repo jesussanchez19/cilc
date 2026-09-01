@@ -4,15 +4,59 @@
   "graph": {},
   "nodes": [
     {
+      "label": "next.config.ts",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "next_config",
+      "community": 12,
+      "community_name": "getWhatsAppPrincipal",
+      "norm_label": "next.config.ts"
+    },
+    {
+      "label": "securityHeaders",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "next_config_securityheaders",
+      "community": 12,
+      "community_name": "getWhatsAppPrincipal",
+      "norm_label": "securityheaders"
+    },
+    {
+      "label": "nextConfig",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "next_config_nextconfig",
+      "community": 12,
+      "community_name": "getWhatsAppPrincipal",
+      "norm_label": "nextconfig"
+    },
+    {
+      "label": "withMDX",
+      "file_type": "code",
+      "source_file": "next.config.ts",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "next_config_withmdx",
+      "community": 12,
+      "community_name": "getWhatsAppPrincipal",
+      "norm_label": "withmdx"
+    },
+    {
       "label": "programs.ts",
       "file_type": "code",
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_lib_data_programs",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "programs.ts"
+      "norm_label": "programs.ts",
+      "id": "src_lib_data_programs"
     },
     {
       "label": "ProgramSection",
@@ -20,10 +64,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_lib_data_programs_programsection",
       "community": 43,
       "community_name": "ProgramPage.tsx",
-      "norm_label": "programsection"
+      "norm_label": "programsection",
+      "id": "src_lib_data_programs_programsection"
     },
     {
       "label": "Program",
@@ -31,10 +75,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program",
       "community": 43,
       "community_name": "ProgramPage.tsx",
-      "norm_label": "program"
+      "norm_label": "program",
+      "id": "src_lib_data_programs_program"
     },
     {
       "label": "programs",
@@ -42,10 +86,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L37",
       "_origin": "ast",
-      "id": "src_lib_data_programs_programs",
       "community": 12,
       "community_name": "getWhatsAppPrincipal",
-      "norm_label": "programs"
+      "norm_label": "programs",
+      "id": "src_lib_data_programs_programs"
     },
     {
       "label": "programColorMap",
@@ -53,10 +97,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L542",
       "_origin": "ast",
-      "id": "src_lib_data_programs_programcolormap",
       "community": 12,
       "community_name": "getWhatsAppPrincipal",
-      "norm_label": "programcolormap"
+      "norm_label": "programcolormap",
+      "id": "src_lib_data_programs_programcolormap"
     },
     {
       "label": "COLOR_OPTIONS",
@@ -64,10 +108,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L558",
       "_origin": "ast",
-      "id": "src_lib_data_programs_color_options",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "color_options"
+      "norm_label": "color_options",
+      "id": "src_lib_data_programs_color_options"
     },
     {
       "label": "PROGRAM_NAMES",
@@ -75,10 +119,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L572",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_names",
       "community": 3,
       "community_name": "schemas/index.ts",
-      "norm_label": "program_names"
+      "norm_label": "program_names",
+      "id": "src_lib_data_programs_program_names"
     },
     {
       "label": "PROGRAM_LINKS",
@@ -86,10 +130,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L575",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_links",
       "community": 59,
       "community_name": "TestimonialsCarousel.tsx",
-      "norm_label": "program_links"
+      "norm_label": "program_links",
+      "id": "src_lib_data_programs_program_links"
     },
     {
       "label": "PROGRAM_LABELS",
@@ -97,10 +141,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L581",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_labels",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "program_labels"
+      "norm_label": "program_labels",
+      "id": "src_lib_data_programs_program_labels"
     },
     {
       "label": "PROGRAM_LEGACY_PATHS",
@@ -108,10 +152,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L586",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_legacy_paths",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "program_legacy_paths"
+      "norm_label": "program_legacy_paths",
+      "id": "src_lib_data_programs_program_legacy_paths"
     },
     {
       "label": "PROGRAM_OPTIONS",
@@ -119,10 +163,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L590",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_options",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "program_options"
+      "norm_label": "program_options",
+      "id": "src_lib_data_programs_program_options"
     },
     {
       "label": "PROGRAM_INFO",
@@ -130,10 +174,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L597",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_info",
       "community": 68,
       "community_name": "[id]/page.tsx",
-      "norm_label": "program_info"
+      "norm_label": "program_info",
+      "id": "src_lib_data_programs_program_info"
     },
     {
       "label": "PROGRAM_EN_LUGAR_DE_PAIS",
@@ -141,10 +185,10 @@
       "source_file": "src/lib/data/programs.ts",
       "source_location": "L611",
       "_origin": "ast",
-      "id": "src_lib_data_programs_program_en_lugar_de_pais",
       "community": 41,
       "community_name": "ArticleCard.tsx",
-      "norm_label": "program_en_lugar_de_pais"
+      "norm_label": "program_en_lugar_de_pais",
+      "id": "src_lib_data_programs_program_en_lugar_de_pais"
     },
     {
       "label": "programa.ts",
@@ -152,10 +196,10 @@
       "source_file": "src/sanity/schemas/programa.ts",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_sanity_schemas_programa",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "programa.ts"
+      "norm_label": "programa.ts",
+      "id": "src_sanity_schemas_programa"
     },
     {
       "label": "programaSchema",
@@ -163,10 +207,10 @@
       "source_file": "src/sanity/schemas/programa.ts",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "src_sanity_schemas_programa_programaschema",
       "community": 21,
       "community_name": "next.config.ts",
-      "norm_label": "programaschema"
+      "norm_label": "programaschema",
+      "id": "src_sanity_schemas_programa_programaschema"
     },
     {
       "label": ".eslintrc.json",
@@ -1927,50 +1971,6 @@
       "community_name": "mdx-components.tsx",
       "norm_label": "usemdxcomponents()",
       "id": "mdx_components_usemdxcomponents"
-    },
-    {
-      "label": "next.config.ts",
-      "file_type": "code",
-      "source_file": "next.config.ts",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "getWhatsAppPrincipal",
-      "norm_label": "next.config.ts",
-      "id": "next_config"
-    },
-    {
-      "label": "securityHeaders",
-      "file_type": "code",
-      "source_file": "next.config.ts",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "getWhatsAppPrincipal",
-      "norm_label": "securityheaders",
-      "id": "next_config_securityheaders"
-    },
-    {
-      "label": "nextConfig",
-      "file_type": "code",
-      "source_file": "next.config.ts",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "getWhatsAppPrincipal",
-      "norm_label": "nextconfig",
-      "id": "next_config_nextconfig"
-    },
-    {
-      "label": "withMDX",
-      "file_type": "code",
-      "source_file": "next.config.ts",
-      "source_location": "L61",
-      "_origin": "ast",
-      "community": 12,
-      "community_name": "getWhatsAppPrincipal",
-      "norm_label": "withmdx",
-      "id": "next_config_withmdx"
     },
     {
       "label": "package.json",
@@ -11204,6 +11204,63 @@
   ],
   "links": [
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "next_config",
+      "target": "next_config_nextconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L5",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "next_config",
+      "target": "next_config_securityheaders",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L78",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "next_config",
+      "target": "next_config_withmdx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "next_config",
+      "target": "src_lib_data_programs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "next.config.ts",
+      "source_location": "L3",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "next_config",
+      "target": "src_lib_data_programs_programs",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -11249,18 +11306,6 @@
       "_origin": "ast",
       "confidence_score": 1.0,
       "source": "app_sitemap",
-      "target": "src_lib_data_programs"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "next.config.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "next_config",
       "target": "src_lib_data_programs"
     },
     {
@@ -11378,9 +11423,9 @@
       "source_location": "L558",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_color_options",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_color_options"
     },
     {
       "relation": "contains",
@@ -11389,9 +11434,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program"
     },
     {
       "relation": "contains",
@@ -11400,9 +11445,9 @@
       "source_location": "L611",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_en_lugar_de_pais",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_en_lugar_de_pais"
     },
     {
       "relation": "contains",
@@ -11411,9 +11456,9 @@
       "source_location": "L597",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_info",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_info"
     },
     {
       "relation": "contains",
@@ -11422,9 +11467,9 @@
       "source_location": "L581",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_labels",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_labels"
     },
     {
       "relation": "contains",
@@ -11433,9 +11478,9 @@
       "source_location": "L586",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_legacy_paths",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_legacy_paths"
     },
     {
       "relation": "contains",
@@ -11444,9 +11489,9 @@
       "source_location": "L575",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_links",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_links"
     },
     {
       "relation": "contains",
@@ -11455,9 +11500,9 @@
       "source_location": "L572",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_names",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_names"
     },
     {
       "relation": "contains",
@@ -11466,9 +11511,9 @@
       "source_location": "L590",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_program_options",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_program_options"
     },
     {
       "relation": "contains",
@@ -11477,9 +11522,9 @@
       "source_location": "L542",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_programcolormap",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_programcolormap"
     },
     {
       "relation": "contains",
@@ -11488,9 +11533,9 @@
       "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_programs",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_programs"
     },
     {
       "relation": "contains",
@@ -11499,9 +11544,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_lib_data_programs",
-      "target": "src_lib_data_programs_programsection",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_programsection"
     },
     {
       "relation": "imports_from",
@@ -11523,9 +11568,9 @@
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_sanity_schemas_programa",
-      "target": "src_lib_data_programs",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs"
     },
     {
       "relation": "imports_from",
@@ -11603,18 +11648,6 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "next.config.ts",
-      "source_location": "L3",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "next_config",
-      "target": "src_lib_data_programs_programs"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
       "source_file": "sanity.config.ts",
       "source_location": "L8",
       "weight": 1.0,
@@ -11679,9 +11712,9 @@
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_sanity_schemas_programa",
-      "target": "src_lib_data_programs_color_options",
-      "confidence_score": 1.0
+      "target": "src_lib_data_programs_color_options"
     },
     {
       "relation": "imports",
@@ -11846,9 +11879,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "src_sanity_schemas_programa",
-      "target": "src_sanity_schemas_programa_programaschema",
-      "confidence_score": 1.0
+      "target": "src_sanity_schemas_programa_programaschema"
     },
     {
       "relation": "imports",
@@ -17458,39 +17491,6 @@
       "confidence_score": 1.0,
       "source": "mdx_components",
       "target": "mdx_components_usemdxcomponents"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "next.config.ts",
-      "source_location": "L13",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "next_config",
-      "target": "next_config_nextconfig"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "next.config.ts",
-      "source_location": "L5",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "next_config",
-      "target": "next_config_securityheaders"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "next.config.ts",
-      "source_location": "L61",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "next_config",
-      "target": "next_config_withmdx"
     },
     {
       "relation": "contains",
@@ -28106,5 +28106,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "b50a38b38c38dbc75d169a049827335634bc804f"
+  "built_at_commit": "cc7059c86c7db1472b2cf03e7d97a756216be075"
 }
